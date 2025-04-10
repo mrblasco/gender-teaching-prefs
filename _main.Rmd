@@ -1,0 +1,82 @@
+---
+title: |
+  How Gender Preferences Shape Teaching?
+  Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections
+
+author:
+  - Andrea Blasco^[European Commission, Joint Research Centre, Brussels, Belgium; (andrea.blasco@ec.europa.eu)]
+  - Elisa Orlandi^[University of Bologna, Bologna, Italy, and European Commission, Joint Research Centre, Brussels, Belgium.]
+
+abstract: |
+  This study examines academics' preferences for teaching alone versus co-teaching, and how these choices impact teaching practices. Using a massive dataset of over five million syllabi, we explore how gender preferences shape instructors' team size and gender composition. Our findings reveal a strong tendency for gender homophily in co-teaching resulting in a significant underrepresentation of mixed-gender teams---half as many as expected under gender-neutral preferences. We also analyze the relationship between team gender composition and key course characteristics, such as interdisciplinarity, breadth and novelty of materials, and the gender of cited authors. Our results show that mixed-gender teams are significantly more interdisciplinary than same-gender teams. Additionally, classes taught by male-only teams cite fewer female authors than those taught by all-female teams, with mixed-gender teams not bridging this gap. Furthermore, solo female instructors and teams with at least one woman tend to reference more novel materials. These findings highlight new mechanisms contributing to gender bias in higher education and suggest that promoting mixed-gender co-teaching could enhance interdisciplinarity and lead to more balanced gender representation among academic authors.
+
+always_allow_html: true
+fontsize: 12pt
+linestretch: 1.5
+colorlinks: true
+link-citations: true
+bibliography: [bibliography/refs.bib]
+csl: assets/pnas.csl
+geometry: margin=1in
+lang: en-UK
+
+header-includes: |
+  ```{=latex}
+  \usepackage{times}
+  \usepackage{colortbl}
+  \usepackage[footnotesize,bf,singlelinecheck=false]{caption}
+  %\usepackage{endfloat} % nomarkers, nolists
+  \usepackage{hyperref}
+  \hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+  }
+  ```
+---
+
+<small>
+Classification: TBA
+</small>
+
+<small>
+Keywords: education | gender bias | teams | interdisciplinarity | novelty | syllabi
+</small>
+
+\newpage
+\doublespace
+
+
+```{r setup, include = FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE)
+source("config.R")
+```
+
+```{r, child = "sections/01-intro.Rmd"}
+```
+
+```{r, child = "sections/20-methods.Rmd"}
+```
+
+```{r, child = "sections/30-results.Rmd"}
+```
+
+
+```{r, child = "sections/40-discussion.Rmd"}
+```
+
+
+```{r, child = "sections/50-supporting.Rmd"}
+```
+
+
+<!--  -->
+\newpage
+\singlespacing
+
+# References {-}
+
+::: {#refs}
+:::

@@ -1,0 +1,92 @@
+# Materials and Methods
+
+## Data
+
+The dataset, compiled by Open Syllabus (New York, US), was created through web extractions that identified syllabi from university websites, resulting in a corpus of over six million documents. Each document was identified as syllabus with a median confidence level of 99.8%. A tagging algorithm extracted key course details--such as title, field, description, academic year, duration, language--as well as institution names, anonymised instructor names, and assigned readings.^[The documentation available at: https://docs.opensyllabus.org] While the original dataset included syllabi in 49 languages, most documents (96%) were in English. For simplicity, we focused exclusively on these documents. As a result, in non-English countries, our sample is more representative of advanced courses, such as postgraduate programs or disciplines where English is the primary language of instruction.
+
+After excluding non-English documents, the dataset comprises 5.4 million syllabi from approximately 4,000 higher education institutions across fifteen countries, spanning 69 academic fields from 1990 to 2019. Among these syllabi, 2.9 million were matched with bibliographic sources, providing additional metadata about readings, such as authorship information, journal, and publication year. Institution names were matched to the Research Organisation Registry, providing further metadata including the instutition's country and student enrollment figures. Collectively, the institutions in our sample account for over 35 million enrolled students.
+
+<!-- ### Teaching teams {-} -->
+
+Each syllabus lists one or more instructors. Specifically, 76% of the syllabi list a single instructor, 16% list two, 4% list three, and another 4% list more than three instructors. Instructor gender was determined automatically based on names, resulting in 52% male, 37% female, and 11% unknown categories. After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors, which aligns closely with the 45% of female academic staff reported in OECD countries [@oecd2022]. The same inference method was used to determine the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with only 12% unknown gender.
+
+## Outcome variables {-}
+
+We defined the following key outcome variables to analyze the impact of the instructors' gender composition and collaboration on interdisciplinarity and readings selections. 
+
+```{r outcomes, echo = FALSE}
+kableExtra::kbl(
+  booktabs = TRUE,
+  data.frame(
+    Name = c(
+      "Interdisciplinarity",
+      "Number of References",
+      "Age of References",
+      "Ratio of Female Authors"
+    ),
+    Definition = c(
+      "Percentile rank of a course's interdisciplinarity score for the given year.", 
+      "Total readings listed in a syllabus.",
+      "Percentile rank of the publication age of readings listed in a syllabus.",
+      "Proportion of female authors cited in the readings."
+    )
+  ),
+  caption = "Outcome variables"
+) |>
+  kableExtra::kable_classic(full_width = TRUE)
+```
+
+### Interdisciplinarity {-} 
+
+To estimate interdisciplinarity, we measured field overlap using course descriptions written in the syllabi. Following Evans et al. [@evans2016measuring; @han2023interdisciplinary], we assigned each course an interdisciplinarity score based on its description. This approach converts descriptions into "bags of words", where word frequencies are normalised with the inverse ratio of the term frequency to document frequency metric. A correlation matrix is then generated across different academic fields to measure the distance between fields. The interdisciplinarity score for each syllabus is computed by taking one minus the weighted average of the pairwise correlations with other syllabi, with weights equal to the conceptual proximity of different fields. This method ensures that syllabi associated with distant fields --either academically or conceptually-- are considered more interdisciplinary. To scale this approach for millions of documents, we optimized for efficiency by using random subsamples for academic fields across academic years. The final interdisciplinarity score was averaged across multiple subsamples for robustness. See Supplementary Information (Section \@ref(si-interdisciplinarity)) for details. To ensure robust comparisons in our analysis, we computed the percentile rank of the interdisciplinarity score for each syllabus $i$:
+$$
+  \text{Interdisciplinarity}_i = \text{PR}_{yr} (\text{Interdisciplinarity Score}_i),
+$$
+where $\text{PR}_{yr}$ represents the percentile rank function applied to all syllabi within a given year $yr$.
+
+
+<!-- - TODO: show dendogram and refer the reader to the picture here.  -->
+<!-- - TODO: show histogram of interdisciplinary measure / by field / by time.  -->
+
+### Readings Selection {-}
+
+To investigate readings selection, we calculated three critical dimensions: the breadth, novelty, and female-authors representation. First, we define _Number of References_ ($N_i$) as the total articles, books, and chapters listed in a syllabus $i$. This variable serves as a broad measure of a course's "breadth," as more assigned readings may indicate a more extensive or comprehensive curriculum. Second, we define _Age of References_ as the difference between the syllabus year ($\text{Year}_i$) and the average publication year of each assigned reading $k$:  
+$$
+  \text{Age of References}_i = \text{PR}_{yr}\left(\text{Year}_i - \sum_{k=1}^{N_i} \text{Publication Year}_k / N_i\right),
+$$
+where $\text{PR}_{yr}$ represents the percentile rank function applied to all syllabi within a given year $yr$. This variable gives a proxy of how recent, or "novel," the readings are.^[While more sophisticated methods to measure novelty are available [@uzzi2013atypical; @wang2017bias], we opt for a simpler metric. Teaching innovation tends to be more incremental, and computationally intensive novelty indicators are impractical for large-scale datasets like ours.] Finally, we define the _Ratio of Female Authors_ as the proportion of female authors among all authors in the assigned readings: 
+$$
+  \text{Ratio of Female Authors}_i = \frac{\text{Female Authors}_i + 1} {\text{Female Authors}_i + \text{Male Authors}_i + 2}.
+$$
+Here, we add two pseudo-observations (one for each gender) to stabilize the ratio, preventing extreme values in cases with very few authors. This metric allows us to investigate whether gender and collaboration relate to the representation of female-authored work in teaching.
+
+## Testing Gender Preferences in Teaching Collaborations {-}
+
+To test the hypothesis of gender preferences shaping teaching, especially co-teaching practices, we employ a montercalo approach. Drawing from the methodology developed elsewhere [@uzzi2013atypical], we counted the frequency of courses taught individually and the frequency of gender combinations (male-male, female-male, etc.) of those taught by two instructors, disaggregating these data per field, institution, and academic year. Then, we compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given institution, field, and academic year, all instructors were switched using Monte Carlo simulation. See Supplementary Information (Section \@ref(si-simulations)) for details. This approach matches our assumption that mobility between institutions and fields is limited within a single academic year, while the within-institution mobility is possible. 
+
+The switching algorithm preserves the total gender counts and the distribution of teams. This ensures that a course with a given number of instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with a given number of male instructors and female instructors teaching in each field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams. Therefore, in the randomized network, instructors form teams as if they were unaware of the gender.
+
+## Regression analysis {-}
+
+We analyse how instructors shape course interdisciplinarity and readings selection using the following multiple linear regression model:
+\[
+Y_{j, yr} = \alpha_{j, yr} + 
+  \text{Gender}_{j, yr} + 
+  \text{Field}_{j, yr}  + 
+  \text{Country}_{j, yr} + 
+  X_i\beta_{j, yr} + 
+  \epsilon_{j, yr}
+\]
+where: 
+
+- $Y_{j, yr}$ denotes the outcome ---_Age of References_, _Number of Female Authors_, _Number of References_, or _Interdisciplinarity_--- for a syllabus where $j$ indexes the grouping by course size (individual or two instructors) and $yr$ by academic year.
+
+- $\text{Gender}$ accounts for gender composition. For courses taught individually, it captures a fixed effect comparing male ("m") and female ("f") instructors. For courses co-taught by two instructors, it represents fixed effects for mixed-gender teams ("mf" or "fm") against male-only ("mm") and female-only ("ff") teams.
+
+- $\text{Field}_{j,yr}$ and $\text{Country}_{j,yr}$  represent fixed effects for the syllabus' field of study and the institution's country that vary by team size and year.
+
+- $X_i\beta_{j,yr}$ includes the effects for additional controls (e.g., number of documents, total authors) varying by team size and year.
+
+- $\epsilon_{j,yr}$ represents the error term.
+
+ <!-- For interdisciplinarity, rather than using a raw average, which is complex to interpret, we employ a percentile rank measure -- each reading’s interdisciplinarity score is converted into a percentile relative to others by year. This approach allows us to compare how team composition relates to the relative interdisciplinarity of the syllabi in a given academic year. -->

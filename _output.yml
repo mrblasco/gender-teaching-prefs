@@ -1,0 +1,9 @@
+bookdown::pdf_document2:
+  toc: false
+  number_sections: true
+  bibliography: [bibliography/refs.bib]
+
+bookdown::html_document2:
+  toc: false
+  number_sections: false
+  bibliography: [bibliography/refs.bib]
