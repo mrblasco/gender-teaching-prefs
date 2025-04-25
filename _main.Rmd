@@ -51,24 +51,9 @@ Keywords: education | gender bias | teams | interdisciplinarity | novelty | syll
 ```{r setup, include = FALSE}
 library(knitr)
 opts_chunk$set(echo = FALSE)
-source("config.R")
 ```
 
-```{r, child = "sections/01-intro.Rmd"}
-```
-
-```{r, child = "sections/20-methods.Rmd"}
-```
-
-```{r, child = "sections/30-results.Rmd"}
-```
-
-
-```{r, child = "sections/40-discussion.Rmd"}
-```
-
-
-```{r, child = "sections/50-supporting.Rmd"}
+```{r, child = list.files(pattern = "[0-9].*.Rmd", full.names = TRUE)}
 ```
 
 
