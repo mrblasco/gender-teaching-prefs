@@ -1,8 +1,8 @@
 # Paths
 OUTPUT_DIR = output
 REPORT_OUT_DIR = $(OUTPUT_DIR)/report
-FIGURE_SCRIPTS = $(wildcard *.R)  # List all your figure scripts here
-FIGURE_LOGS = $(FIGURE_SCRIPTS:%.R=figures/%.log)  # Corresponding log files
+FIGURE_SCRIPTS = $(wildcard fig[0-9]*.R)  # List all your figure scripts here
+FIGURE_LOGS = $(FIGURE_SCRIPTS:%.R=figures/%.pdf)  # Corresponding log files
 REPORT_SRC = _main.Rmd
 REPORT_SECTIONS = $(wildcard [0-9]*.Rmd)
 
@@ -18,16 +18,17 @@ REPORT_LATEST = $(REPORT_OUT_DIR)/main_latest.pdf
 # Default target
 all: $(REPORT_OUT_FILE)
 
-$(OUTPUT_DIR): 
-	mkdir -p $@/report
+$(REPORT_OUT_DIR): 
+	mkdir -p $@
 
 # Generate figures
-$(FIGURE_LOGS): figures/%.log: %.R
-	Rscript $< > $@
+$(FIGURE_LOGS): figures/%.pdf: %.R
+	Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_yaml = "_output_pdf.yml")'
+	open $@
 
 # Render report
-$(REPORT_OUT_FILE): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(OUTPUT_DIR)
-	Rscript -e "rmarkdown::render('$<', output_file = '$@')"
+$(REPORT_OUT_FILE): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_OUT_DIR)
+	Rscript -e "rmarkdown::render('$<', output_file = '$@', output_yaml = '_output_pdf.yml')"
 	ln -sf main_$(VERSION).pdf $(REPORT_LATEST)
 
 
