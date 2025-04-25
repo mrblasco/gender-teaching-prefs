@@ -1,4 +1,3 @@
-
 # ---- Setup, include = FALSE ------------------------------
 
 library(dplyr, warn.conflicts = FALSE)
@@ -12,7 +11,7 @@ source("config.R")
 knitr::opts_chunk$set(
   echo = FALSE,
   fig.cap = "TODO: add caption here",
-  fig.path = "figures/",
+  fig.path = file.path(getwd(), "figures/"),
   cache.path = "cache/",
   dev = c("pdf", "png"),
   dpi = 600
@@ -96,6 +95,59 @@ ds <- readRDS(filename_data) %>%
 
 format(object.size(ds), "MB")
 
+# ----- head
+
+sapply(ds, function(.) head(unique(.)))
+
+
+# ----- fields
+
+count(ds, field, wt = n) %>%
+  mutate(index = row_number(),
+         col = ifelse(index %% 2 == 1, "left", "right"),
+         group = (index + 1) %/% 2) %>%
+  select(-index) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>% 
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  mutate(across(c(field, n, pc), as.character)) %>% 
+  pivot_wider(names_from = col, 
+              values_from = c(field, n, pc), 
+              values_fill =  "") %>%
+  select(field_left, n_left, pc_left, field_right, n_right, pc_right) %>%
+  kableExtra::kbl(
+    caption = "Number of Syllabi per Field",
+    col.names = rep(c("Field", "N (thousands)", "%"), 2),
+  ) %>%
+  kableExtra::kable_styling()
+
+
+# ----- years
+
+ds %>% 
+  mutate(year_bc = ifelse(year < 2000, "1999 or older", as.character(year))) %>% 
+  count(year_bc, wt = n) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>%
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  kableExtra::kbl(
+    caption = "Number of Syllabi per Year",
+    col.names = rep(c("Academic year", "N (thousands)", "%"), 1),
+  ) %>%
+  kableExtra::kable_styling()
+
+# ----- contries, eval = FALSE
+
+# ... Need to put country back in the data
+ds %>% 
+  count(country, wt = n) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>%
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  kableExtra::kbl(
+    caption = "Number of Syllabi per Country",
+    col.names = rep(c("Country", "N (thousands)", "%"), 1),
+  ) %>%
+  kableExtra::kable_styling()
+
+
 # ----- evolution, fig.width = 7, fig.height = 3.5 ---------------
 
 ds_count <- ds %>%
@@ -149,19 +201,6 @@ p <- ds_count %>%
   )
 
 p + facet_wrap(~ team_size, scales = "free")
-
-
-# p1 <- p %+% filter(ds_count, team_size == 1)
-# p2 <- p %+% filter(ds_count, team_size == 2)
-# p1 + p2 +
-#   plot_layout(guides = "collect", 
-#               axis_titles = "collect_x") +
-#   plot_annotation(tag_levels = "A")
-
-
-#'
-#' \clearpage
-#'
 
 # ----- montecarlo, fig.width = 7, fig.height = 4 -------
 
