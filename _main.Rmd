@@ -12,20 +12,21 @@ abstract: |
 
 always_allow_html: true
 fontsize: 12pt
-linestretch: 1.5
+linestretch: 1
 colorlinks: true
 link-citations: true
 bibliography: [bibliography/refs.bib]
 csl: assets/pnas.csl
 geometry: margin=1in
 lang: en-UK
+mainfont: Arial
 
 header-includes: |
   ```{=latex}
-  \usepackage{times}
+  %\usepackage{times}
   \usepackage{colortbl}
   \usepackage[footnotesize,bf,singlelinecheck=false]{caption}
-  %\usepackage{endfloat} % nomarkers, nolists
+  %\usepackage[nomarkers,nolists]{endfloat} % nomarkers, nolists
   \usepackage{hyperref}
   \hypersetup{
     colorlinks=true,
@@ -58,7 +59,7 @@ opts_chunk$set(echo = FALSE)
 
 
 <!--  -->
-\newpage
+\clearpage
 \singlespacing
 
 # References {-}
