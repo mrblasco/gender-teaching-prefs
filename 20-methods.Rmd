@@ -1,4 +1,4 @@
-# Materials and Methods
+# Materials and Methods {#sec:methods}
 
 ## Data
 
