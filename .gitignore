@@ -7,3 +7,5 @@ figures/
 cache/
 scripts/
 *.log
+*.fff 
+*.ttt
