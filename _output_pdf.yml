@@ -2,4 +2,5 @@
 bookdown::pdf_document2:
   toc: false
   number_sections: true
+  latex_engine: xelatex
   bibliography: [bibliography/refs.bib]
