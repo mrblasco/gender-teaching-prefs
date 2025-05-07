@@ -11,34 +11,38 @@ VERSION_DATE = $(shell date +%Y%m%d)
 GIT_TAG = $(shell git describe --tags --always)
 VERSION = $(VERSION_DATE)_$(GIT_TAG)
 
-# Version
-REPORT_OUT_FILE = $(REPORT_OUT_DIR)/main_$(VERSION).pdf
-REPORT_LATEST = $(REPORT_OUT_DIR)/main_latest.pdf
+# Output 
+REPORT_PDF = $(REPORT_OUT_DIR)/main_$(VERSION).pdf
+REPORT_DOCX = $(REPORT_OUT_DIR)/main_$(VERSION).docx
+REPORT_LATEST_PDF = $(REPORT_OUT_DIR)/main_latest.pdf
+REPORT_LATEST_DOCX = $(REPORT_OUT_DIR)/main_latest.docx
 
-# Default target
-all: $(REPORT_OUT_FILE)
+all: $(REPORT_PDF)
 
-$(REPORT_OUT_DIR): 
+$(REPORT_OUT_DIR):
 	mkdir -p $@
 
-# Generate figures
 $(FIGURE_LOGS): figures/%.pdf: %.R
 	Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_yaml = "_output_pdf.yml")'
-	open $@
 
-# Render report
-$(REPORT_OUT_FILE): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_OUT_DIR)
+$(REPORT_PDF): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_OUT_DIR)
 	Rscript -e "rmarkdown::render('$<', output_file = '$@', output_yaml = '_output_pdf.yml')"
-	ln -sf main_$(VERSION).pdf $(REPORT_LATEST)
+	ln -sf main_$(VERSION).pdf $(REPORT_LATEST_PDF)
 
+docx: $(REPORT_DOCX)
 
-# Clean figures and output
+$(REPORT_DOCX): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_OUT_DIR)
+	Rscript -e "rmarkdown::render('$<', output_file = '$@', output_yaml = '_output_docx.yml')"
+	ln -sf "main_$(VERSION).docx" $(REPORT_LATEST_DOCX)
+
 clean:
 	rm -f figures/*.pdf figures/*.log
 	rm -f $(REPORT_OUT_DIR)/main_*.pdf
-	rm -f $(REPORT_LATEST)
 
 view:
-	open -a Skim $(REPORT_LATEST)
+	open -a Skim $(REPORT_LATEST_PDF)
+
+draft:
+	open $(REPORT_LATEST_DOCX)
 
 .PHONY: all figures clean view
