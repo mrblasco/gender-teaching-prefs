@@ -2,38 +2,37 @@
 
 ## Data
 
-The dataset, compiled by Open Syllabus (New York, US), was created through web extractions that identified syllabi from university websites, resulting in a corpus of over six million documents. Each document was identified as syllabus with a median confidence level of 99.8%. A tagging algorithm extracted key course details--such as title, field, description, academic year, duration, language--as well as institution names, anonymised instructor names, and assigned readings.^[The documentation available at: https://docs.opensyllabus.org] While the original dataset included syllabi in 49 languages, most documents (96%) were in English. For simplicity, we focused exclusively on these documents. As a result, in non-English countries, our sample is more representative of advanced courses, such as postgraduate programs or disciplines where English is the primary language of instruction.
+We examined a corpus of over six million documents compiled by Open Syllabus (New York, US). This dataset was created through web extractions that identified syllabi from university websites, with a median confidence level of 99.8%. A tagging algorithm extracted key course details, such as the  title, field, description, academic year, duration, and language, a list of anonymised instructors, and the assigned readings.^[The documentation available at: https://docs.opensyllabus.org] While the original dataset included syllabi in 49 languages, most documents (96%) were in English. For simplicity, we focused exclusively on these documents. Consequently, in non-English countries, our sample is more representative of advanced courses, such as postgraduate programs or disciplines where English is the primary language of instruction.
 
-After excluding non-English documents, the dataset comprises 5.4 million syllabi from approximately 4,000 higher education institutions across fifteen countries, spanning 69 academic fields from 1990 to 2019. Among these syllabi, 2.9 million were matched with bibliographic sources, providing additional metadata about readings, such as authorship information, journal, and publication year. Institution names were matched to the Research Organisation Registry, providing further metadata including the instutition's country and student enrollment figures. Collectively, the institutions in our sample account for over 35 million enrolled students.
+The resulting dataset comprised 5.4 million syllabi from approximately 4,000 higher education institutions across fifteen countries from 1990 to 2019. These syllabi were classified into 69 top-level fields derived from the U.S. Department of Education's CIP code classification.^[https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55] About 2.9 million syllabi (53% of the total) listed readings matched with bibliographic sources, providing additional metadata about  authorship information, journal, and publication year. The institution was matched to a list of more than 22,000 entities from the Research Organisation Registry, providing further metadata including the instutition's country and enrollment figures --- the institutions in our sample account for over 35 million enrolled students today.
 
 <!-- ### Teaching teams {-} -->
 
-Each syllabus lists one or more instructors. Specifically, 76% of the syllabi list a single instructor, 16% list two, 4% list three, and another 4% list more than three instructors. Instructor gender was determined automatically based on names, resulting in 52% male, 37% female, and 11% unknown categories. After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors, which aligns closely with the 45% of female academic staff reported in OECD countries [@oecd2022]. The same inference method was used to determine the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with only 12% unknown gender.
+Each syllabus lists one or more instructors, with 76% of the syllabi listing a single instructor, 16% listing two, 4% listing three, and another 4% listing more than three instructors. Instructor gender was determined automatically based on names, resulting in 52% male, 37% female, and 11% unknown categories. After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors, which aligns closely with the 45% of female academic staff reported in OECD countries [@oecd2022]. The same inference method was used to determine the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with only 12% unknown gender.
 
 ## Outcome variables {-}
 
 We defined the following key outcome variables to analyze the impact of the instructors' gender composition and collaboration on interdisciplinarity and readings selections. 
 
 ```{r outcomes, echo = FALSE}
-kableExtra::kbl(
-  booktabs = TRUE,
-  data.frame(
-    Name = c(
-      "Interdisciplinarity",
-      "Number of References",
-      "Age of References",
-      "Ratio of Female Authors"
-    ),
-    Definition = c(
-      "Percentile rank of a course's interdisciplinarity score for the given year.", 
-      "Total readings listed in a syllabus.",
-      "Percentile rank of the publication age of readings listed in a syllabus.",
-      "Proportion of female authors cited in the readings."
-    )
+data.frame(
+  Name = c(
+    "Interdisciplinarity",
+    "Number of References",
+    "Age of References",
+    "Ratio of Female Authors"
   ),
-  caption = "Outcome variables"
+  Definition = c(
+    "Percentile rank of a course's interdisciplinarity score for the given year.",  # nolint
+    "Total readings listed in a syllabus.",
+    "Percentile rank of the publication age of readings listed in a syllabus.",
+    "Proportion of female authors cited in the readings."
+  )
 ) |>
-  kableExtra::kable_classic(full_width = TRUE)
+  kableExtra::kbl(booktabs = TRUE,
+                  caption = "Outcome variables") |>
+  kableExtra::kable_classic(full_width = TRUE) |>
+  kableExtra::column_spec(1, width = "1.5in")
 ```
 
 ### Interdisciplinarity {-} 
@@ -68,25 +67,30 @@ The switching algorithm preserves the total gender counts and the distribution o
 
 ## Regression analysis {-}
 
-We analyse how instructors shape course interdisciplinarity and readings selection using the following multiple linear regression model:
+We analyse how different teaching team configurations, $j\in \{F, M, MM, MF/FM, FF\}$, where F = female alone, M = male alone, MM = two males, FM/MF = mixed gender, FF = two female instructors, shape course outcomes across academic years, $t = 1999, \cdots, 2020$. The outcome of interest include (1) interdisciplinarity, (2) the average age of references, (3) the proportion of cited female authors, and (4) the total number of references.  To estimate these effects, we employ the following linear mixed-effects model:
 \[
-Y_{j, yr} = \alpha_{j, yr} + 
-  \text{Gender}_{j, yr} + 
-  \text{Field}_{j, yr}  + 
-  \text{Country}_{j, yr} + 
-  X_i\beta_{j, yr} + 
-  \epsilon_{j, yr}
+Y_{j, t} = 
+  \alpha_t + 
+  \text{Team}_{j, t} + 
+  \text{STEM}_t + \eta_{t} + 
+  \text{Country}_{t} + \text{Enroll}_t + \delta_{t} + 
+  \epsilon_{j, t}
 \]
+
 where: 
 
-- $Y_{j, yr}$ denotes the outcome ---_Age of References_, _Number of Female Authors_, _Number of References_, or _Interdisciplinarity_--- for a syllabus where $j$ indexes the grouping by course size (individual or two instructors) and $yr$ by academic year.
+- $Y_{j, t}$ is the outcome variable for team configuration $j$ in year $t$,
 
-- $\text{Gender}$ accounts for gender composition. For courses taught individually, it captures a fixed effect comparing male ("m") and female ("f") instructors. For courses co-taught by two instructors, it represents fixed effects for mixed-gender teams ("mf" or "fm") against male-only ("mm") and female-only ("ff") teams.
+- $\alpha_t$ is a fixed effect for the academic year,
 
-- $\text{Field}_{j,yr}$ and $\text{Country}_{j,yr}$  represent fixed effects for the syllabus' field of study and the institution's country that vary by team size and year.
+- $\text{Team}_{j, t}$ is a fixed effect for team configuration,
 
-- $X_i\beta_{j,yr}$ includes the effects for additional controls (e.g., number of documents, total authors) varying by team size and year.
+- $STEM_t$ is a fixed effect for STEM courses,
 
-- $\epsilon_{j,yr}$ represents the error term.
+- $\eta_t$ is a random intercept for each of the 69 academic fields,
 
- <!-- For interdisciplinarity, rather than using a raw average, which is complex to interpret, we employ a percentile rank measure -- each reading’s interdisciplinarity score is converted into a percentile relative to others by year. This approach allows us to compare how team composition relates to the relative interdisciplinarity of the syllabi in a given academic year. -->
+- $\text{Country}_{t}$ and $\text{Enroll}_t$ are categorical fixed effects for the institution's country and enrollment size, respectively, 
+
+- $\delta_{t}$ is a random intercept for each of the 2000 unique institutions,
+
+- $\epsilon_{j,t}$ is the residual error term.
