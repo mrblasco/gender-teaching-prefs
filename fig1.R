@@ -1,11 +1,14 @@
 # ---- Setup, include = FALSE ------------------------------
-
+library(yaml)
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr)
 library(ggplot2)
 library(ggrepel)
 library(patchwork)
 source("config.R")
+
+config <- yaml.load_file("config.yml")
+data_dir <- config$data_dir
 
 fig_dir <- file.path(getwd(), "output/figures/")
 dir.create(fig_dir, showWarnings = FALSE)
@@ -87,7 +90,7 @@ theme_set(theme_custom())
 
 # ---- Load data, cache = TRUE ----------------------------
 
-filename_data <- "../data/rds/final.rds"
+filename_data <- file.path(data_dir, "rds/final.rds") #"../data/rds/final.rds"
 
 ds <- readRDS(filename_data) %>%
   filter(nchar(team) < 10) %>%
