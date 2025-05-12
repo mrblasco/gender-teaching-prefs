@@ -5,16 +5,20 @@ library(tidyr)
 library(ggplot2)
 library(ggrepel)
 library(patchwork)
-
 source("config.R")
+
+fig_dir <- file.path(getwd(), "output/figures/")
+dir.create(fig_dir, showWarnings = FALSE)
 
 knitr::opts_chunk$set(
   echo = FALSE,
   fig.cap = "TODO: add caption here",
-  fig.path = file.path(getwd(), "figures/"),
+  fig.path = fig_dir,
   cache.path = "cache/",
-  dev = c("pdf", "png"),
-  dpi = 600
+  dev = c("png", "pdf"),
+  dpi = 600,
+  fig.width = 7, 
+  fig.height = 4
 )
 
 # Constants
@@ -59,7 +63,6 @@ theme_custom <- function() {
       plot.title      = element_text(face = "bold"),
       plot.subtitle   = element_text(face = "italic"),
       plot.caption    = element_blank(),
-      #panel.grid.minor = element_blank(),
       panel.spacing   = unit(1.5, "lines"),
       strip.text      = element_text(face = "bold"),
       axis.line       = element_line(color = "gray25"),
@@ -69,13 +72,18 @@ theme_custom <- function() {
     )
 }
 
-my_colors <- c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02")
+my_colors <- c("#1b9e77", "#d95f02",
+               "#7570b3", "#e7298a",
+               "#66a61e", "#e6ab02")
 
-scale_color_discrete <- function(...) scale_color_manual(values = my_colors, ...)
-scale_fill_discrete <- function(...) scale_fill_manual(values = my_colors, ...)
+scale_color_discrete <- function(...) {
+  scale_color_manual(values = my_colors, ...)
+}
+scale_fill_discrete <- function(...) {
+  scale_fill_manual(values = my_colors, ...)
+}
 
 theme_set(theme_custom())
-
 
 # ---- Load data, cache = TRUE ----------------------------
 
@@ -83,26 +91,61 @@ filename_data <- "../data/rds/final.rds"
 
 ds <- readRDS(filename_data) %>%
   filter(nchar(team) < 10) %>%
-  select(field, year, team = team_ordered, team_rand) %>% 
+  select(field, year, team = team_ordered, team_rand, country) %>% 
   pivot_longer(cols = c(team, team_rand),
                names_to = "formation",
                values_to = "composition") %>%
-  count(formation, composition, field, year) %>% 
+  count(formation, composition, field, year, country) %>% 
   mutate(
     team_gender = get_gender_composition(composition),
-    team_size = nchar(as.character(composition))
+    team_size = nchar(as.character(composition)),
   )
 
-format(object.size(ds), "MB")
+# ---- data-size ----------------------------
 
-# ----- head
+data_size <- format(object.size(ds), units = "MB")
+message("Size ", data_size)
 
-sapply(ds, function(.) head(unique(.)))
+head(ds) %>%
+  knitr::kable(
+    caption = "Top Rows of The Dataset"
+  )
 
+# ----- country ----------------------------
 
-# ----- fields
+ds %>%
+  filter(formation == "team") %>% 
+  mutate(
+    country_name = case_when(
+      country == "US" ~ "USA",
+      country == "GB" ~ "Great Britain",
+      country == "CA" ~ "Canada",
+      country == "IT" ~ "Italy",
+      country == "PL" ~ "Poland",
+      country == "NL" ~ "Netherlands",
+      country == "DE" ~ "Germany",
+      country == "IE" ~ "Ireland",
+      country == "PT" ~ "Portugal",
+      country == "SE" ~ "Sweden",
+      country == "ES" ~ "Spain",
+      country == "AT" ~ "Austria",
+      country == "DK" ~ "Denmark",
+      country == "FR" ~ "France",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  count(country_name, wt = n, sort = TRUE) %>%
+  mutate(prop = 100 * n / sum(n)) %>% 
+  select(Country = country_name, Syllabi = n, "Syllabi (%)" = prop) %>%
+  knitr::kable(
+    format.args = list(big.mark = " "), digits = 1,
+    caption = "Syllabi per Country"
+  )
 
-count(ds, field, wt = n) %>%
+# ----- fields ----------------------------
+ds %>%
+  filter(formation == "team") %>% 
+  count(field, wt = n) %>%
   mutate(index = row_number(),
          col = ifelse(index %% 2 == 1, "left", "right"),
          group = (index + 1) %/% 2) %>%
@@ -120,11 +163,13 @@ count(ds, field, wt = n) %>%
   ) %>%
   kableExtra::kable_styling()
 
+# ----- years ----------------------------
 
-# ----- years
-
-ds %>% 
-  mutate(year_bc = ifelse(year < 2000, "1999 or older", as.character(year))) %>% 
+ds %>%
+  filter(formation == "team") %>%
+  mutate(
+    year_bc = ifelse(year < 2000, "1999 or older", as.character(year))
+  ) %>% 
   count(year_bc, wt = n) %>%
   mutate(pc = round(100 * n / sum(n), 1)) %>%
   mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
@@ -134,21 +179,30 @@ ds %>%
   ) %>%
   kableExtra::kable_styling()
 
-# ----- contries, eval = FALSE
+# ----- composition ----------------------------
 
-# ... Need to put country back in the data
-ds %>% 
-  count(country, wt = n) %>%
-  mutate(pc = round(100 * n / sum(n), 1)) %>%
-  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+ds %>%
+  filter(formation == "team") %>%
+  count(composition, wt = n) %>%
+  arrange(desc(n)) %>%
+  mutate(pc = round(100 * n / sum(n), 1),
+         n = sprintf("%2.1f", n / 1e3)) %>% 
+  filter(nchar(composition) < 3) %>% 
+  mutate(composition = convert_gender_label(composition)) %>%
+  rename(
+    "N (thousands)" = n,
+    "Team composition" = composition,
+    "%" = pc,
+  ) %>%
   kableExtra::kbl(
-    caption = "Number of Syllabi per Country",
-    col.names = rep(c("Country", "N (thousands)", "%"), 1),
+    caption = "Teaching Team Configurations",
+    format.args = list(big.mark = " "),
   ) %>%
   kableExtra::kable_styling()
 
 
-# ----- evolution, fig.width = 7, fig.height = 3.5 ---------------
+# ----- evolution, fig.cap = cap ------------
+cap <- "Evolution of Courses by Teaching Configuration. (A) proportions of courses per year with one instructor by gender (B) proportions of courses per year with two instructors by gender configuration." # nolint
 
 ds_count <- ds %>%
   filter(formation == "team") %>%
@@ -202,7 +256,8 @@ p <- ds_count %>%
 
 p + facet_wrap(~ team_size, scales = "free")
 
-# ----- montecarlo, fig.width = 7, fig.height = 4 -------
+# ----- montecarlo, fig.cap = cap -------
+cap <- "Montecarlo simulations."
 
 ds_count_unordered <- ds %>%
   filter(team_size < 3) %>% 
@@ -212,8 +267,6 @@ ds_count_unordered <- ds %>%
       sapply(paste_sort)
   ) %>%
   count(formation, composition, year, wt = n)
-
-
 
 p <- ds_count_unordered %>%
   filter(year > year_cutoff) %>%
@@ -249,12 +302,58 @@ p <- ds_count_unordered %>%
     x = "Academic year", y  = "Courses per year (%)"
   )
 
-
 print(p)
 
-#' 
-#' 
+# ----- sim-by-cntry,  fig.cap = cap -------
 
+cap <- "Montecarlo simulations by country."
+
+ds %>%
+  filter(team_size < 3, year > year_cutoff) %>%
+  mutate(
+    composition = composition %>%
+      strsplit(split = "") %>%
+      sapply(paste_sort)
+  ) %>%
+  mutate(
+    region = case_when(
+      country %in% c("DK", "DE", "AT", "BE", 
+                     "FR", "IT", "NL", "ES", "PT",
+                     "PL", "ES", "IE") ~ "European Union",
+      country == "CA" ~ "Canada",
+      country == "US" ~ "United States",
+      country == "GB" ~ "Great Britain",
+      TRUE ~ "Other",
+    )
+  ) %>% 
+  count(region, formation, composition, year, wt = n) %>%
+  mutate(pc = (n + 1) / (sum(n) + 2), .by = c(year, formation, region)) %>%
+  filter(composition == "fm") %>%
+  mutate(
+    color = case_when(
+      formation == "team" ~ "Actual",
+      formation == "team_rand" ~ "Simulated (gender-neutral)",
+    ),
+  ) %>%
+  ggplot(aes(year, pc, color = color, linetype = color)) +
+  geom_line() +
+  ggrepel::geom_text_repel(
+    aes(
+      label = ifelse(year == 2019, sprintf("%2.0f%%", pc * 100), "")
+    ),
+    size = 3,
+    segment.colour = "gray25",
+    show.legend = FALSE
+  ) +
+  coord_cartesian(clip = "off", xlim = c(1999, 2021)) +
+  scale_y_continuous(labels = function(.) sprintf("%2.0f%%", 100 * .)) +
+  scale_color_discrete() +
+  scale_fill_discrete() +
+  facet_wrap(~region, scales = "free") + 
+  labs(
+    x = "Academic year", 
+    y  = "Mixed gender (MF/FM) courses\nper year (%)"
+  )
 
 # ----- montecarlo-order, fig.width = 5, fig.height = 3.5 -----
 
@@ -305,9 +404,6 @@ p <- ds %>%
   )
 
 print(p)
-
-#' 
-#' 
 
 
 # ----- montecarlo-by-field, fig.width = 7, fig.height = 9 ------
@@ -380,91 +476,3 @@ p2 <- p %+% filter(ds_filtered, !grepl(regex, isced))
 
 (p1 + p2) + 
   plot_layout(guides = "collect", axis_titles = "collect")
-
-#' 
-#' 
-
-
-# ---- Interdsciplinarity Data, cache = TRUE ----------------------------
-
-filename_data <- "../data/rds/final.rds"
-
-ds_intdisc <- readRDS(filename_data) %>%
-  filter(nchar(team) < 3, year > year_cutoff) %>%
-  mutate(intdisc_pr = percent_rank(mean_intdisc),
-         .by = year)
-
-format(object.size(ds_intdisc), "MB")
-
-# ----- Interdisciplinarity Regression, cache = TRUE -----------------
-
-fit_ols <- function(...) {
-  message("Fitting OLS model...")
-  tryCatch(
-    broom::tidy(lm(...), conf.int = TRUE),
-    error = function(e) message("Error: ", e$message),
-    warning = function(w) message("Warning: ", w$message)
-  )
-}
-
-fit_ols_intdisc <- ds_intdisc %>% 
-  mutate(team_size = nchar(team),
-         gender = convert_gender_label(team)) %>%
-  reframe(
-    fit_ols(intdisc_pr ~ country + field + gender),
-    .by = c(year, team_size)
-  )
-
-# ----- Interdisciplinarity, fig.height = 3.5, fig.width = 7 -----------------
-
-fit_ols_intdisc_labeled <- fit_ols_intdisc %>%
-  filter(grepl("gender", term)) %>%
-  mutate(team_size_label = case_when(
-    team_size == 1 ~ "Single female instructor (F)",
-    team_size == 2 ~ "Two female instructors (FF)",
-    TRUE ~ paste0("Team size: ", team_size)
-  )) %>%
-  mutate(gender_label = gsub("^gender", "", term))
-
-
-p <- fit_ols_intdisc_labeled %>% 
-  ggplot(
-    aes(
-      x = year, y = estimate, ymin = conf.low, ymax = conf.high,
-      fill = gender_label, color = gender_label, pch = gender_label
-    )
-  ) +
-  facet_wrap(~ team_size, nrow = 1) +
-  scale_color_discrete() + 
-  scale_fill_discrete() +
-  geom_hline(yintercept = 0, color = "brown", linetype = 2) +
-  geom_ribbon(alpha = 0.2, color = NA, show.legend = FALSE) +
-  geom_line() +
-  geom_point(size = 2.5) +
-  scale_y_continuous(labels = function(.) sprintf("%2.0f", 100 * .)) +
-  labs(
-    x = "Academic year",
-    y = "Effect of Gender Composition on\nInterdisciplinarity Score (percentage point)",
-    title = "Interdisciplinarity",
-    subtitle = "Regression coefficients and 95% confidence intervals",
-  ) +
-  geom_text(
-    data = . %>% distinct(team_size),
-    aes(
-      x = -Inf, y = -Inf,
-      label = case_when(
-        team_size == 1 ~ "Zero = Single female instructor (F)",
-        team_size == 2 ~ "Zero = Two female instructors (FF)"
-      )
-    ),
-    inherit.aes = FALSE,
-    hjust = -0.05, vjust = -1,
-    color = "brown",
-    size = 3.8,
-    fontface = "italic"
-  )  + 
-  theme(
-    legend.position = "right"
-  )
-
-print(p)
