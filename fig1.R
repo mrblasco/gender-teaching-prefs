@@ -9,8 +9,8 @@ source("config.R")
 
 config <- yaml.load_file("config.yml")
 data_dir <- config$data_dir
+fig_dir <- file.path(getwd(), config$fig_dir) # full path
 
-fig_dir <- file.path(getwd(), "output/figures/")
 dir.create(fig_dir, showWarnings = FALSE)
 
 knitr::opts_chunk$set(
@@ -110,9 +110,13 @@ data_size <- format(object.size(ds), units = "MB")
 message("Size ", data_size)
 
 head(ds) %>%
-  knitr::kable(
+  kableExtra::kbl(
     caption = "Top Rows of The Dataset"
-  )
+  ) %>% 
+  kableExtra::kable_styling()
+
+#' ----
+
 
 # ----- country ----------------------------
 
@@ -143,7 +147,10 @@ ds %>%
   knitr::kable(
     format.args = list(big.mark = " "), digits = 1,
     caption = "Syllabi per Country"
-  )
+  ) %>% 
+  kableExtra::kable_styling()
+
+#' ----
 
 # ----- fields ----------------------------
 ds %>%

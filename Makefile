@@ -2,7 +2,7 @@
 OUTPUT_DIR = output
 REPORT_OUT_DIR = $(OUTPUT_DIR)/report
 FIGURE_SCRIPTS = $(wildcard fig[0-9]*.R)  # List all your figure scripts here
-FIGURE_LOGS = $(FIGURE_SCRIPTS:%.R=figures/%.pdf)  # Corresponding log files
+FIGURE_LOGS = $(FIGURE_SCRIPTS:%.R=$(OUTPUT_DIR)/%.pdf)  # Corresponding log files
 REPORT_SRC = _main.Rmd
 REPORT_SECTIONS = $(wildcard [0-9]*.Rmd)
 
@@ -22,7 +22,7 @@ all: $(REPORT_PDF)
 $(REPORT_OUT_DIR):
 	mkdir -p $@
 
-$(FIGURE_LOGS): figures/%.pdf: %.R
+$(FIGURE_LOGS): output/%.pdf: %.R
 	Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_yaml = "_output_pdf.yml")'
 
 $(REPORT_PDF): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_OUT_DIR)

@@ -1,39 +1,65 @@
+```{css, echo = FALSE}
+.caption {
+  text-align: justify;
+  font-size: 0.8em; /* Adjust size as needed */
+  color: #555;      /* Optional: make it slightly gray */
+}
+```
+
+```{r result-setup, include = FALSE}
+library(yaml)
+config <- yaml.load_file("config.yml")
+fig_dir <- file.path(getwd(), config$fig_dir)
+
+knitr::opts_chunk$set(echo = FALSE)
+
+add_figure <- function(path) {
+  if (file.exists(path)) {
+    return(knitr::include_graphics(path, auto_pdf = TRUE, rel_path = FALSE))
+  }
+  warning("File not found: ", path)
+  plot(1)
+}
+```
 
 # Results
 
-```{r team-trends, fig.cap = "Trends in course gender composition from 2000 to 2019 reveal a steady increase in women's participation (both in solo-taught and two-instructor courses), while the proportion of mixed-gender teams has remained relatively stable over time. (A) Percentage of solo-taught courses by instructor gender over time. (B) Percentage of two-instructor courses by gender composition over time. N = 5.1 million courses. Shaded area represent 95\\% confidence interval of the proportion per academic year.", out.width = "100%", fig.align = "center", echo = FALSE}
+```{r team-trends, fig.cap = cap, out.width = "100%", fig.align = "center", echo = FALSE}
+cap <- "**Evolution of Teaching Teams by Gender Composition and Size.** Trends in course gender composition from 2000 to 2019 reveal a steady increase in women's participation (both in solo-taught and two-instructor courses), while the proportion of mixed-gender teams has remained relatively stable over time. (A) Percentage of solo-taught courses by instructor gender over time. (B) Percentage of two-instructor courses by gender composition over time. N = 5.1 million courses. Shaded area represent 95\\% confidence interval of the proportion per academic year." # nolint
 
-knitr::include_graphics("figures/evolution-1.png", auto_pdf = TRUE)
+add_figure(file.path(fig_dir, "evolution-1.png"))
 ```
 
-<!-- As illustrated in Figure \@ref(fig:team-trends), the share of classes taught by a single female instructor steadly increased between 2000 and 2019, going from 25% to 36% courses per year (a 44% increase). Similarly, the share of courses co-taught by two female instructors rose by 33% over the same period, going from 3% to 4%.  In contrast, the share of mixed-gender teams remained largely unchanged at 3% per year. This overall trend aligns with the increase in women holding academic positions worldwide.[^women-academia] However, the lack of growth in mixed-gender teams suggests the growing presence of women in academia has not translated into increased mixed-gender collaborations. Notice that, although co-teaching teams make up only 13% of courses in 2019, this still amounts to over 660,000 courses --- underscoring their significance in academic teaching. -->
 
-
-
-Figure \@ref(fig:team-trends) presents trends in the gender composition of instructors in university courses from 2000 to 2019, grouped by whether a course had one or two instructors. Panel A shows courses with one instructor, where male-only courses (orange triangles) consistently dominated but declined from around 60% in 2000 to 46% in 2019. Over the same period, female-only courses (green circles) increased from roughly 25% to 36%. Panel B shows courses with two instructors, where male-only courses also decreased—from about 8% in the early 2000s to 6% in 2020, while female-only (green cricles) and mixed-gender (purple squares) instructor teams remained relatively stable, each accounting for approximately 3–4% and 3%, respectively, in recent years. Together, these results reveal a gradual but consistent shift toward greater gender diversity in course instruction over time, particularly a decline in male-only instruction and a rise in female-only instruction, especially in single-instructor courses.[^women-academia] Notably, mixed-gender teaching teams (3%) are consistently less common than same-gender teams (10%).
+Figure \@ref(fig:team-trends) presents trends in the instructors' gender composition and team size in university courses from 2000 to 2019 for courses with one or two instructors. Panel A shows courses with one instructor, where male-only courses (orange triangles) consistently dominated but declined from around 60% in 2000 to 46% in 2019. Over the same period, female-only courses (green circles) increased from roughly 25% to 36%. Panel B shows courses with two instructors, where male-only courses also decreased—from about 8% in the early 2000s to 6% in 2020, while female-only (green cricles) and mixed-gender (purple squares) instructor teams remained relatively stable, each accounting for approximately 4% and 3%, respectively, in recent years. Together, these results reveal a gradual but consistent shift toward greater gender diversity in course instruction over time, particularly a decline in male-only instruction and a rise in female-only instruction, especially in single-instructor courses.[^women-academia] Notably, mixed-gender teaching teams (3%) are consistently less common than same-gender teams (10%).
 
 [^women-academia]: This overall trend aligns with the increase in women holding academic positions worldwide. In 2000, women constituted approximately 35% of academic staff worldwide. By 2022, this figure had risen to about 44%, according to data from the World Bank; The data are available at: https://data.worldbank.org/indicator/SE.TER.TCHR.FE.ZS
 
-```{r montecarlo, fig.cap = "Comparison of gender composition between actual courses and courses simulated under gender neutrality with Monte Carlo, while keeping constant the institutional constraints (i.e., number of teams by size, institution, academic year, and 69 academic fields). Simulated mixed-gender teams consistently exceed observed proportions, highlighting persistent barriers to forming gender-diverse teaching teams.", out.width = "100%", fig.align = "center", echo = FALSE}
+```{r montecarlo, fig.cap = cap, out.width = "100%", fig.align = "center", echo = FALSE}
+cap <- "Comparison of gender composition between actual courses and courses simulated with Monte Carlo. Simulations ensure gender neutrality while keeping constant the institutional constraints (i.e., number of teams by size, institution, academic year, and 69 academic fields). Simulated mixed-gender teams consistently exceed observed proportions, highlighting persistent barriers to forming gender-diverse teaching teams." # nolint
 
-knitr::include_graphics("figures/montecarlo-1.png", auto_pdf = TRUE)
+add_figure(file.path(fig_dir, "montecarlo-1.png"))
 ```
 
-<!-- To assess whether gender preferences influence co-teaching teams, Figure \@ref(fig:montecarlo) compares the actual gender composition of courses with a distribution generated by a Monte Carlo simulation. This simulation assumes no gender preferences in team formation, while it preserves institutional constrants by holding constant the number of teams by size, institution, year, and across 69 academic fields. -->
+To assess possible gender-based barriers to co-teaching teams, Figure \@ref(fig:montecarlo) compares the actual percentages of different instructor gender compositions of 2000-2019 university courses (solid green lines) with simulated courses (dashed orange lines) generated from a Monte Carlo model. This model randomly shuffles instructors while preserving the overall distribution of course loads per year by institution and academic field, but ignoring gender-based preferences or constraints (see Section \@ref(sec:methods)).
 
-To assess possible drivers of co-teaching teams, Figure \@ref(fig:montecarlo) compares the actual percentages of different instructor gender compositions of 2000-2019 university courses (solid green lines) with simulated courses (dashed orange lines) generated from a Monte Carlo model. This model randomly shuffles instructors while preserving the overall distribution of course loads per year by institution and academic field, but ignoring gender-based preferences or constraints (see Section \@ref(sec:methods)).
-
-The results reveal that actual data systematically deviate from simulated expectations: female-female (FF) and male-male (MM) courses occur more freequently in actual data than in simulations by 3-4 percentage points in recent years. By contrast, mixed-gender collaborations (MF/FM) are consistently underrepresented in the actual data (3%) compared to simulations (6%). These findings suggest that gender composition is shaped by social or institutional dynamics beyond chance, including possible gender homophily, mentoring networks, or departmental assignment practices that reinforce same-gender pairings, especially among women.
+The results reveal that actual data systematically deviate from simulated expectations: female-female (FF) and male-male (MM) courses occur more freequently in actual data than in simulations by 66% and 20%, respectively, in 2019. By contrast, mixed-gender collaborations (MF/FM) are consistently underrepresented in the actual data (3%) compared to simulations (6%), representing a 50% difference. These findings suggest that gender composition is shaped by social or institutional dynamics beyond chance, including possible gender homophily, mentoring networks, or departmental assignment practices that reinforce same-gender pairings, especially among women.
 
 ```{r montecarlo-by-field, fig.cap = cap, out.width = "100%", fig.align = "center"}
 cap <- "This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender (MF/FM) courses by academic field. The shaded bar indicates 95% confidence level of the proportion." # nolint
 
-knitr::include_graphics("figures/montecarlo-by-field-1.png")
+add_figure(file.path(fig_dir, "montecarlo-by-field-1.png"))
 ```
 
-Figure \@ref(fig:montecarlo-by-field) disaggregates the comparison between actual and simulated mixed-gender (MF/FM) courses by academic field. Nearly all fields show clear underrepresentation of mixed-gender teams (relative to expectations) by two to four times. For instance, in Medicine (Health and Welfare), the actual share of mixed-gender collaborations is 4.8% versus an expected 9.1%, indicating a large imbalance. Similar gaps are evident in Law (3.8% actual vs 6.4% simulated) and Linguistic (4.3% vs 6.7%), underscoring the pervasiveness of the barriers to form mixed-gender teams across different academic fields. 
+Figure \@ref(fig:montecarlo-by-field) disaggregates the comparison between actual and simulated mixed-gender (MF/FM) courses by academic field. Nearly all fields show clear underrepresentation of mixed-gender teams (relative to expectations) by two to four times. For instance, in Medicine (Health and Welfare), the actual share of mixed-gender collaborations is 4.8% versus an expected 9.1%, indicating a large imbalance. Similar gaps are evident in Law (3.8% actual vs 6.4% simulated) and Linguistic (4.3% vs 6.7%), underscoring the pervasiveness of the barriers to form mixed-gender teams across different academic fields. Remarkably, we see no differences in these patterns between male- vs female-dominated fields (e.g., Engineering or Accounting vs Nursing or Chemistry), suggesting that the underrepresentation of mixed-gender teams is a pervasive structural feature rather than one driven by field-specific gender balances.
 
-Remarkably, we see no differences in these patterns between male- vs female-dominated fields (e.g., Engineering or Accounting vs Nursing or Chemistry), suggesting that the underrepresentation of mixed-gender teams is a pervasive structural feature rather than one driven by field-specific gender balances.
+```{r montecarlo-by-cntry, fig.cap = cap}
+cap <- "TBA"
+
+add_figure(file.path(fig_dir, "sim-by-cntry-1.png"))
+```
+
+Figure \@ref(fig:montecarlo-by-cntry) illustrates that the proportion of mixed-gender teams in the simulations consistently exceeds the observed proportions across various geographic regions, despite notable variation in the magnitude of these differences. For example, mixed-gender teams are relatively rare in Great Britain (1%) compared to Canada (5%). However, in the simulations, the proportion of mixed-gender teams in both countries increases substantially—to XX% and XX%, respectively. The largest discrepancy between simulated and observed proportions is found in EU countries (from 5% to 12%). Overall, these patterns underscore the robustness of the findings across diverse geographic contexts.
 
 ## The Impact on Course Materials
 
@@ -41,8 +67,10 @@ To assess the impact of teaching team size and gender composition on course mate
 
 ### Interdisciplinarity
 
-```{r interdisciplinarity, fig.cap = "The figure illustrates the differences in interdisciplinarity between female-only (the baseline, set to zero), male-only, and mixed-gender courses. Although female-only courses exhibit slightly less interdisciplinarity than male-only courses (both individually and in teams), mixed-gender courses exhibt the highest levels of interdisciplinarity. These differences are obtained from separate linear regressions for each year and team size, controlling for country and academic field. Interdisciplinarity is measured in percentile ranks per year of the interdisciplinary score, with higher values indicating greater interdisciplinarity scores relative to other courses in the same cohort.", out.width = "100%", fig.align = "center"}
-knitr::include_graphics("figures/interdisciplinarity.pdf")
+```{r interdisciplinarity, fig.cap = cap, out.width = "100%", fig.align = "center"}
+cap <- "The figure illustrates the differences in interdisciplinarity between female-only (the baseline, set to zero), male-only, and mixed-gender courses. Although female-only courses exhibit slightly less interdisciplinarity than male-only courses (both individually and in teams), mixed-gender courses exhibt the highest levels of interdisciplinarity. These differences are obtained from separate linear regressions for each year and team size, controlling for country and academic field. Interdisciplinarity is measured in percentile ranks per year of the interdisciplinary score, with higher values indicating greater interdisciplinarity scores relative to other courses in the same cohort." # nolint
+
+add_figure(file.path(fig_dir, "plot-interdisciplinarity-1.png"))
 ```
 
 Figure \@ref(fig:interdisciplinarity) shows that, while female-only courses exhibit slightly less interdisciplinarity than male-only courses (individually and in teams), mixed-gender courses exhibit the highest levels of interdisciplinarity. Between 2000 and 2019, mixed-gender courses scored approximately 5% higher than male-only or female-only courses with similar characteristics. These findings suggest that, although minor gender-based differences in interdisciplinarity exist between female-only and male-only courses, gender diversity appears to have the most significant impact on fostering interdisciplinarity.
@@ -51,8 +79,10 @@ Disaggregating the analysis by academic field, with separate regressions by fiel
 
 ### Citing Women Authors
 
-```{r female-authors, fig.cap = "The figure illustrates the differences in the percentage of female authors cited in course readings between female-only (the baseline, set to zero), male-only, and mixed-gender courses. Male-only courses cite approximately 4% fewer female authors than female-only courses. While mixed-gender courses mitigate this effect to some extent, they do not reduced it by half, as one might expect if reading selections were equally influenced by both male and female instructors in a two-person team. This suggests that male instructors preferences continue to influence reading selections, even in mixed-gender courses. However, mixed-gender courses show a rising percentage of female authors in more recent years. These differences are represented as regression coefficients from separate linear regressions, controlling for total number of authors, academic year, team size, country, and academic field. Shaded areas represent 95% confidence intervals. The proportion of cited women is measured by adding two pseudo-observations to both male and female author counts, ensuring more conservative results.", out.width = "100%", fig.align = "center"}
-knitr::include_graphics("figures/female_authors.pdf")
+```{r female-authors, fig.cap = cap, out.width = "100%", fig.align = "center"}
+cap <- "The figure illustrates the differences in the percentage of female authors cited in course readings between female-only (the baseline, set to zero), male-only, and mixed-gender courses. Male-only courses cite approximately 4% fewer female authors than female-only courses. While mixed-gender courses mitigate this effect to some extent, they do not reduced it by half, as one might expect if reading selections were equally influenced by both male and female instructors in a two-person team. This suggests that male instructors preferences continue to influence reading selections, even in mixed-gender courses. However, mixed-gender courses show a rising percentage of female authors in more recent years. These differences are represented as regression coefficients from separate linear regressions, controlling for total number of authors, academic year, team size, country, and academic field. Shaded areas represent 95% confidence intervals. The proportion of cited women is measured by adding two pseudo-observations to both male and female author counts, ensuring more conservative results."
+
+add_figure(file.path(fig_dir, "plot-female-ratio-1.pdf"))
 ```
 
 Figure \@ref(fig:female-authors) highlights significant and consistent gender effects on the percentage of female authors over total authors cited in course readings while controlling for academic field and country in the regression.[^female-authors] Courses taught by a single male instructor consistently cite about 3% fewer female authors than those taught by a female instructor in the same cohort. However, the gap decreased by 25% between 2001 and 2019, going from 4% to 3%. Mixed-gender courses do not offset this disparity, as they cite fewer women by a similar margin, showing little difference from male-only classes taught by two instructors.  However, since 2013, a gap has emerged between mixed-gender and male-only courses, indicating a positive trend in gender representation driven by mixed-gender teams.
@@ -61,8 +91,10 @@ Figure \@ref(fig:female-authors) highlights significant and consistent gender ef
 
 ## Age of Readings (“novelty”)
 
-```{r age-readings, fig.cap = "The figure illustrates the evoloving differences in publication age of the readings selected in the courses. While male-only teams tend to select older readings than female-only ones, mixed-gender teams do not show a consistent pattern.", out.width = "100%", fig.align = "center"}
-knitr::include_graphics("figures/age_readings.pdf")
+```{r age-readings, fig.cap = cap, out.width = "100%", fig.align = "center"}
+cap <- "The figure illustrates the evoloving differences in publication age of the readings selected in the courses. While male-only teams tend to select older readings than female-only ones, mixed-gender teams do not show a consistent pattern." # nolint
+
+add_figure(file.path(fig_dir, "plot-age-of-references-1.pdf"))
 ```
 
 Figure \@ref(fig:age-readings) illustrates significant gender differences in the publication age of the selected readings.[^age-footnote] Courses taught by a single male instructor between 2000 and 2019 tended to choose readings about 2% older than those taught by a single female instructor, indicating significant gender-based differences. Similarly, during the same period, courses taught by two male instructors tend to list older readings than female-only ones. No consistent differences emerge between same-gender and mixed-gender courses. These findings broadly support that as more women hold academic positions, the materials taught to students tend to be more current. At the same time, gender diversity appears to have little impact on the age of readings.
@@ -71,8 +103,10 @@ Figure \@ref(fig:age-readings) illustrates significant gender differences in the
 
 ## Number of readings (“breadth”)
 
-```{r uniq-docs, fig.cap = "The figure illustrates the evoloving differences in number of readings across different team types over time. It shows that while gender-based differences vary in magnitude, mixed-gender teaching teams consistently outperform same-gender teams in the number of readings, suggesting a key role of gender diversity in delivering more comprehensive courses.", out.width = "100%", fig.align = "center"}
-knitr::include_graphics("figures/lg_uniq_docs.pdf")
+```{r uniq-docs, fig.cap = cap, out.width = "100%", fig.align = "center"}
+cap <- "The figure illustrates the evoloving differences in number of readings across different team types over time. It shows that while gender-based differences vary in magnitude, mixed-gender teaching teams consistently outperform same-gender teams in the number of readings, suggesting a key role of gender diversity in delivering more comprehensive courses." # nolint 
+
+add_figure(file.path(fig_dir, "lg_uniq_docs.pdf"))
 ```
 
 Figure \@ref(fig:uniq-docs) illustrates the evolving differences in the number of readings across different team types, serving as a direct measure of a course's breadth. Courses taught by a single male instructor generally include more readings than those led by a single female instructor. However, the difference is greater between 2005 and 2015 and decreased to disappear in recent years. Mixed-gender courses exhibit significantly more readings than same-gender courses, though this difference varies over time, ranging from 20-30% between 2005 and 2015 to around 10% in recent years. In contrast, courses co-taught by two male instructors tend to list approximately 5% more readings than all-female ones throughout the period. While these findings highlight fluctuating gender-based differences in course breadth, they also indicate strongly that mixed-gender teaching teams are crucial in delivering more comprehensive courses or those with broader curricula. 

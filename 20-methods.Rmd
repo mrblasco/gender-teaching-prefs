@@ -6,8 +6,6 @@ We examined a corpus of over six million documents compiled by Open Syllabus (Ne
 
 The resulting dataset comprised 5.4 million syllabi from approximately 4,000 higher education institutions across fifteen countries from 1990 to 2019. These syllabi were classified into 69 top-level fields derived from the U.S. Department of Education's CIP code classification.^[https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55] About 2.9 million syllabi (53% of the total) listed readings matched with bibliographic sources, providing additional metadata about  authorship information, journal, and publication year. The institution was matched to a list of more than 22,000 entities from the Research Organisation Registry, providing further metadata including the instutition's country and enrollment figures --- the institutions in our sample account for over 35 million enrolled students today.
 
-<!-- ### Teaching teams {-} -->
-
 Each syllabus lists one or more instructors, with 76% of the syllabi listing a single instructor, 16% listing two, 4% listing three, and another 4% listing more than three instructors. Instructor gender was determined automatically based on names, resulting in 52% male, 37% female, and 11% unknown categories. After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors, which aligns closely with the 45% of female academic staff reported in OECD countries [@oecd2022]. The same inference method was used to determine the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with only 12% unknown gender.
 
 ## Outcome variables {-}

@@ -1,4 +1,5 @@
 # ---- setup, include = FALSE
+library(yaml)
 library(patchwork)
 library(ggplot2)
 library(dplyr)
@@ -12,11 +13,17 @@ theme_update(
   legend.position = "none",
 )
 
+config <- yaml.load_file("config.yml")
+data_dir <- config$data_dir
+fig_dir <- file.path(getwd(), config$fig_dir) # full path
+
+
+
 knitr::opts_chunk$set(
-  echo = TRUE,
+  echo = FALSE,
   messages = FALSE,
   fig.cap = "TODO: add caption here",
-  fig.path = file.path(getwd(), "output/figures/"),
+  fig.path = fig_dir,
   cache.path = "cache/fig2/",
   dev = c("png", "pdf"),
   dpi = 600
@@ -55,7 +62,7 @@ fit_model <- function(formula) {
 }
 
 year_cutoff <- 1999
-filename_data <- "../data/rds/final.rds"
+filename_data <- file.path(data_dir, "rds/final.rds")
 
 # ---- data, include = FALSE, cache = TRUE
 
@@ -124,6 +131,7 @@ system.time(
 
 system.time(
   fit_by_year <- ds %>%
+    mutate(team = relevel(factor(team), ref = "m")) %>%
     arrange(year) %>%
     reframe(
       bind_rows(
@@ -154,21 +162,30 @@ system.time(
     )
 )
 
+
+# ----- plot-utils ----------------------------
+
+rename_term <- function(term) {
+  out <- dplyr::case_when(
+    term == "teamf" ~ "Female alone (F)",
+    term == "teamm" ~ "Male alone (M)",
+    term == "teamfm" ~ "Mixed Gender (MF/FM)",
+    term == "teammm" ~ "Male-Male (MM)",
+    term == "teamff" ~ "Female-Female (FF)",
+    TRUE ~ "Other"
+  )
+  factor(out, c("Male alone (M)",
+                "Female alone (F)", 
+                "Male-Male (MM)",
+                "Mixed Gender (MF/FM)",
+                "Female-Female (FF)"))
+}
+
 # ----- plot-baseline, fig.width = 7, fig.height = 3, eval = FALSE
 
 p <- fit %>% 
   filter(grepl("team", term)) %>%
-  mutate(
-    column = case_when(
-      term == "teamm" ~ "Male alone (M)",
-      term == "teamfm" ~ "Mixed Gender (MF/FM)",
-      term == "teammm" ~ "Male-Male (MM)",
-      term == "teamff" ~ "Female-Female (FF)",
-      TRUE ~ "Other"
-    ) %>% 
-      factor(c("Male alone (M)", "Male-Male (MM)",
-               "Mixed Gender (MF/FM)", "Female-Female (FF)"))
-  ) %>%
+  mutate(column = rename_term(term)) %>%
   ggplot() +
   aes(
     y = column,
@@ -200,17 +217,7 @@ cap <- "Estimated differences in the novelty percentile (younger = more novel) o
 p <- fit_by_year %>% 
   filter(grepl("team", term), 
          depvar == "age_of_readings") %>%
-  mutate(
-    column = case_when(
-      term == "teamm" ~ "Male alone (M)",
-      term == "teamfm" ~ "Mixed Gender (MF/FM)",
-      term == "teammm" ~ "Male-Male (MM)",
-      term == "teamff" ~ "Female-Female (FF)",
-      TRUE ~ "Other"
-    ) %>% 
-      factor(c("Male alone (M)", "Male-Male (MM)",
-               "Mixed Gender (MF/FM)", "Female-Female (FF)"))
-  ) %>%
+  mutate(column = rename_term(term)) %>%
   ggplot() +
   aes(
     x = year,
@@ -232,7 +239,8 @@ p <- fit_by_year %>%
     y = "Difference in Age of Readings\n(Percentile Rank)"
   )
 
-(p + facet_grid(~column))
+p_age_readings <- p + facet_grid(~column)
+print(p_age_readings)
 
 # ---- plot-female-ratio, fig.cap = cap, fig.width = 7, fig.height = 3
 
@@ -241,17 +249,7 @@ cap <- "Estimated differences in the share of cited female authors by team gende
 p <- fit_by_year %>% 
   filter(grepl("team", term), 
          depvar == "female_ratio") %>%
-  mutate(
-    column = case_when(
-      term == "teamm" ~ "Male alone (M)",
-      term == "teamfm" ~ "Mixed Gender (MF/FM)",
-      term == "teammm" ~ "Male-Male (MM)",
-      term == "teamff" ~ "Female-Female (FF)",
-      TRUE ~ "Other"
-    ) %>% 
-      factor(c("Male alone (M)", "Male-Male (MM)",
-               "Mixed Gender (MF/FM)", "Female-Female (FF)"))
-  ) %>%
+  mutate(column = rename_term(term)) %>%
   ggplot() +
   aes(
     x = year,
@@ -274,25 +272,15 @@ p <- fit_by_year %>%
   )
 
 
-p + facet_grid(~column)
-
+p_female_ratio <- p + facet_grid(~column)
+print(p_female_ratio)
 
 # ---- plot-interdisciplinarity, fig.width = 7, fig.height = 3
 
 p <- fit_by_year %>% 
   filter(grepl("team", term), 
          depvar == "intdisc") %>%
-  mutate(
-    column = case_when(
-      term == "teamm" ~ "Male alone (M)",
-      term == "teamfm" ~ "Mixed Gender (MF/FM)",
-      term == "teammm" ~ "Male-Male (MM)",
-      term == "teamff" ~ "Female-Female (FF)",
-      TRUE ~ "Other"
-    ) %>% 
-      factor(c("Male alone (M)", "Male-Male (MM)",
-               "Mixed Gender (MF/FM)", "Female-Female (FF)"))
-  ) %>%
+  mutate(column = rename_term(term)) %>%
   ggplot() +
   aes(
     x = year,
@@ -314,8 +302,14 @@ p <- fit_by_year %>%
     y = "Difference in Interdisciplinarity\n(%)"
   )
 
-p + facet_grid(~column)
+p_interdisc <- p + facet_grid(~column)
+print(p_interdisc)
 
+# ---- full-panel ----- 
+
+require(patchwork)
+
+(p_age_readings / p_female_ratio) / p_interdisc + plot_annotation(tag_levels = "A")
 
 # ---- mixed-model-by-field, cache = TRUE
 
@@ -345,6 +339,7 @@ system.time(
 p <- filter(out, grepl("team", term)) %>%
   mutate(
     column = case_when(
+      term == "teamf" ~ "Female alone (F)",
       term == "teamm" ~ "Male alone (M)",
       term == "teamfm" ~ "Mixed-gender (FM/MF)",
       term == "teammm" ~ "Male-Male (MM)",
@@ -376,3 +371,5 @@ p <- filter(out, grepl("team", term)) %>%
 p +
   facet_grid(isced ~ column, scales = "free") + 
   theme(legend.position = "none")
+
+

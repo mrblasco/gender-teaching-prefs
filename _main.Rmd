@@ -16,7 +16,7 @@ linestretch: 1
 colorlinks: true
 link-citations: true
 bibliography: [bibliography/refs.bib]
-csl: assets/pnas.csl
+csl: [https://www.zotero.org/styles/pnas]
 geometry: margin=1in
 lang: en-UK
 mainfont: Arial
