@@ -1,6 +1,6 @@
 ---
 title: |
-  How Gender Preferences Shape Teaching?
+  Gender in Teaching:
   Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections
 
 author:

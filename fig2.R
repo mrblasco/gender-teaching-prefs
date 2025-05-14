@@ -7,17 +7,9 @@ library(lme4)
 library(broom)
 library(broom.mixed)
 
-theme_set(theme_minimal())
-theme_update(
-  strip.text.y = element_blank(),
-  legend.position = "none",
-)
-
 config <- yaml.load_file("config.yml")
 data_dir <- config$data_dir
 fig_dir <- file.path(getwd(), config$fig_dir) # full path
-
-
 
 knitr::opts_chunk$set(
   echo = FALSE,
@@ -28,6 +20,16 @@ knitr::opts_chunk$set(
   dev = c("png", "pdf"),
   dpi = 600
 )
+
+# ----- theme --------------------------
+
+theme_set(theme_minimal())
+
+theme_update(
+  strip.text.y = element_blank(),
+  legend.position = "none",
+)
+
 
 # ----- functions -----------------------
 
@@ -61,10 +63,7 @@ fit_model <- function(formula) {
   return(coeffs)
 }
 
-year_cutoff <- 1999
-filename_data <- file.path(data_dir, "rds/final.rds")
 
-# ---- data, include = FALSE, cache = TRUE
 
 stem_fields <- c(
   "Astronomy", "Atmospheric Sciences",
@@ -83,15 +82,29 @@ annotate_stem <- function(fields) {
   )
 }
 
+
+year_cutoff <- 1999
+
+# ---- data, include = FALSE, cache = TRUE
+
+filename_data <- file.path(data_dir, "rds/final.rds")
+
 ds <- readRDS(filename_data) %>%
   filter(nchar(team) < 3, year > 1999) %>% 
   mutate(
     novelty_pctl = percent_rank(year - novelty),
     intdisc_pr = percent_rank(mean_intdisc),
     total_authors = female_authors + male_authors,
-    female_ratio = (female_authors + 2) / (male_authors + female_authors + 4),
+    female_ratio = (female_authors + 1) / (male_authors + female_authors + 2),
     stem = annotate_stem(field),
     .by = year
+  )
+
+# ----- data-head -------------------------------
+
+head(ds) %>% 
+  knitr::kable(
+    caption = "xxx"
   )
 
 # ---- model, cache = TRUE, eval = FALSE
