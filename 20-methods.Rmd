@@ -2,35 +2,35 @@
 
 ## Data
 
-We examined a corpus of over six million documents compiled by Open Syllabus (New York, US). This dataset was created through web extractions that identified syllabi from university websites, with a median confidence level of 99.8%. A tagging algorithm extracted key course details, such as the  title, field, description, academic year, duration, and language, a list of anonymised instructors, and the assigned readings.^[The documentation available at: https://docs.opensyllabus.org] While the original dataset included syllabi in 49 languages, most documents (96%) were in English. For simplicity, we focused exclusively on these documents. Consequently, in non-English countries, our sample is more representative of advanced courses, such as postgraduate programs or disciplines where English is the primary language of instruction.
+We examined a corpus of over six million documents compiled by Open Syllabus (New York, US). This dataset was created through web extractions that identified syllabi from university websites, with a median confidence level of 99.8%. A tagging algorithm extracted key course details, such as the  title, field, description, academic year, duration, and language, a list of anonymised instructors, and the assigned readings.^[The documentation available at: https://docs.opensyllabus.org] While the original dataset included syllabi in 49 languages, most documents (96%) were in English. For simplicity, we focused exclusively on these documents.^[Our focus on English-language courses means that, while we have comprehensive data for English-speaking countries such as Canada, Ireland, the United States, and Great Britain, the sample in non-English-speaking countries tends to be more representative of internationally oriented universities. These are typically institutions offering programs in English or advanced-level courses, such as postgraduate programs or disciplines where English is the primary medium of instruction within traditional universities.]
 
-The resulting dataset comprised 5.4 million syllabi from approximately 4,000 higher education institutions across fifteen countries from 1990 to 2019. These syllabi were classified into 69 top-level fields derived from the U.S. Department of Education's CIP code classification.^[https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55] About 2.9 million syllabi (53% of the total) listed readings matched with bibliographic sources, providing additional metadata about  authorship information, journal, and publication year. The institution was matched to a list of more than 22,000 entities from the Research Organisation Registry, providing further metadata including the instutition's country and enrollment figures --- the institutions in our sample account for over 35 million enrolled students today.
+The resulting dataset comprised 5.4 million syllabi from approximately 4,000 higher education institutions across fifteen countries from 1990 to 2019. OpenSyllabus classified these syllabi into 69 top-level fields derived from the U.S. Department of Education's CIP code classification.^[The original CIP classification is available online: https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55] About 2.9 million syllabi (53% of the total) listed readings matched with bibliographic sources, providing additional metadata about  authorship information, journal, and publication year. The institution was matched to a list of more than 22,000 entities from the Research Organisation Registry, providing further metadata including the instutition's country and enrollment figures --- the institutions in our sample account for over 35 million enrolled students today.^[For further information on how OpenSyllabus classified and matched the data, the related documentation is available online at https://docs.opensyllabus.org.]
 
-Each syllabus lists one or more instructors, with 76% of the syllabi listing a single instructor, 16% listing two, 4% listing three, and another 4% listing more than three instructors. Instructor gender was determined automatically based on names, resulting in 52% male, 37% female, and 11% unknown categories. After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors, which aligns closely with the 45% of female academic staff reported in OECD countries [@oecd2022]. The same inference method was used to determine the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with only 12% unknown gender.
+Each syllabus lists one or more instructors, with 76% of the syllabi listing a single instructor, 16% listing two, 4% listing three, and another 4% listing more than three instructors. Instructor gender was determined automatically by OpenSyllabus based on names, resulting in 52% male, 37% female, and 11% unknown categories. After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors, which aligns closely with the 45% of female academic staff reported in OECD countries [@oecd2022]. The same inference method was used to determine the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with only 12% of unknown gender.
 
 ## Outcome variables {-}
 
-We defined the following key outcome variables to analyze the impact of the instructors' gender composition and collaboration on interdisciplinarity and readings selections. 
+We defined the following key outcome variables to analyse how different team configurations, such as gender and team size, relate to interdisciplinarity and characteristics of assigned readings, such as their publication age and the inclusion of female-authored works.
 
-```{r outcomes, echo = FALSE}
+```{r outcomes, echo = FALSE, warning = FALSE, message = FALSE}
+library(kableExtra)
+library(dplyr)
+
 data.frame(
   Name = c(
     "Interdisciplinarity",
-    "Number of References",
     "Age of References",
     "Ratio of Female Authors"
   ),
   Definition = c(
-    "Percentile rank of a course's interdisciplinarity score for the given year.",  # nolint
-    "Total readings listed in a syllabus.",
-    "Percentile rank of the publication age of readings listed in a syllabus.",
-    "Proportion of female authors cited in the readings."
+    "Percentile rank of the course's interdisciplinarity score for the year.", # nolint
+    "Percentile rank of the average publication age of assigned readings.",
+    "Proportion of women authors in the assigned readings."
   )
 ) |>
   kableExtra::kbl(booktabs = TRUE,
                   caption = "Outcome variables") |>
-  kableExtra::kable_classic(full_width = TRUE) |>
-  kableExtra::column_spec(1, width = "1.5in")
+  kableExtra::kable_classic(full_width = TRUE) 
 ```
 
 ### Interdisciplinarity {-} 
@@ -47,7 +47,7 @@ where $\text{PR}_{yr}$ represents the percentile rank function applied to all sy
 
 ### Readings Selection {-}
 
-To investigate readings selection, we calculated three critical dimensions: the breadth, novelty, and female-authors representation. First, we define _Number of References_ ($N_i$) as the total articles, books, and chapters listed in a syllabus $i$. This variable serves as a broad measure of a course's "breadth," as more assigned readings may indicate a more extensive or comprehensive curriculum. Second, we define _Age of References_ as the difference between the syllabus year ($\text{Year}_i$) and the average publication year of each assigned reading $k$:  
+To investigate characteristics of the assigned readings, we calculated the following critical dimensions: the age of readings (a measure of "novelty") and the proportion of female authors in the assigned readings. First, we compute the number of references, $N_i$, as the total articles, books, and chapters listed in a syllabus $i$. This variable serves as a broad measure of a course's "breadth," as more assigned readings may indicate a more extensive or comprehensive curriculum. Then, we define the _Age of References_ variable as the difference between the syllabus year ($\text{Year}_i$) and the average publication year of each assigned reading $k$:  
 $$
   \text{Age of References}_i = \text{PR}_{yr}\left(\text{Year}_i - \sum_{k=1}^{N_i} \text{Publication Year}_k / N_i\right),
 $$
@@ -57,25 +57,24 @@ $$
 $$
 Here, we add two pseudo-observations (one for each gender) to stabilize the ratio, preventing extreme values in cases with very few authors. This metric allows us to investigate whether gender and collaboration relate to the representation of female-authored work in teaching.
 
-## Testing Gender Preferences in Teaching Collaborations {-}
+## Simulated Teaching Collaborations {-}
 
-To test the hypothesis of gender preferences shaping teaching, especially co-teaching practices, we employ a montercalo approach. Drawing from the methodology developed elsewhere [@uzzi2013atypical], we counted the frequency of courses taught individually and the frequency of gender combinations (male-male, female-male, etc.) of those taught by two instructors, disaggregating these data per field, institution, and academic year. Then, we compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given institution, field, and academic year, all instructors were switched using Monte Carlo simulation. See Supplementary Information (Section \@ref(si-simulations)) for details. This approach matches our assumption that mobility between institutions and fields is limited within a single academic year, while the within-institution mobility is possible. 
+To examine whether the gender composition of co-teaching teams deviates from what one would expect under gender-neutral matching, we employ the following Monte Carlo approach. Drawing from a methodology developed elsewhere [@uzzi2013atypical], we counted the frequency of courses taught individually and the frequency of gender combinations (male-male, female-male, etc.) of those taught by two instructors, disaggregating these data per field, institution, and academic year. Then, we compared these combinations against those expected by chance in a gender-neutral composition network, where all instructors are switched randomly within a given institution, field, and academic year. This approach matches our assumption that forming teams between institutions and fields is limited, at least within a single academic year, while forming teams within the same field and institution is attainable. 
 
-The switching algorithm preserves the total gender counts and the distribution of teams. This ensures that a course with a given number of instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with a given number of male instructors and female instructors teaching in each field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams. Therefore, in the randomized network, instructors form teams as if they were unaware of the gender.
+The switching algorithm preserves the total gender counts and the distribution of teams. This ensures that a course with a given number of instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with a given number of male and female instructors teaching in each field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams. Therefore, in the randomized network, instructors form teams as if they were unaware of the gender. See the details in the Supplementary Information (Section \@ref(si-simulations)).
 
 ## Regression analysis {-}
 
-We analyse how different teaching team configurations, $j\in \{F, M, MM, MF/FM, FF\}$, where F = female alone, M = male alone, MM = two males, FM/MF = mixed gender, FF = two female instructors, shape course outcomes across academic years, $t = 1999, \cdots, 2020$. The outcome of interest include (1) interdisciplinarity, (2) the average age of references, (3) the proportion of cited female authors, and (4) the total number of references.  To estimate these effects, we employ the following linear mixed-effects model:
+We analyse how different teaching team configurations, $j\in \{F, M, MM, MF/FM, FF\}$, where F = female alone, M = male alone, MM = two males, FM/MF = mixed gender, FF = two female instructors, associate with course outcomes across academic years, $t = 1999, \cdots, 2020$. The outcomes of interest include: (1) interdisciplinarity, (2) the average age of references, and (3) the proportion of cited female authors.  To estimate these effects, we employ the following linear mixed-effects model:
 \[
 Y_{j, t} = 
   \alpha_t + 
   \text{Team}_{j, t} + 
   \text{STEM}_t + \eta_{t} + 
   \text{Country}_{t} + \text{Enroll}_t + \delta_{t} + 
-  \epsilon_{j, t}
+  \epsilon_{j, t}.
 \]
-
-where: 
+Where: 
 
 - $Y_{j, t}$ is the outcome variable for team configuration $j$ in year $t$,
 
@@ -89,6 +88,6 @@ where:
 
 - $\text{Country}_{t}$ and $\text{Enroll}_t$ are categorical fixed effects for the institution's country and enrollment size, respectively, 
 
-- $\delta_{t}$ is a random intercept for each of the 2000 unique institutions,
+- $\delta_{t}$ is a random intercept for each of approximately 4000 unique institutions,
 
 - $\epsilon_{j,t}$ is the residual error term.
