@@ -68,3 +68,10 @@ To reduce computational costs, we "bootstrap" the field-by-field cosine similari
 
 #include_graphics("figures/interdisciplinarity_by_field.pdf")
 ```
+
+
+```{r, fig.cap = cap}
+cap <- "TBA"
+plot(1) 
+# Male-led vs Female-led Team Formation.
+```

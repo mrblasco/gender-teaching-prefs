@@ -486,3 +486,42 @@ p2 <- p %+% filter(ds_filtered, !grepl(regex, isced))
 
 (p1 + p2) + 
   plot_layout(guides = "collect", axis_titles = "collect")
+
+
+# --------- gender-imbalance -------------------------
+
+head(ds_by_field_unord)
+
+
+
+ds_gender_imbalance <- ds_by_field_unord %>% 
+  filter(formation == "team") %>% 
+  mutate(gender = strsplit(composition, "")) %>% 
+  select(gender, n, field) %>%
+  tidyr::unnest(cols = gender) %>%
+  count(field, gender, wt = n) %>%
+  pivot_wider(names_from = gender, values_from = n) %>% 
+  mutate(gender_ratio = (f + 2) / (m + f + 4), .by = field)
+
+head(ds_gender_imbalance)
+
+ds_simulation_diff <- ds_filtered %>% 
+  filter(composition == "fm") %>% 
+  select(field, formation, pc) %>% 
+  pivot_wider(names_from = formation, values_from = pc)
+
+ds_simulation_diff %>% 
+  left_join(ds_gender_imbalance) %>% 
+  ggplot(
+    aes(gender_ratio,
+        Actual - `Simulated (gender-neutral)`,
+        label = field)
+  ) + 
+  scale_x_continuous(labels = function(.) . * 100) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  ggrepel::geom_text_repel() +
+  labs(
+    x = "Gender ratio (% women instructors)",
+    y = "Actual - Simulated (Mixed gender teams)"
+  )

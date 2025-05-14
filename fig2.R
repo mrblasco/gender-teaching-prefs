@@ -104,7 +104,7 @@ ds <- readRDS(filename_data) %>%
 
 head(ds) %>% 
   knitr::kable(
-    caption = "xxx"
+    caption = "Top Rows of the dataset"
   )
 
 # ---- model, cache = TRUE, eval = FALSE
@@ -172,6 +172,42 @@ system.time(
         .id = "depvar"
       ),
       .by = c(year)
+    )
+)
+
+
+# ---- model-by-stem, cache = TRUE
+
+system.time(
+  fit_by_stem <- ds %>%
+    mutate(team = relevel(factor(team), ref = "m")) %>%
+    arrange(year) %>%
+    reframe(
+      bind_rows(
+        age_of_readings = {
+          message("Age, N = ", n(), " --> ", unique(year))
+          fit_model(
+            novelty_pctl ~ team + country +
+              (1 | field) + (1 | institution)
+          )
+        },
+        intdisc = {
+          message("IntDisc, N = ", n(), " --> ", unique(year))
+          fit_model(
+            intdisc_pr ~ team + country +
+              (1 | field) + (1 | institution)
+          )
+        },
+        female_ratio = {
+          message("Female Ratio, N = ", n(), " --> ", unique(year))
+          fit_model(
+            female_ratio ~ team + country +
+              (1 | field) + (1 | institution)
+          )
+        },
+        .id = "depvar"
+      ),
+      .by = c(year, stem)
     )
 )
 
@@ -317,12 +353,6 @@ p <- fit_by_year %>%
 
 p_interdisc <- p + facet_grid(~column)
 print(p_interdisc)
-
-# ---- full-panel ----- 
-
-require(patchwork)
-
-(p_age_readings / p_female_ratio) / p_interdisc + plot_annotation(tag_levels = "A")
 
 # ---- mixed-model-by-field, cache = TRUE
 

@@ -4,3 +4,4 @@ bookdown::pdf_document2:
   number_sections: true
   latex_engine: xelatex
   bibliography: [bibliography/refs.bib]
+  keep_tex: true
