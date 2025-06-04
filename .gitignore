@@ -5,8 +5,8 @@ assets/
 archive/
 output/
 figures/
-cache/
-*/*cache/
+*cache/
+
 scripts/
 *.log
 *.fff 
