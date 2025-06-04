@@ -8,8 +8,7 @@ author:
   - Elisa Orlandi^[University of Bologna, Bologna, Italy, and European Commission, Joint Research Centre, Brussels, Belgium.]
 
 abstract: |
-  This study examines academics' preferences for teaching alone versus co-teaching, and how these choices impact teaching practices. Using a massive dataset of over five million syllabi, we explore how gender preferences shape instructors' team size and gender composition. Our findings reveal a strong tendency for gender homophily in co-teaching resulting in a significant underrepresentation of mixed-gender teams---half as many as expected under gender-neutral preferences. We also analyze the relationship between team gender composition and key course characteristics, such as interdisciplinarity, breadth and novelty of materials, and the gender of cited authors. Our results show that mixed-gender teams are significantly more interdisciplinary than same-gender teams. Additionally, classes taught by male-only teams cite fewer female authors than those taught by all-female teams, with mixed-gender teams not bridging this gap. Furthermore, solo female instructors and teams with at least one woman tend to reference more novel materials. These findings highlight new mechanisms contributing to gender bias in higher education and suggest that promoting mixed-gender co-teaching could enhance interdisciplinarity and lead to more balanced gender representation among academic authors.
-
+  This study examines the formation of academic teaching teams and how their gender composition is associated with course design and gender disparity in academic recognition. Analysing over five million syllabi from higher education in fifteen countries, we document a stark underrepresentation of mixed-gender co-teaching teams, which occur 50% less frequently than expected under gender-neutral team formation. We link team gender configurations to critical course characteristics: interdisciplinarity, novelty of reading materials, and gender balance in assigned citations. Courses taught by mixed-gender teams are significantly more interdisciplinary than those taught by same-gender teams. However, male-only teams cite substantially fewer female authors than female-only teams, and mixed-gender teams do not eliminate this gap. Moreover, courses led by solo female instructors or teams including at least one woman tend to incorporate more novel reading materials. These findings reveal persistent gendered patterns in teaching collaboration and content and point to mixed-gender co-teaching as a potential lever to promote interdisciplinarity and gender equity in academic representation.
 always_allow_html: true
 fontsize: 12pt
 linestretch: 1
@@ -24,9 +23,10 @@ mainfont: Arial
 header-includes: |
   ```{=latex}
   %\usepackage{times}
+  \usepackage{babel}
   \usepackage{colortbl}
   \usepackage[footnotesize,bf,singlelinecheck=false]{caption}
-  %\usepackage[nomarkers,nolists]{endfloat} % nomarkers, nolists
+  
   \usepackage{hyperref}
   \hypersetup{
     colorlinks=true,
@@ -34,11 +34,15 @@ header-includes: |
     citecolor=blue,
     urlcolor=blue
   }
+  % for drafting
+  \usepackage[nomarkers,nolists]{endfloat} % nomarkers, nolists
+  \let\oldsection\section
+  \renewcommand{\section}{\clearpage\oldsection}
   ```
 ---
 
 <small>
-Classification: TBA
+JEL Classification:  I21, I23, J16
 </small>
 
 <small>
@@ -54,9 +58,8 @@ library(knitr)
 opts_chunk$set(echo = FALSE)
 ```
 
-```{r, child = list.files(pattern = "[0-9].*.Rmd", full.names = TRUE)}
+```{r, child = list.files(pattern = "[0-4].*.Rmd", full.names = TRUE)}
 ```
-
 
 <!--  -->
 \clearpage

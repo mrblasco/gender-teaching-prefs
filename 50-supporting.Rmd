@@ -1,3 +1,6 @@
+\newpage
+\processdelayedfloats
+
 \newpage 
 \appendix
 \renewcommand{\thefigure}{SI-\arabic{figure}}
@@ -7,17 +10,44 @@
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
+```{r, SI-setup, include = FALSE}
+library(yaml)
+library(dplyr)
+library(tidyr)
+library(kableExtra)
+
+create_table <- function(x, ...) {
+  kableExtra::kbl(x, ...) %>%
+    kableExtra::kable_styling(
+      latex_options = c("striped", "hold_position"),
+      font_size = 10,
+      full_width = FALSE,
+      position = "center"
+    )
+}
+
+```
+
+```{r, data-supporting, cache = TRUE, include = FALSE}
+config <- yaml.load_file("config.yml")
+data_dir <- config$data_dir
+
+filename_data <- file.path(data_dir, "rds/final.rds")
+
+ds <- readRDS(filename_data) %>%
+  filter(nchar(team) < 10) %>%
+  select(field, year, team = team_ordered, team_rand, country) %>% 
+  pivot_longer(cols = c(team, team_rand),
+               names_to = "formation",
+               values_to = "composition") %>%
+  count(formation, composition, field, year, country)
+```
+
 # Supporting Information
 
 ## Simulating Gender-Neutral Courses {#si-simulations}
 
-<!-- - We dropped all teams with more than 10 members to minimize the risk of a few ouliers with many members drirving the results. 
-
-- We stablise the estimated proportions of teams with 2 pseudo-observations to make it robust to small samples and avoid that the the proportions to become 0 and 1 for sub-groups with few data as in Agresti et al. (xxx).  -->
-
-We employed a simlar methodology to that developed by @uzzi2013atypical for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network.
-
-In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with $n$ instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with $m$ male instructors and $f$ female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
+We employed a simlar methodology to that developed by @uzzi2013atypical for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with $n$ instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with $m$ male instructors and $f$ female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
 
 ## Interdiscipline Similarity {#si-interdisciplinarity}
 
@@ -32,6 +62,128 @@ To reduce computational costs, we "bootstrap" the field-by-field cosine similari
 \clearpage 
 
 ## Addtional Figures 
+
+### Countries
+
+```{r, SI-country}
+ds %>%
+  filter(formation == "team") %>% 
+  count(country, wt = n) %>%
+  mutate(
+    country = case_when(
+      country == "US" ~ "USA",
+      country == "GB" ~ "Great Britain",
+      country == "CA" ~ "Canada",
+      country == "IT" ~ "Italy",
+      country == "PL" ~ "Poland",
+      country == "NL" ~ "Netherlands",
+      country == "DE" ~ "Germany",
+      country == "IE" ~ "Ireland",
+      country == "PT" ~ "Portugal",
+      country == "SE" ~ "Sweden",
+      country == "ES" ~ "Spain",
+      country == "AT" ~ "Austria",
+      country == "DK" ~ "Denmark",
+      country == "FR" ~ "France",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>% 
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  create_table(
+    caption = "Number of Syllabi per Country",
+    col.names = c("Country", "N (thousands)", "%"),
+    align = c("l", "r", "r"),
+    booktabs = TRUE,
+    linesep = "",
+    format.args = list(big.mark = " ")
+  )
+```
+### Fields
+
+```{r SI-fields, echo = FALSE}
+ds %>%
+  filter(formation == "team") %>% 
+  count(field, wt = n) %>%
+  mutate(index = row_number(),
+         col = ifelse(index %% 2 == 1, "left", "right"),
+         group = (index + 1) %/% 2) %>%
+  select(-index) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>% 
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  mutate(across(c(field, n, pc), as.character)) %>% 
+  pivot_wider(names_from = col, 
+              values_from = c(field, n, pc), 
+              values_fill =  "") %>%
+  select(field_left, n_left, pc_left, field_right, n_right, pc_right) %>%
+  create_table(
+    caption = "Number of Syllabi per Field",
+    col.names = rep(c("Field", "N (thousands)", "%"), 2),
+    align = c("l", "r", "r", "l", "r", "r"),
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
+
+### Years
+
+
+```{r, SI-years}
+ds %>%
+  filter(formation == "team") %>%
+  mutate(
+    year_bc = ifelse(year < 2000, "1999 or older", as.character(year))
+  ) %>% 
+  count(year_bc, wt = n) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>%
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  create_table(
+    caption = "Number of Syllabi per Year",
+    col.names = rep(c("Academic year", "N (thousands)", "%"), 1),
+    align = c("l", "r", "r"),
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
+
+### Gender Composition
+
+
+```{r, SI-composition}
+convert_gender_label <- function(original_labels) {
+  dplyr::case_match(
+    original_labels,
+    "f"  ~ "Female only (F)",
+    "ff" ~ "Female-Female (FF)",
+    "mf" ~ "Mixed Gender (MF/FM)",
+    "fm" ~ "Mixed Gender (MF/FM)",
+    "mm" ~ "Male-Male (MM)",
+    "m"  ~ "Male only (M)",
+    .default = "Unknown"
+  )
+}
+
+ds %>%
+  filter(formation == "team") %>%
+  count(composition, wt = n) %>%
+  arrange(desc(n)) %>%
+  mutate(pc = round(100 * n / sum(n), 1),
+         n = sprintf("%2.1f", n / 1e3)) %>% 
+  filter(nchar(composition) < 3) %>% 
+  mutate(composition = convert_gender_label(composition)) %>%
+  rename(
+    "N (thousands)" = n,
+    "Team composition" = composition,
+    "%" = pc,
+  ) %>%
+  create_table(
+    caption = "Teaching Team Configurations",
+    format.args = list(big.mark = " "),
+    align = c("l", "r", "r"),
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
 
 ```{r, fig.cap = "Summary of observations for key variables.", fig.align="centering", fig.pos="hp!", , out.width = "80%"}
 #include_graphics("figures/summary_obs.pdf")
