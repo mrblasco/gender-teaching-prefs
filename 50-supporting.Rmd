@@ -9,6 +9,7 @@
 \setcounter{figure}{0}
 \setcounter{section}{0}
 \setcounter{subsection}{0}
+\renewcommand{\thetable}{SI-\arabic{table}}
 
 ```{r, SI-setup, include = FALSE}
 library(yaml)
@@ -61,9 +62,9 @@ To reduce computational costs, we "bootstrap" the field-by-field cosine similari
 
 \clearpage 
 
-## Addtional Figures 
+## Addtional Tables 
 
-### Countries
+<!-- ### Countries -->
 
 ```{r, SI-country}
 ds %>%
@@ -99,7 +100,7 @@ ds %>%
     format.args = list(big.mark = " ")
   )
 ```
-### Fields
+<!-- ### Fields -->
 
 ```{r SI-fields, echo = FALSE}
 ds %>%
@@ -125,8 +126,7 @@ ds %>%
   )
 ```
 
-### Years
-
+<!-- ### Years -->
 
 ```{r, SI-years}
 ds %>%
@@ -146,8 +146,7 @@ ds %>%
   )
 ```
 
-### Gender Composition
-
+<!-- ### Gender Composition -->
 
 ```{r, SI-composition}
 convert_gender_label <- function(original_labels) {
@@ -184,3 +183,4 @@ ds %>%
     linesep = ""
   )
 ```
+
