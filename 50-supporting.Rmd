@@ -6,7 +6,10 @@
 \renewcommand{\thefigure}{SI-\arabic{figure}}
 \renewcommand{\thesection}{SI}
 \renewcommand{\thesubsection}{SI-\arabic{subsection}}
+
+<!-- Set counters -->
 \setcounter{figure}{0}
+\setcounter{table}{0}
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 \renewcommand{\thetable}{SI-\arabic{table}}

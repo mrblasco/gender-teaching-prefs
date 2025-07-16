@@ -1,44 +1,49 @@
-# Paths
+# Directories
 OUTPUT_DIR = output
-REPORT_OUT_DIR = $(OUTPUT_DIR)/report
-FIGURE_SCRIPTS = $(wildcard fig[0-9]*.R)  # List all your figure scripts here
+REPORT_DIR = $(OUTPUT_DIR)/report
+
 REPORT_SRC = _main.Rmd
 REPORT_SECTIONS = $(wildcard [0-9]*.Rmd)
+FIGURE_SCRIPTS = $(wildcard fig[0-9]*.R)
 
-# Date and Git commit hash
-VERSION_DATE = $(shell date +%Y%m%d)
-GIT_TAG = $(shell git describe --tags --always)
-VERSION = $(VERSION_DATE)_$(GIT_TAG)
+PDF_FORMAT := bookdown::pdf_document2
 
 # Output 
 FIGURE_LOGS = $(FIGURE_SCRIPTS:%.R=$(OUTPUT_DIR)/%.pdf)  # Corresponding log files
-REPORT_PDF = $(REPORT_OUT_DIR)/main_$(VERSION).pdf
-REPORT_DOCX = $(REPORT_OUT_DIR)/main_$(VERSION).docx
-REPORT_LATEST_PDF = $(REPORT_OUT_DIR)/main_latest.pdf
-REPORT_LATEST_DOCX = $(REPORT_OUT_DIR)/main_latest.docx
+REPORT_PDF = $(REPORT_DIR)/Gender_Teaching_Syllabi.pdf
+REPORT_DOCX = $(REPORT_PDF:.pdf=.docx)
 
-all: $(REPORT_PDF)
+all: pdf
 
-$(REPORT_OUT_DIR):
+pdf: $(REPORT_PDF)
+
+$(REPORT_DIR):
 	mkdir -p $@
 
-$(FIGURE_LOGS): output/%.pdf: %.R
-	Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_yaml = "_output_pdf.yml")'
+$(REPORT_PDF): _main.Rmd $(PDF_CONFIG) $(REPORT_SECTIONS) $(FIGURE_LOGS) $(REPORT_DIR)
+	Rscript -e 'rmarkdown::render("$<", "$(PDF_FORMAT)", "$@")'
 
-$(REPORT_PDF): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_OUT_DIR)
-	Rscript -e "rmarkdown::render('$<', output_file = '$@', output_yaml = '_output_pdf.yml')" 
-	cp $@ $(REPORT_LATEST_PDF)
+$(FIGURE_LOGS): output/%.pdf: %.R
+	Rscript -e 'rmarkdown::render("$<", "$(PDF_FORMAT)", "$@")'
+
+view:
+	open -a Skim $(REPORT_PDF)
+
+clean:
+	rm *.fff *.log *.ttt
+
+.PHONY: all clean view
+
+# ---- Word
 
 docx: $(REPORT_DOCX)
 
-$(REPORT_DOCX): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_OUT_DIR)
+$(REPORT_DOCX): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_DIR)
 	Rscript -e "rmarkdown::render('$<', output_file = '$@', output_yaml = '_output_docx.yml')"
 	ln -sf "main_$(VERSION).docx" $(REPORT_LATEST_DOCX)
 
-view:
-	open -a Skim $(REPORT_LATEST_PDF)
 
 draft:
 	open $(REPORT_LATEST_DOCX)
 
-.PHONY: all figures clean view
+

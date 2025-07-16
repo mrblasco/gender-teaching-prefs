@@ -1,0 +1,11 @@
+# Acknowledgements
+
+The contents of this publication do not necessarily reflect the position or opinion of the European Commission or the Joint Research Centre.
+
+# Statements and Declarations
+
+## Data Availability
+
+All the datasets generated during the current study are available online in the [name of repository], [persistent web link or DOI]. The raw data will be available from the corresponding author upon reasonable request and if the request meets the contractual agreements with OpenSyllabus.
+
+All the scripts and code used in the analyses is available at [GitHub link or DOI]. This includes two repositories one with all the Python scripts used to compute the interdisciplinarity score [LINK or DOI] and another with Rscripts to analyse the data and create the figures [LINK or DOI].

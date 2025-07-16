@@ -2,3 +2,19 @@ bookdown::html_document2:
   toc: false
   number_sections: false
   bibliography: [bibliography/refs.bib]
+
+
+
+bookdown::pdf_document2:
+  toc: false
+  number_sections: true
+  latex_engine: xelatex
+  bibliography: [bibliography/refs.bib]
+  keep_tex: true
+
+
+
+bookdown::word_document2:
+  toc: false
+  number_sections: true
+  bibliography: [bibliography/refs.bib]

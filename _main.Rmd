@@ -4,18 +4,18 @@ title: |
   Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections
 
 author:
-  - Andrea Blasco^[European Commission, Joint Research Centre, Brussels, Belgium; (andrea.blasco@ec.europa.eu)]
-  - Elisa Orlandi^[University of Bologna, Bologna, Italy, and European Commission, Joint Research Centre, Brussels, Belgium; (elisa.orlandi15@unibo.it)]
+  - Andrea Blasco^[Corresponding author; European Commission, Joint Research Centre, Brussels, Belgium; andrea.blasco@ec.europa.eu]
+  - Elisa Orlandi^[University of Bologna, Bologna, Italy, and European Commission, Joint Research Centre, Brussels, Belgium; elisa.orlandi15@unibo.it]
 
 abstract: |
   This study examines the formation of academic teaching teams and how their gender composition is associated with course design and gender disparity in academic recognition. Analysing over five million syllabi from higher education in fifteen countries, we document a persistent underrepresentation of mixed-gender co-teaching teams, which occur 50% less frequently than expected under gender-neutral team formation. We link team gender configurations to critical course characteristics: interdisciplinarity, novelty of reading materials, and gender balance in assigned citations. Courses taught by mixed-gender teams are significantly more interdisciplinary than those taught by same-gender teams. Male-only teams cite substantially fewer female authors than female-only teams, and mixed-gender teams do not eliminate this gap. Moreover, courses led by solo female instructors or teams including at least one woman tend to incorporate more novel reading materials. These findings reveal persistent gendered patterns in teaching collaboration and content and point to mixed-gender co-teaching as a potential lever to promote interdisciplinarity and gender equity in academic representation.
 
 always_allow_html: true
-fontsize: 12pt
-linestretch: 1
+fontsize: 11pt
+linestretch: 1.25
 colorlinks: true
 link-citations: true
-bibliography: [bibliography/refs.bib]
+bibliography: [refs.bib]
 csl: [https://www.zotero.org/styles/pnas]
 geometry: margin=1in
 lang: en-UK
@@ -23,8 +23,6 @@ mainfont: Arial
 
 header-includes: |
   ```{=latex}
-  %\usepackage{times}
-  \usepackage{babel}
   \usepackage{colortbl}
   \usepackage[footnotesize,bf,singlelinecheck=false]{caption}
   
@@ -37,8 +35,8 @@ header-includes: |
   }
   % for drafting
   \usepackage[nomarkers,nolists]{endfloat} % nomarkers, nolists
-  \let\oldsection\section
-  \renewcommand{\section}{\clearpage\oldsection}
+  %\let\oldsection\section
+  %\renewcommand{\section}{\clearpage\oldsection}
   ```
 ---
 
@@ -51,7 +49,6 @@ Keywords: education | gender bias | teams | interdisciplinarity | novelty | syll
 </small>
 
 \newpage
-\doublespace
 
 
 ```{r setup, include = FALSE}
