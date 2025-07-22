@@ -1,10 +1,12 @@
-# Acknowledgements
+\newpage
+\processdelayedfloats
+
+
+## Acknowledgements
 
 The contents of this publication do not necessarily reflect the position or opinion of the European Commission or the Joint Research Centre.
 
-# Statements and Declarations
-
-## Data Availability
+## Data Availability Statement
 
 All the datasets generated during the current study are available online in the [name of repository], [persistent web link or DOI]. The raw data will be available from the corresponding author upon reasonable request and if the request meets the contractual agreements with OpenSyllabus.
 

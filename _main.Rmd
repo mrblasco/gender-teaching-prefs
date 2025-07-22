@@ -51,12 +51,12 @@ Keywords: education | gender bias | teams | interdisciplinarity | novelty | syll
 \newpage
 
 
-```{r setup, include = FALSE}
+```{r main-setup, include = FALSE}
 library(knitr)
 opts_chunk$set(echo = FALSE)
 ```
 
-```{r, child = list.files(pattern = "[0-4].*.Rmd", full.names = TRUE)}
+```{r, child = list.files(pattern = "[0-9]+.*.Rmd", full.names = TRUE)}
 ```
 
 <!--  -->
