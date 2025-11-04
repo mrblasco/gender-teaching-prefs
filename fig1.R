@@ -5,6 +5,7 @@ library(tidyr)
 library(ggplot2)
 library(ggrepel)
 library(patchwork)
+library(countrycode)
 source("config.R")
 
 config <- yaml.load_file("config.yml")
@@ -31,49 +32,10 @@ timestamp <- format(Sys.time(), "%Y%m%d")
 
 # ---- Helpers ----------------------------------------
 
-get_gender_composition <- function(x) {
-  x <- as.character(x)
-  case_when(
-    grepl("m", x) & grepl("f", x) ~ "Mixed-gender",
-    grepl("m", x) ~ "Male-only",
-    grepl("f", x) ~ "Female-only",
-    TRUE ~ "Other"
-  )
-}
-
-paste_sort <- function(x) paste0(sort(x), collapse = "")
-
-convert_gender_label <- function(original_labels) {
-  dplyr::case_match(
-    original_labels,
-    "f"  ~ "Female only (F)",
-    "ff" ~ "Female-Female (FF)",
-    "mf" ~ "Mixed Gender (MF/FM)",
-    "fm" ~ "Mixed Gender (MF/FM)",
-    "mm" ~ "Male-Male (MM)",
-    "m"  ~ "Male only (M)",
-    .default = "Unknown"
-  )
-}
-
-sep <- function(p, n) sqrt(p * (1 - p) / n)
+source("R/utils.R")
+source("R/theme.R")
 
 # ------ Theme ------------------------------------
-
-theme_custom <- function() {
-  theme_minimal(base_family = "Helvetica") +
-    theme(
-      plot.title      = element_text(face = "bold"),
-      plot.subtitle   = element_text(face = "italic"),
-      plot.caption    = element_blank(),
-      panel.spacing   = unit(1.5, "lines"),
-      strip.text      = element_text(face = "bold"),
-      axis.line       = element_line(color = "gray25"),
-      axis.ticks      = element_line(),
-      legend.position = "bottom",
-      legend.title    = element_blank(),
-    )
-}
 
 my_colors <- c("#1b9e77", "#d95f02",
                "#7570b3", "#e7298a",
@@ -120,40 +82,31 @@ head(ds) %>%
 
 # ----- country ----------------------------
 
-ds %>%
-  filter(formation == "team") %>% 
+tbl_country <- ds %>%
+  filter(formation == "team") %>%
   mutate(
-    country_name = case_when(
-      country == "US" ~ "USA",
-      country == "GB" ~ "Great Britain",
-      country == "CA" ~ "Canada",
-      country == "IT" ~ "Italy",
-      country == "PL" ~ "Poland",
-      country == "NL" ~ "Netherlands",
-      country == "DE" ~ "Germany",
-      country == "IE" ~ "Ireland",
-      country == "PT" ~ "Portugal",
-      country == "SE" ~ "Sweden",
-      country == "ES" ~ "Spain",
-      country == "AT" ~ "Austria",
-      country == "DK" ~ "Denmark",
-      country == "FR" ~ "France",
-      TRUE ~ "Other"
-    )
+    country_name = countrycode(country, "iso2c", "country.name") 
   ) %>%
+  bind_rows(., mutate(., country_name = "All")) %>%
   count(country_name, wt = n, sort = TRUE) %>%
-  mutate(prop = 100 * n / sum(n)) %>% 
-  select(Country = country_name, Syllabi = n, "Syllabi (%)" = prop) %>%
-  knitr::kable(
-    format.args = list(big.mark = " "), digits = 1,
-    caption = "Syllabi per Country"
-  ) %>% 
-  kableExtra::kable_styling()
+  mutate(prop = 100 * n / sum(n[country_name != "All"])) %>%
+  select(Country = country_name, Syllabi = n, "% total" = prop)
 
-#' ----
+tbl_country %>%
+  kableExtra::kbl(
+    caption = "Frequency of Syllabi per Country",
+    caption.short = "Frequency of Syllabi per Country",
+    booktabs = TRUE,
+    format.args = list(big.mark = " "),
+    digits = 1,
+  ) %>%
+  kableExtra::kable_styling() %>% 
+  kableExtra::column_spec(1, bold = TRUE)
+
 
 # ----- fields ----------------------------
-ds %>%
+
+tbl_fields <- ds %>%
   filter(formation == "team") %>% 
   count(field, wt = n) %>%
   mutate(index = row_number(),
@@ -166,32 +119,37 @@ ds %>%
   pivot_wider(names_from = col, 
               values_from = c(field, n, pc), 
               values_fill =  "") %>%
-  select(field_left, n_left, pc_left, field_right, n_right, pc_right) %>%
+  select(field_left, n_left, pc_left, field_right, n_right, pc_right) 
+
+
+tbl_fields %>%
   kableExtra::kbl(
-    caption = "Number of Syllabi per Field",
+    caption = "Frequency of Syllabi by Academic Field",
     col.names = rep(c("Field", "N (thousands)", "%"), 2),
   ) %>%
   kableExtra::kable_styling()
 
 # ----- years ----------------------------
 
-ds %>%
+tbl_years <- ds %>%
   filter(formation == "team") %>%
   mutate(
     year_bc = ifelse(year < 2000, "1999 or older", as.character(year))
   ) %>% 
   count(year_bc, wt = n) %>%
   mutate(pc = round(100 * n / sum(n), 1)) %>%
-  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  mutate(n = sprintf("%2.1f", n / 1e3))
+
+tbl_years %>% 
   kableExtra::kbl(
-    caption = "Number of Syllabi per Year",
+    caption = "Frequency of Syllabi per Academic Year",
     col.names = rep(c("Academic year", "N (thousands)", "%"), 1),
   ) %>%
   kableExtra::kable_styling()
 
 # ----- composition ----------------------------
 
-ds %>%
+tbl_team_composition <- ds %>%
   filter(formation == "team") %>%
   count(composition, wt = n) %>%
   arrange(desc(n)) %>%
@@ -203,12 +161,19 @@ ds %>%
     "N (thousands)" = n,
     "Team composition" = composition,
     "%" = pc,
-  ) %>%
+  ) 
+
+tbl_team_composition %>%
   kableExtra::kbl(
-    caption = "Teaching Team Configurations",
+    caption = "Frequency of Syllabi by Team Composition",
+    caption.short = "Frequency of Syllabi by Team ccmposition",
     format.args = list(big.mark = " "),
   ) %>%
   kableExtra::kable_styling()
+
+#' ## Figures
+#' 
+#' 
 
 
 # ----- evolution, fig.cap = cap ------------
