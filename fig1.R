@@ -15,14 +15,14 @@ fig_dir <- file.path(getwd(), config$fig_dir) # full path
 dir.create(fig_dir, showWarnings = FALSE)
 
 knitr::opts_chunk$set(
-  echo = FALSE,
-  fig.cap = "TODO: add caption here",
-  fig.path = fig_dir,
-  cache.path = "cache/",
-  dev = c("png", "pdf"),
-  dpi = 600,
-  fig.width = 7, 
-  fig.height = 4
+    echo = FALSE,
+    fig.cap = "TODO: add caption here",
+    fig.path = fig_dir,
+    cache.path = "cache/",
+    dev = c("png", "pdf"),
+    dpi = 600,
+    fig.width = 7,
+    fig.height = 4
 )
 
 # Constants
@@ -42,153 +42,220 @@ my_colors <- c("#1b9e77", "#d95f02",
                "#66a61e", "#e6ab02")
 
 scale_color_discrete <- function(...) {
-  scale_color_manual(values = my_colors, ...)
+    scale_color_manual(values = my_colors, ...)
 }
 scale_fill_discrete <- function(...) {
-  scale_fill_manual(values = my_colors, ...)
+    scale_fill_manual(values = my_colors, ...)
 }
 
 theme_set(theme_custom())
 
 # ---- Load data, cache = TRUE ----------------------------
 
-filename_data <- file.path(data_dir, "rds/final.rds") #"../data/rds/final.rds"
+filename_data <- file.path(data_dir, "rds/final.rds")
 
 ds <- readRDS(filename_data) %>%
-  filter(nchar(team) < 10) %>%
-  select(field, year, team = team_ordered, team_rand, country) %>% 
-  pivot_longer(cols = c(team, team_rand),
-               names_to = "formation",
-               values_to = "composition") %>%
-  count(formation, composition, field, year, country) %>% 
-  mutate(
-    team_gender = get_gender_composition(composition),
-    team_size = nchar(as.character(composition)),
-  )
+    filter(nchar(team) < 10) %>%
+    select(field, year, team = team_ordered, team_rand, country) %>% 
+    pivot_longer(cols = c(team, team_rand),
+                names_to = "formation",
+                values_to = "composition") %>%
+    count(formation, composition, field, year, country) %>% 
+    mutate(
+        team_gender = get_gender_composition(composition),
+        team_size = nchar(as.character(composition)),
+    )
 
-# ---- data-size ----------------------------
+# ---- top-rows ----------------------------
 
-data_size <- format(object.size(ds), units = "MB")
-message("Size ", data_size)
-
-head(ds) %>%
-  kableExtra::kbl(
-    caption = "Top Rows of The Dataset"
-  ) %>% 
-  kableExtra::kable_styling()
-
-#' ----
-
+kbl_top_rows <- head(ds) %>%
+    kableExtra::kbl(
+        caption = "Top Rows of The Dataset"
+    ) %>%
+    kableExtra::kable_styling()
 
 # ----- country ----------------------------
 
 tbl_country <- ds %>%
-  filter(formation == "team") %>%
-  mutate(
-    country_name = countrycode(country, "iso2c", "country.name") 
-  ) %>%
-  bind_rows(., mutate(., country_name = "All")) %>%
-  count(country_name, wt = n, sort = TRUE) %>%
-  mutate(prop = 100 * n / sum(n[country_name != "All"])) %>%
-  select(Country = country_name, Syllabi = n, "% total" = prop)
+    filter(formation == "team") %>%
+    mutate(
+        country_name = countrycode(country, "iso2c", "country.name")
+    ) %>%
+    bind_rows(., mutate(., country_name = "All")) %>%
+    count(country_name, wt = n, sort = TRUE) %>%
+    mutate(prop = 100 * n / sum(n[country_name != "All"]))
 
-tbl_country %>%
-  kableExtra::kbl(
-    caption = "Frequency of Syllabi per Country",
-    caption.short = "Frequency of Syllabi per Country",
-    booktabs = TRUE,
-    format.args = list(big.mark = " "),
-    digits = 1,
-  ) %>%
-  kableExtra::kable_styling() %>% 
-  kableExtra::column_spec(1, bold = TRUE)
+kbl_country <- tbl_country %>%
+    select(
+        "Country" = country_name,
+        "Syllabi" = n,
+        "% total" = prop
+    ) %>%
+    kableExtra::kbl(
+        caption = "Frequency of Syllabi per Country",
+        caption.short = "Frequency of Syllabi per Country",
+        booktabs = TRUE,
+        format.args = list(big.mark = " "),
+        digits = 1,
+    ) %>%
+    kableExtra::kable_styling() %>% 
+    kableExtra::column_spec(1, bold = TRUE)
 
+plot_country <- tbl_country %>%
+    ggplot(
+        aes(
+            fill = country_name == "All",
+            color = country_name == "All",
+            x = n,
+            y = reorder(country_name, n),
+            label = case_when(
+                n > 1e6 ~ sprintf("%2.1fM", n / 1e6),
+                n > 1e3 ~ sprintf("%2.1fk", n / 1e3),
+                TRUE ~ sprintf("%i", n)
+            )
+        )
+    ) +
+    scale_x_log10(
+        #labels = scales::label_math(10^.x),
+        expand = c(0.1, 0.1)
+    ) +
+    scale_fill_manual(values = c("blue4", "gold2")) +
+    scale_color_manual(values = c("white", "black")) +
+    geom_col(width = 0.8, color = NA) +
+    geom_text(
+        position = position_stack(0),
+        hjust = 0
+    ) +
+    labs(
+        x = "Number of syllabi (log10)",
+        y = NULL
+    ) +
+    theme(
+        legend.position = "none",
+        panel.grid = element_blank(),
+    )
 
 # ----- fields ----------------------------
 
 tbl_fields <- ds %>%
-  filter(formation == "team") %>% 
-  count(field, wt = n) %>%
-  mutate(index = row_number(),
-         col = ifelse(index %% 2 == 1, "left", "right"),
-         group = (index + 1) %/% 2) %>%
-  select(-index) %>%
-  mutate(pc = round(100 * n / sum(n), 1)) %>% 
-  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
-  mutate(across(c(field, n, pc), as.character)) %>% 
-  pivot_wider(names_from = col, 
-              values_from = c(field, n, pc), 
-              values_fill =  "") %>%
-  select(field_left, n_left, pc_left, field_right, n_right, pc_right) 
+    filter(formation == "team") %>% 
+    count(field, wt = n) %>%
+    mutate(index = row_number(),
+           col = ifelse(index %% 2 == 1, "left", "right"),
+           group = (index + 1) %/% 2) %>%
+    select(-index) %>%
+    mutate(pc = round(100 * n / sum(n), 1)) %>% 
+    mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+    mutate(across(c(field, n, pc), as.character)) %>% 
+    pivot_wider(names_from = col, 
+                values_from = c(field, n, pc), 
+                values_fill =  "") %>%
+    select(field_left, n_left, pc_left, field_right, n_right, pc_right) 
 
+kbl_fields <- tbl_fields %>%
+    kableExtra::kbl(
+        caption = "Frequency of Syllabi by Academic Field",
+        col.names = rep(c("Field", "N (thousands)", "%"), 2),
+    ) %>%
+    kableExtra::kable_styling()
 
-tbl_fields %>%
-  kableExtra::kbl(
-    caption = "Frequency of Syllabi by Academic Field",
-    col.names = rep(c("Field", "N (thousands)", "%"), 2),
-  ) %>%
-  kableExtra::kable_styling()
+plot_fields <- ds %>%
+    filter(formation == "team") %>% 
+    count(field, wt = n) %>%
+    mutate(index = row_number(),
+           col = ifelse(index %% 2 == 1, "left", "right"),
+           group = (index + 1) %/% 2) %>% 
+    ggplot(
+        aes(
+            x = n,
+            y = reorder(field, n)
+        )
+    ) +
+    scale_x_log10() +
+    facet_wrap(~ col, scales = "free") +
+    geom_col(width = 0.7) +
+    labs(
+        x = "Number of Syllabi (log10)",
+        y = NA
+    ) +
+    theme(
+        strip.text = element_blank()
+    )
 
 # ----- years ----------------------------
 
 tbl_years <- ds %>%
-  filter(formation == "team") %>%
-  mutate(
-    year_bc = ifelse(year < 2000, "1999 or older", as.character(year))
-  ) %>% 
-  count(year_bc, wt = n) %>%
-  mutate(pc = round(100 * n / sum(n), 1)) %>%
-  mutate(n = sprintf("%2.1f", n / 1e3))
+    filter(formation == "team") %>%
+    mutate(
+        year_bc = ifelse(year < 2000, "1999 or older", as.character(year))
+    ) %>% 
+    count(year_bc, wt = n) %>%
+    mutate(pc = round(100 * n / sum(n), 1))
 
-tbl_years %>% 
-  kableExtra::kbl(
-    caption = "Frequency of Syllabi per Academic Year",
-    col.names = rep(c("Academic year", "N (thousands)", "%"), 1),
-  ) %>%
-  kableExtra::kable_styling()
+kbl_years <- tbl_years %>% 
+    mutate(n = sprintf("%2.1f", n / 1e3)) %>%
+    kableExtra::kbl(
+        caption = "Frequency of Syllabi per Academic Year",
+        col.names = rep(c("Academic year", "N (thousands)", "%"), 1),
+    ) %>%
+    kableExtra::kable_styling()
+
+plot_year <- ds %>%
+    filter(formation == "team") %>%
+    count(year, wt = n) %>% 
+    ggplot(
+        aes(
+            x = year, #factor(year, ordered = TRUE),
+            y = n
+        )
+    ) +
+    scale_y_log10() +
+    geom_point() +
+    labs(
+        y = "Number of syllabi (log10)", x = NULL
+    )
 
 # ----- composition ----------------------------
 
 tbl_team_composition <- ds %>%
-  filter(formation == "team") %>%
-  count(composition, wt = n) %>%
-  arrange(desc(n)) %>%
-  mutate(pc = round(100 * n / sum(n), 1),
-         n = sprintf("%2.1f", n / 1e3)) %>% 
-  filter(nchar(composition) < 3) %>% 
-  mutate(composition = convert_gender_label(composition)) %>%
-  rename(
-    "N (thousands)" = n,
-    "Team composition" = composition,
-    "%" = pc,
-  ) 
+    filter(formation == "team") %>%
+    count(composition, wt = n) %>%
+    arrange(desc(n)) %>%
+    mutate(pc = round(100 * n / sum(n), 1),
+            n = sprintf("%2.1f", n / 1e3)) %>% 
+    filter(nchar(composition) < 3) %>% 
+    mutate(composition = convert_gender_label(composition)) 
 
-tbl_team_composition %>%
-  kableExtra::kbl(
-    caption = "Frequency of Syllabi by Team Composition",
-    caption.short = "Frequency of Syllabi by Team ccmposition",
-    format.args = list(big.mark = " "),
-  ) %>%
-  kableExtra::kable_styling()
+kbl_team_composition <- tbl_team_composition %>%
+    rename(
+        "N (thousands)" = n,
+        "Team composition" = composition,
+        "%" = pc,
+    ) %>%
+    kableExtra::kbl(
+        caption = "Frequency of Syllabi by Team Composition",
+        caption.short = "Frequency of Syllabi by Team ccmposition",
+        format.args = list(big.mark = " "),
+    ) %>%
+    kableExtra::kable_styling()
 
-#' ## Figures
-#' 
-#' 
-
+# ====================================
+# Figures
+# ====================================
 
 # ----- evolution, fig.cap = cap ------------
 cap <- "Evolution of Courses by Teaching Configuration. (A) proportions of courses per year with one instructor by gender (B) proportions of courses per year with two instructors by gender configuration." # nolint
 
 ds_count <- ds %>%
-  filter(formation == "team") %>%
-  count(team_size, team_gender, year, wt = n) %>%
-  mutate(
-    pc = (n + pseudo_obs) / (sum(n) + 2 * pseudo_obs),
-    ymin = pc - 1.96 * sqrt(pc * (1 - pc) / (n + 2 * pseudo_obs)),
-    ymax = pc + 1.96 * sqrt(pc * (1 - pc) / (n + 2 * pseudo_obs)),
-    .by = c(year)
-  ) %>%
-  filter(year > year_cutoff, team_size < 3)
+    filter(formation == "team") %>%
+    count(team_size, team_gender, year, wt = n) %>%
+    mutate(
+        pc = (n + pseudo_obs) / (sum(n) + 2 * pseudo_obs),
+        ymin = pc - 1.96 * sqrt(pc * (1 - pc) / (n + 2 * pseudo_obs)),
+        ymax = pc + 1.96 * sqrt(pc * (1 - pc) / (n + 2 * pseudo_obs)),
+        .by = c(year)
+    ) %>%
+    filter(year > year_cutoff, team_size < 3)
 
 p <- ds_count %>%
   mutate(
@@ -230,6 +297,8 @@ p <- ds_count %>%
   )
 
 p + facet_wrap(~ team_size, scales = "free")
+
+
 
 # ----- montecarlo, fig.cap = cap -------
 cap <- "Montecarlo simulations."

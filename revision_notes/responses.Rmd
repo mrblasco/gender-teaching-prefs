@@ -1,0 +1,233 @@
+---
+title : |
+    Responses to Reviewers: 
+    "Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections"
+subtitle: |
+    Manuscript ID: PNASNEXUS-2025-00959-T
+authors: 
+    - Andrea Blasco
+    - Elisa Orlandi
+
+mainfont: Arial
+linestretch: 1.5
+geometry: "margin=1in"
+--- 
+ 
+
+Dear Editor and Reviewers, 
+
+
+We thank you for the constructive and thoughtful feedback on our manuscript. We have revised the paper substantially to address all comments. Below, we respond point by point. Reviewer comments are in italics; our responses follow. Page and line references refer to the clean revised manuscript. 
+
+
+# Editor Comments 
+ 
+
+**1. Reorganize the introduction to clarify the major focus of your research.**
+
+ 
+We substantially rewrote the Introduction and literature review to foreground the central research question and contributions. The revised text now clearly presents three linked arguments: 
+
+(i) courses taught by female instructors include a higher share of readings by women authors; 
+
+(ii) mixed-gender teams tend to assign more recent (up-to-date) readings; and 
+
+(iii) mixed-gender teams display greater interdisciplinarity. 
+
+Each expectation is explicitly connected to prior research on gendered collaboration. 
+
+Changes: Introduction [pp. X–Y]. 
+
+ 
+
+**2. Address differences relative to prior work (e.g., Dion et al., 2018) and clarify whether instructors can choose to team-teach, including incentives and constraints.**
+
+ 
+We added a paragraph comparing our findings to Dion et al. (2018) and related studies. We also expanded the discussion of institutional variation in team teaching, acknowledging that instructors’ ability to co-teach depends on administrative structures and credit systems that vary across institutions and countries. 
+
+Changes: Literature/Background [pp. X–Y, lines A–B]; Discussion [pp. X–Y, lines C–D]. 
+
+ 
+
+**3. Methodology and interpretation: controls, representativeness, missing data, measures (e.g., novelty/recency), temporal changes; consider additional data and analyses (US vs. non-US; by subject area)**. 
+
+ 
+We expanded the Methods and Results sections to clarify the analytical design and robustness checks. 
+
+* Controls: We added course-level indicators along with subject area, year, and country fixed effects. 
+
+* Representativeness: Because no comprehensive census of syllabi exists, completeness cannot be verified at the institutional level. We acknowledge this limitation. 
+
+* Instructor gender identification: Approximately 12% of instructors are classified as “unknown” due to ambiguous or abbreviated names (e.g., initials or gender-neutral forms). Excluding these cases does not materially affect results. 
+
+* Measures: We replaced the term “novelty” with “recency,” defined as the average publication year of assigned readings relative to the course year. We explicitly note that recency does not necessarily capture conceptual novelty but provides a transparent, observable indicator of how up-to-date course materials are. 
+
+* Additional analyses: We ran separate models for U.S. vs. non-U.S. institutions and by broad disciplinary area (humanities, social sciences, natural sciences). The main conclusions remain consistent. 
+
+* Temporal patterns: We extended the discussion of time trends. 
+
+* Presentation: Reference groups are now standardized across all figures and specified explicitly in each caption. 
+
+* Robustness: All robustness analyses are included in the Supplementary Appendix (Tables S1–S3). 
+
+ 
+
+Changes: Methods and Supplement [pp. X–Y; Tables S1–S3]; Discussion [pp. X–Y]. 
+
+# Responses to Reviewers
+
+
+# Reviewer 1 
+
+> The literature review needs to be re-organized into three subsections that clearly delineate the three arguments that the paper wants to make. * first, on "how courses taught by FEMALE instructors may contain more female authored readings".    * second, on "why MIXED-gender team would assign more novel readings".   * third, on "how MIXED-gender teams can increase interdisciplinary teaching"   * Currently, the structure looks very hidden to me, especially given that sometimes the authors discuss the effect of "female" while other times they discuss the effect of "mixed gender".
+
+We reorganized the Introduction and theoretical framework to match the three core arguments: (1) female instructors assign more female-authored readings, (2) mixed-gender teams select more recent readings, and (3) mixed-gender teams promote greater interdisciplinarity.  
+
+Changes: Introduction [pp. X–Y]. 
+
+> There seems to be no control for the level of courses (ie., 101, 200+, 300+ and so on based on course code), but that could greatly influence the level of interdisciplinarity, age of course readings, or who teaches it. This is totally doable with Open Syllabus data to my knowledge
+
+
+> * Although it is understandable to not have perfectly representative coverage of fields and schools given the scraped nature of this online based dataset -- this lack of representativeness is indeed heavily related to the aggregated estimates that the authors presented in the graphs throughout the results section. For example, when 
+estimating whether mixed gender teaching groups have more interdisciplinarity than male-only groups, we need to know whether both types of teaching groups that are used in the analysis are proportional to the real distribution of the specific discipline in the specific institution and the specific country. Otherwise, how can we be sure that the aggregated / average estimates are not affected by the distribution of the cases selected in the operational data in this study?
+ 
+1. Add course-level controls. 
+
+ 
+
+Response: We included course-level indicators (introductory/intermediate/advanced) based on course numbering, which may affect interdisciplinarity and reading selection. 
+
+Changes: Methods [pp. X–Y]; Table S1. 
+
+ 
+
+3. Address representativeness and data coverage. 
+
+ 
+
+Response: We acknowledge that coverage is uneven and that no external benchmark exists for course completeness.  We discuss potential biases due to differential representation and include fixed effects for institution, year, and subject area to account for systematic differences. 
+
+ 
+
+Changes: Methods [pp. X–Y]. 
+
+ 
+
+> Genderizer: 12% of the syllabi were reported to have unknown gender (p 5). Is this a problem of missing, or is it a problem of the genderizer being unable to estimate the gender (many asian names are gender neutral) -- how is this going to affect the estimates?
+
+ 
+
+Response: We now explain that “unknown” genders (~12%) primarily reflect abbreviated or gender-neutral names that cannot be assigned by the Genderize algorithm by OpensSyllabus. Results remain stable when excluding these cases. 
+
+Changes: Methods [pp. X–Y]; Supplement Table S1. 
+
+ 
+
+>  novelty = using more recent readings in the syllabus: a decision the authors tried to defend on page 6. However, I do not really buy it. It is NOT a conventional construction of novelty simply by using the age of readings (especially given that the authors are aware that STS literature developed much better measurements of it) -- for example, old readings can also be rediscovered as highly novel in new contexts where they regain relevance and attention that they did not have before.
+
+ 
+
+Response: We now refer to this variable as “recency” rather than “novelty.” We acknowledge that recency (the publication year of readings relative to course year) does not equate to conceptual novelty, but it serves as a clear and replicable indicator of up-to-date reading selections. 
+
+Changes: Methods [pp. X–Y]. 
+
+ 
+
+> On page 10, I found myself wondering why the figures tend to have different reference groups every now and then. For example, in section 3.1.3, the authors wrote, "between 2000 and 2019 courses taught by a single female instructor ... ...than otherwise similar courses taught by **a single man** in that year... ... Similarly, courses taught by two women also assign newer materials than those taught by **two men** " -- this seems to me that the reference group in the first comparison is "courses taught by single man" while the reference group for the second is "courses taught by two men".  This is highly confusing because in the note of the specific figure, it says the reference is "courses taught by single male" . If different reference groups are used, then it must be clarified early, and in the figures' notes as well
+ 
+
+Response: We standardized reference categories across all models and clearly report them in figure captions (e.g., “single male instructor” as the baseline). 
+
+Changes: Figures [F1–Fx]; caption notes updated. 
+
+ 
+
+> On page 10, the robustness analyses need to be presented as appendices. Now they are only discussed but not displayed, so it is unable for readers to evaluate whether the results look good or not
+
+ 
+
+Response: All robustness analyses are now presented in the Supplementary Appendix (Tables S1–S3), rather than only discussed in text. 
+
+Changes: Supplement [Tables S1–S3]. 
+
+
+## Reviewer 2
+
+1. Discuss differences with prior literature (Dion et al., 2018). 
+
+ 
+
+Response: We added discussion comparing our findings to Dion et al. (2018). 
+
+Changes: Background/Literature [pp. X–Y]. 
+
+ 
+
+2. Discuss temporal changes and COVID-19. 
+
+ 
+
+Response: We expanded discussion of time trends and include post covid 19 data. 
+
+Changes: Discussion [pp. X–Y]. 
+
+ 
+
+3. Address team-teaching constraints. 
+
+Response: Response: We added discussion of variation in institutional policies governing team teaching. We recognize that team-teaching decisions and the composition of teaching teams do not depend solely on instructors’ preferences, but are also shaped by institutional practice, workload/credit allocation, and scheduling/administrative norms. 
+Changes: Discussion [pp. X–Y]; Supplement Figure/Table S1 (descriptive variation). 
+
+ 
+
+4. Address U.S. dominance of the data and compare with non-U.S. institutions. 
+
+ 
+
+Response: We ran models separately for U.S. and non-U.S. institutions. Patterns are directionally similar, though magnitudes vary slightly.  
+
+Changes: Results summary [pp. X–Y]; Tables S2–S3; Supplement S1. 
+
+ 
+
+5. Run analyses by broad area (sciences, humanities, social sciences). 
+
+ 
+
+Response:We conducted separate analyses by disciplinary area. Effects are directionally consistent across fields, though magnitudes differ. 
+
+Changes: Table S3; summary in main text [pp. X–Y]. 
+
+ 
+
+ 
+
+ 
+
+Data and Code Availability 
+
+ 
+
+A data and code availability statement will be included in the revised manuscript once the repository link and DOI are finalized. 
+
+ 
+
+Changes: Methods, Data Availability subsection [p. X]. 
+
+ 
+
+Files Provided with the Revision 
+
+ 
+
+1. Clean manuscript (revised) 
+
+2. Marked manuscript (tracked changes) 
+
+3. Response to Reviewers (this document) 
+
+ 
+
+Sincerely, 
+
+Andrea Blasco & Elisa Orlandi 

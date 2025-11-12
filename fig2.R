@@ -12,76 +12,50 @@ data_dir <- config$data_dir
 fig_dir <- file.path(getwd(), config$fig_dir) # full path
 
 knitr::opts_chunk$set(
-  echo = FALSE,
-  messages = FALSE,
-  fig.cap = "TODO: add caption here",
-  fig.path = fig_dir,
-  cache.path = "cache/fig2/",
-  dev = c("png", "pdf"),
-  dpi = 600
+    echo = FALSE,
+    messages = FALSE,
+    fig.cap = "TODO: add caption here",
+    fig.path = fig_dir,
+    cache.path = "cache/fig2/",
+    dev = c("png", "pdf"),
+    dpi = 600
 )
+
+source("R/utils.R")
+source("R/isced.R")
+source("R/fitting.R")
 
 # ----- theme --------------------------
 
-theme_set(theme_minimal())
+source("R/theme.R")
 
+theme_set(theme_custom())
 theme_update(
-  strip.text.y = element_blank(),
-  legend.position = "none",
+    strip.text.y = element_blank(),
+    legend.position = "none",
 )
 
 
 # ----- functions -----------------------
 
-source("config.R")
-
-convert_gender_label <- function(original_labels) {
-  dplyr::case_match(
-    original_labels,
-    "f"  ~ "Female only (F)",
-    "ff" ~ "Female-Female (FF)",
-    "mf" ~ "Mixed Gender (MF/FM)",
-    "fm" ~ "Mixed Gender (MF/FM)",
-    "mm" ~ "Male-Male (MM)",
-    "m"  ~ "Male only (M)",
-    .default = "Unknown"
-  )
-}
-
-fit_model <- function(formula) {
-  fit <- lmer(
-    formula,
-    control = lmerControl(optimizer = "bobyqa", calc.derivs = FALSE)
-  )
-  if (isSingular(fit)) {
-    warning("⚠️ Model is singular (overfit or sparse random effects)")
-  }
-  if (!is.null(fit@optinfo$conv$lme4$messages)) {
-    warning("⚠️ Convergence issues detected")
-  }
-  coeffs <- broom::tidy(fit, conf.int = TRUE)
-  return(coeffs)
-}
-
-
-
 stem_fields <- c(
-  "Astronomy", "Atmospheric Sciences",
-  "Biology", "Chemistry", "Computer Science",
-  "Earth Sciences", "Engineering",
-  "Engineering Technician", "Mathematics",
-  "Natural Resource Management", "Physics",
-  "Veterinary Medicine"
+    "Astronomy", "Atmospheric Sciences",
+    "Biology", "Chemistry", "Computer Science",
+    "Earth Sciences", "Engineering",
+    "Engineering Technician", "Mathematics",
+    "Natural Resource Management", "Physics",
+    "Veterinary Medicine"
 )
 
 annotate_stem <- function(fields) {
-  dplyr::case_when(
-    fields %in% stem_fields ~ "STEM",
-    is.na(fields) ~ NA,
-    TRUE ~ "Other"
-  )
+    dplyr::case_when(
+        fields %in% stem_fields ~ "STEM",
+        is.na(fields) ~ NA,
+        TRUE ~ "Other"
+    )
 }
 
+# ---- constants -----
 
 year_cutoff <- 1999
 
@@ -90,53 +64,224 @@ year_cutoff <- 1999
 filename_data <- file.path(data_dir, "rds/final.rds")
 
 ds <- readRDS(filename_data) %>%
-  filter(nchar(team) < 3, year > 1999) %>% 
-  mutate(
-    novelty_pctl = percent_rank(year - novelty),
-    intdisc_pr = percent_rank(mean_intdisc),
-    total_authors = female_authors + male_authors,
-    female_ratio = (female_authors + 1) / (male_authors + female_authors + 2),
-    stem = annotate_stem(field),
-    .by = year
-  )
+    filter(nchar(team) < 3, year > 1999) %>% 
+    mutate(
+        novelty_pctl = percent_rank(year - novelty),
+        intdisc_pr = percent_rank(mean_intdisc),
+        total_authors = female_authors + male_authors,
+        female_ratio = (female_authors + 1) / (male_authors + female_authors + 2),
+        stem = annotate_stem(field),
+        .by = year
+    )
 
-# ----- data-head -------------------------------
+# ----- top-rows -------------------------------
 
-head(ds) %>% 
-  knitr::kable(
-    caption = "Top Rows of the dataset"
-  )
+kbl_top_rows <- head(ds) %>% 
+    knitr::kable(
+        caption = "Top Rows of the dataset"
+    )
+
+# ---- fit-test ----
+source("R/fitting.R")
+
+ds_auth <- filter(ds, total_authors > 0)
+dim(ds_auth)
+
+fitted_models <- list()
+
+fit_glm <- fit_and_save_glm(
+    file = "glm_qp_female_auth_team_offset.rds",
+    formula = female_authors ~ team + offset(log(total_authors)),
+    data = ds_auth,
+    family = quasipoisson(link = "log"),
+    replace = TRUE
+)
+
+broom::tidy(fit_glm) %>%
+    filter(grepl("team", term)) %>%
+    mutate(term = gsub("team", "Team: ", term)) %>% 
+    mutate(exp_l1 = sprintf("[%2.1f%%]", 100 * (exp(estimate) - 1)))
+
+fitted_models[[1]] <- fit_glm
+
+fit_glm <- fit_and_save_glm(
+    file = "glm_qp_female_auth_team_yr_cntry_offset.rds",
+    formula = as.formula(female_authors ~ team + year + country + offset(log(total_authors))),
+    data = ds_auth,
+    family = quasipoisson(link = "log")
+)
+
+broom::tidy(fit_glm) %>%
+    filter(grepl("team", term)) %>%
+    mutate(term = gsub("team", "Team: ", term)) %>% 
+    mutate(exp_l1 = sprintf("[%2.1f%%]",100 * (exp(estimate) - 1)))
+
+fitted_models[[2]] <- fit_glm
+
+# Model 3: year + country + field
+
+fit_glm <- fit_and_save_glm(
+    file = "glm_qp_female_auth_team_yr_cntry_field_offset.rds",
+    formula = as.formula(female_authors ~ team + year + country + field + offset(log(total_authors))),
+    data = ds_auth,
+    family = quasipoisson(link = "log")
+)
+
+broom::tidy(fit_glm) %>%
+    filter(grepl("team", term)) %>%
+    mutate(term = gsub("team", "Team: ", term)) %>% 
+    mutate(exp_l1 = sprintf("[%2.1f%%]", 100 * (exp(estimate) - 1)))
+
+fitted_models[[3]] <- fit_glm
+
+
+p_star <- function(x) {
+    case_when(
+        x < 0.001 ~ "***",
+        x < 0.01 ~ "**",
+        x < 0.05 ~ "*",
+        TRUE ~ ""
+    )
+}
+fitted_models
+tbl_coeffs <- lapply(fitted_models, tidy) %>% 
+    bind_rows(.id = "model") 
+
+tbl_model_info <- bind_rows(lapply(fitted_models, broom::glance), .id = "model") %>% 
+    tidyr::pivot_longer(-model, names_to = "term", values_to = "estimate")
+
+tbl_coeffs_wide <- tbl_coeffs %>%
+    bind_rows(tbl_model_info) %>% 
+    mutate(
+        estimate = sprintf("%.2f%s", estimate, p_star(p.value)),
+        std.error = sprintf("(%.2f)", std.error),
+        statistic = sprintf("[%.2f]", statistic),
+        p.value = sprintf("%.2f", p.value),
+    ) %>%
+    tidyr::pivot_longer(c(-model, -term)) %>%
+    tidyr::pivot_wider(names_from = model, values_fill = "") %>%
+    filter(grepl("team|nobs", term)) 
+
+
+tbl_coeffs_wide %>% 
+    filter(name %in% c("estimate", "std.error")) %>% 
+    mutate(term = ifelse(name == "estimate", term, "") %>% gsub("team", "Team: ", .)) %>%
+    select(-name) %>%
+    knitr::kable()
+
+
+fit <- glmer(
+    formula = female_authors ~ team + (1|field),
+    data = ds_auth,
+    family = poisson(),
+    offset = log(ds_auth$total_authors),
+    start = start_vals,
+    verbose = TRUE
+)
+summary(fit)
+
+# ----- 
+
+ds_auth <- filter(ds, total_authors > 0)
+dim(ds_auth)
+
+fitted_models <- list()
+
+fit_glm <- fit_and_save_glm(
+    file = "glm_qp_female_auth_team_offset.rds",
+    formula = female_authors ~ team + offset(log(total_authors)),
+    data = ds_auth,
+    family = quasipoisson(link = "log"),
+    replace = TRUE
+)
+
+broom::tidy(fit_glm) %>%
+    filter(grepl("team", term)) %>%
+    mutate(term = gsub("team", "Team: ", term)) %>% 
+    mutate(exp_l1 = sprintf("[%2.1f%%]", 100 * (exp(estimate) - 1)))
+
+fitted_models[[1]] <- fit_glm
+
+fit_glm <- fit_and_save_glm(
+    file = "glm_qp_female_auth_team_yr_cntry_offset.rds",
+    formula = as.formula(female_authors ~ team + year + country + offset(log(total_authors))),
+    data = ds_auth,
+    family = quasipoisson(link = "log")
+)
+
+broom::tidy(fit_glm) %>%
+    filter(grepl("team", term)) %>%
+    mutate(term = gsub("team", "Team: ", term)) %>% 
+    mutate(exp_l1 = sprintf("[%2.1f%%]",100 * (exp(estimate) - 1)))
+
+fitted_models[[2]] <- fit_glm
+
+# Model 3: year + country + field
+
+fit_glm <- fit_and_save_glm(
+    file = "glm_qp_female_auth_team_yr_cntry_field_offset.rds",
+    formula = as.formula(female_authors ~ team + year + country + field + offset(log(total_authors))),
+    data = ds_auth,
+    family = quasipoisson(link = "log")
+)
+
+broom::tidy(fit_glm) %>%
+    filter(grepl("team", term)) %>%
+    mutate(term = gsub("team", "Team: ", term)) %>% 
+    mutate(exp_l1 = sprintf("[%2.1f%%]", 100 * (exp(estimate) - 1)))
+
+fitted_models[[3]] <- fit_glm
+
+# ... Recency
+summary(ds$novelty) # average year of cited references
+summary(ds$novelty)
+
+# e.g., 2006 < 2025 - 5 = 2020
+lm(novelty < year - 5 ~ 1, ds) # 95% have year of publication 
+
+ds_test <- filter(ds, !is.na(intdisc_pr), year == 2010)
+dim(ds_test)
+
+fit <- lmer(
+    intdisc_pr ~ team + country + (1 + team | field) + (1 | institution),
+    control = lmerControl(optimizer = "bobyqa", calc.derivs = FALSE),
+    verbose = TRUE,
+    data = ds_test
+)
+summary(fit)
+
+
 
 # ---- model, cache = TRUE, eval = FALSE
 
 system.time(
-  fit <- ds %>%
-    reframe(
-      bind_rows(
-        age_of_readings = {
-          message("Age, N = ", n())
-          fit_model(
-            novelty_pctl ~ team + country + (1 | year) +
-              (1 | field) + (1 | institution)
-          )
-        },
-        intdisc = {
-          message("IntDisc, N = ", n())
-          fit_model(
-            intdisc_pr ~ team + country + (1 | year) + 
-              (1 | field) + (1 | institution)
-          )
-        },
-        female_ratio = {
-          message("Female Ratio, N = ", n())
-          fit_model(
-            female_ratio ~ team + country + (1 | year) +
-              (1 | field) + (1 | institution)
-          )
-        },
-        .id = "depvar"
-      )
-    )
+    fit <- ds %>%
+        reframe(
+            bind_rows(
+                age_of_readings = {
+                    message("Age, N = ", n())
+                    fit_model(
+                        novelty_pctl ~ team + country + (1 | year) +
+                            (1 | field) + (1 | institution)
+                    )
+                },
+                intdisc = {
+                    message("IntDisc, N = ", n())
+                    fit_model(
+                        intdisc_pr ~ team + country + (1 | year) + 
+                            (1 | field) + (1 | institution)
+                    )
+                },
+                female_ratio = {
+                    message("Female Ratio, N = ", n())
+                    fit_model(
+                        female_ratio ~ team + country + (1 | year) +
+                            (1 | field) + (1 | institution)
+                    )
+                },
+                .id = "depvar"
+            )
+        )
 )
 
 

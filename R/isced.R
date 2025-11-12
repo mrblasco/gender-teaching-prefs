@@ -1,7 +1,3 @@
-library(dplyr)
-library(ggplot2)
-
-
 isced_mapping <- list(
   "Education" = c("Education"),
 
@@ -60,7 +56,9 @@ isced_mapping <- list(
 
 recode_field <- function(x) {
   sapply(x, function(f) {
-    category <- names(isced_mapping)[sapply(isced_mapping, function(fields) f %in% fields)]
+    category <- names(isced_mapping)[
+        sapply(isced_mapping, function(fields) f %in% fields)
+    ]
     ifelse(length(category) > 0, category, "Uncategorized")
   })
 }
