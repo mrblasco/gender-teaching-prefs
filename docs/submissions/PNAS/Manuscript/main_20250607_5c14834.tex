@@ -1,0 +1,765 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  12pt,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+    \setmainfont[]{Arial}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{british}
+\ifPDFTeX
+\else
+\babelfont{rm}[]{Arial}
+\fi
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\ifLuaTeX
+  \usepackage[english]{selnolig} % disable illegal ligatures
+\fi
+%\usepackage{times}
+\usepackage{babel}
+\usepackage{colortbl}
+\usepackage[footnotesize,bf,singlelinecheck=false]{caption}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+% for drafting
+\usepackage[nomarkers,nolists]{endfloat} % nomarkers, nolists
+\let\oldsection\section
+\renewcommand{\section}{\clearpage\oldsection}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections},
+  pdfauthor={Andrea Blasco; Elisa Orlandi},
+  pdflang={en-UK},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Gender in Teaching:
+Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections}
+\author{Andrea Blasco\footnote{European Commission, Joint Research Centre, Brussels, Belgium; (\href{mailto:andrea.blasco@ec.europa.eu}{\nolinkurl{andrea.blasco@ec.europa.eu}})} \and Elisa Orlandi\footnote{University of Bologna, Bologna, Italy, and European Commission, Joint Research Centre, Brussels, Belgium; (\href{mailto:elisa.orlandi15@unibo.it}{\nolinkurl{elisa.orlandi15@unibo.it}})}}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This study examines the formation of academic teaching teams and how their gender composition is associated with course design and gender disparity in academic recognition. Analysing over five million syllabi from higher education in fifteen countries, we document a persistent underrepresentation of mixed-gender co-teaching teams, which occur 50\% less frequently than expected under gender-neutral team formation. We link team gender configurations to critical course characteristics: interdisciplinarity, novelty of reading materials, and gender balance in assigned citations. Courses taught by mixed-gender teams are significantly more interdisciplinary than those taught by same-gender teams. Male-only teams cite substantially fewer female authors than female-only teams, and mixed-gender teams do not eliminate this gap. Moreover, courses led by solo female instructors or teams including at least one woman tend to incorporate more novel reading materials. These findings reveal persistent gendered patterns in teaching collaboration and content and point to mixed-gender co-teaching as a potential lever to promote interdisciplinarity and gender equity in academic representation.
+\end{abstract}
+
+\setstretch{1}
+JEL Classification: I21, I23, J16
+
+Keywords: education \textbar{} gender bias \textbar{} teams \textbar{} interdisciplinarity \textbar{} novelty \textbar{} syllabi
+
+\newpage
+\doublespace
+
+\section{Introduction}\label{introduction}
+
+Universities, vocational schools, and other higher education institutions play a crucial role in disseminating knowledge and developing human capital. Instructors shape this role through their choices in teaching subjects, assigned readings, and co-teaching arrangements. These decisions have a significant impact on student learning outcomes and students' career trajectories (\citeproc{ref-bakkenes2010teacher}{1}--\citeproc{ref-han2023interdisciplinary}{3}). However, they are not always optimal. Instructors may prefer working alone or with colleagues from similar backgrounds, which can limit course diversity and interdisciplinarity, reinforce gender stereotypes in specific subjects (\citeproc{ref-ellemers2018gender}{4}--\citeproc{ref-canaan2023impact}{6}), or even restrict instructors' exposure to different teaching methodologies, hindering their professional growth (\citeproc{ref-buckingham2021learning}{7}). Despite its significance, research on the underlying factors that drive these teaching choices remains limited, primarily due to a lack of data.
+
+This study addresses this gap by analysing a large dataset of English course syllabi from 1990 to 2019 across fifteen countries, which has been previously used to study school curricula (\citeproc{ref-han2023interdisciplinary}{3}), teaching metrics (\citeproc{ref-nowogrodzki2016mining}{8}), the impacts of AI (\citeproc{ref-gao2023quantifying}{9}), and the education-innovation gap (\citeproc{ref-biasi2022education}{10}). The dataset enables a systematic, quantitative analysis of long-term trends. Each syllabus includes instructor gender, institutional affiliation, course field, assigned readings, and a course description. This allows us to examine gender-based team formation, revealing potential preferences and institutional constraints in teaching collaborations. Furthermore, we analyse how team composition, particularly gender and size, relates to teaching practices, such as interdisciplinarity and reading assignments, while controlling for institutional factors, field, academic year, and other relevant variables.
+
+Specifically, this study addresses two key questions. First, how often do academics choose to teach alone versus co-teach with a colleague, and to what extent are co-teaching teams composed of mixed-gender pairs? Second, how do the size and gender composition of teaching teams relate to key aspects of teaching: (1) the course's interdisciplinarity, (2) the novelty of assigned readings, and (3) the gender representation of the cited authors? Previous research has shown that these aspects shape students' learning outcomes and career trajectories (\citeproc{ref-bakkenes2010teacher}{1}--\citeproc{ref-han2023interdisciplinary}{3}) while also influencing instructors' professional development and promotion within their institutions (\citeproc{ref-buckingham2021learning}{7}).
+
+Our results reveal a significant role for gender in co-teaching practices, with mixed-gender teams occurring consistently less frequently than same-gender teams across institutions and fields. Furthermore, mixed-gender teams arise much less often than expected under a null model that forms teams in a gender-neutral manner while keeping fixed field-related and institutional constraints. These findings underscore a persistent and widespread underrepresentation of mixed-gender collaborations in teaching, that is not fully explained by unobserved differences across fields or institutions.
+
+Our analysis further reveals a significant and strong association between the gender composition of a teaching team and the course's interdisciplinarity, with mixed-gender teams being more interdisciplinary than all-male teams or courses taught by individual instructors. This evidence suggests that gender diversity can be a potential lever for increasing interdisciplinary teaching in tertiary education. We also find a significant association between team configurations and the fraction of cited female authors. Specifically, classes taught by a female instructor alone tend to cite a higher fraction of female authors compared to courses taught by male instructors, with mixed-gender teams falling in between. This highlights teaching practices as an understudied potential driver of the underrepresentation of women in academia. Finally, we also observe a trend in novelty, with female instructors assigning more recent readings than their male counterparts, regardless of team size. This evidence contributes to the debate on the factors shaping the education-innovation gap (\citeproc{ref-biasi2022education}{10}).
+
+While prior research has investigated academics decision-making, especially how they form research collaborations (\citeproc{ref-guimera2005team}{11}--\citeproc{ref-yang2022gender}{14}), less is known about their teaching choices, including the formation of co-teaching teams, interdisciplinarity, and reading selections, and their effects on student outcomes.
+
+Our findings contribute to the literature on gender dynamics in academia, particularly research team formation (\citeproc{ref-milojevic2014principles}{13}, \citeproc{ref-boschini2007team}{15}, \citeproc{ref-love2022impact}{16}), which has shown significant gender homophily --- a tendency to collaborate with colleagues of the same gender (\citeproc{ref-kwiek2021gender}{17}). It also examines gender differences in citation patterns, a driving factor of the persistent gender bias in academia (\citeproc{ref-boivin2024sexism}{18}), including tenure promotion (\citeproc{ref-weisshaar2017publish}{19}), grant success (\citeproc{ref-bedi2012gender}{20}), co-authorships (\citeproc{ref-boschini2007team}{15}), and peer recognition (\citeproc{ref-sarsons2017recognition}{21}, \citeproc{ref-card2022gender}{22}). While prior research has primarily focused on these areas, we shift our attention to the citation gap in teaching. This issue may not only reinforce existing gender bias in academia but also shape students' learning outcomes and future career choices (\citeproc{ref-card2022impact}{23}), effects that are less well understood.
+
+By focusing on the relationships between teaching and interdisciplinarity, our work also contributes to the literature on the factors influencing interdisciplinarity in academia. There is evidence that interdisciplinarity research is less likely to be funded (\citeproc{ref-bromham2016interdisciplinary}{24}), tends to attract fewer citations when it is highly interdisciplinary (\citeproc{ref-lariviere2010relationship}{25}), and is correlated with the probability of publication in academic journals (\citeproc{ref-xiang2025evaluating}{\textbf{xiang2025evaluating?}}). Furthermore, students attending colleges with more interdisciplinary courses tend to earn higher earnings after graduation (\citeproc{ref-han2023interdisciplinary}{3}, \citeproc{ref-evans2016measuring}{26}). We extend this work by examining the association between gender composition and interdisciplinarity in teaching, showing that mixed-gender teams occur less frequently but tend to be more interdisciplinary. This finding suggests that removing barriers to mixed-gender team formation may increase interdisciplinarity in teaching.
+
+We also build on prior research on the underrepresentation of female-authored works in university curricula, which has been shown within specific fields (psychology and international relations) and at a small scale (\citeproc{ref-skitka2021gender}{27}--\citeproc{ref-harris2020diversify}{29}). Our results reveal a consistent and significant gap in the number of cited works between female and male instructors, which is only partially addressed within mixed-gender co-teaching. This evidence highlights teaching practices as an important factor shaping gender differences in recognition among scholars.
+
+Finally, studies about team formation are especially relevant to our work. These studies have found that mixed-gender teams tend to perform better in various settings (\citeproc{ref-yang2022gender}{14}, \citeproc{ref-bear2011role}{30}). In research collaboration, for example, mixed-gender teams often obtain more citations, produce more novel research, publish in more prestigious journals, and are more interdisciplinary (\citeproc{ref-yang2022gender}{14}, \citeproc{ref-maddi2021gender}{31}). Although we do not measure team ``performance'' as we lack data on students outcomes, our results show that mixed-gender co-teaching teams are consistently less likely to form, but, once created, they tend to deliver different outcomes, especially a higher interdisciplinarity, that previous literature has suggested having an impact on students outcomes as discussed above.
+
+\section{Materials and Methods}\label{sec:methods}
+
+\subsection{Data}\label{data}
+
+We obtained a corpus of over six million documents compiled by Open Syllabus (New York, US). Open Syllabus created this dataset through web extractions that identified syllabi from university websites, with a median confidence level of 99.8\%. A tagging algorithm extracted key course details, such as the title, field, description, academic year, duration, and language, a list of anonymised instructors, and the assigned readings.\footnote{The documentation available at: \url{https://docs.opensyllabus.org}} While the original dataset included syllabi in 49 languages, most documents (96\%) were in English. For simplicity, we focused exclusively on these documents.\footnote{Our focus on English-language courses means that, while we have comprehensive data for English-speaking countries such as Canada, Ireland, the United States, and Great Britain, the sample in non-English-speaking countries tends to be more representative of internationally oriented universities. These are typically institutions offering programs in English or advanced-level courses, such as postgraduate programs or disciplines where English is the primary medium of instruction within traditional universities.}
+
+The resulting dataset comprised 5.4 million syllabi from approximately 4,000 higher education institutions across fifteen countries (see Table \ref{tab:SI-country} for the list of countries) from 1990 to 2019, with a higher proportion of syllabi in recent years (see Table \ref{tab:SI-years}). OpenSyllabus classified these syllabi into 69 top-level fields derived from the U.S. Department of Education's CIP code classification (see Table \ref{tab:SI-fields}).\footnote{The original CIP classification is available online: \url{https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55}} About 2.9 million syllabi (53\% of the total) listed readings matched with bibliographic sources, providing additional metadata about authorship information, journal, and publication year. The institution was matched to a list of more than 22,000 entities from the Research Organisation Registry, providing further metadata, including the institution's country and enrollment figures --- the institutions in our sample account for over 35 million enrolled students today.\footnote{For more details on how OpenSyllabus classified and matched the data, the related documentation is available online at \url{https://docs.opensyllabus.org}.}
+
+Each syllabus lists one or more instructors, with 76\% listing a single instructor, 16\% listing two, 4\% listing three, and 4\% listing more than three instructors. OpenSyllabus determined the instructors gender automatically based on their names, resulting in 52\% male, 37\% female, and 11\% unknown categories. (Table \ref{tab:SI-composition} illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58\% male and 42\% female instructors, which aligns closely with the 45\% of female academic staff reported in OECD countries (\citeproc{ref-oecd2022}{32}). Open Syllabus used the same method to determine the gender of the authors listed in the readings, resulting in 32\% female and 56\% male authors, with 12\% of the authors having an unknown gender.
+
+\subsection{Outcome variables}\label{outcome-variables}
+
+Building on prior research highlighting the value of teaching cutting-edge knowledge (\citeproc{ref-biasi2022education}{10}), the role of interdisciplinary training in shaping career outcomes (\citeproc{ref-han2023interdisciplinary}{3}), and evidence of gender disparities in citation practices---particularly the under-recognition of female scholars and the influence of the citing author's gender (\citeproc{ref-aksnes2011female}{33}--\citeproc{ref-tekles2022same}{35})--- we defined key outcome variables to examine how team configurations, including gender composition and team size, are associated with the interdisciplinarity of assigned readings and their key characteristics, such as publication age and the inclusion of female-authored works. The outcome variables are described in detail below; a concise summary is provided in Table \ref{tab:outcome-variables}.
+
+\begin{table}
+\centering\centering
+\caption{\label{tab:outcome-variables}Outcome variables}
+\centering
+\fontsize{12}{14}\selectfont
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4cm}>{\raggedright\arraybackslash}p{10cm}}
+\toprule
+\multicolumn{1}{>{}p{4cm}}{\textbf{Variable}} & \multicolumn{1}{>{}p{10cm}}{\textbf{Definition}}\\
+\midrule
+\textbf{Interdisciplinarity} & Percentile rank of the course's interdisciplinarity score for the year.\\
+\addlinespace
+\textbf{Age of Readings} & Percentile rank of the average publication age of assigned readings.\\
+\addlinespace
+\textbf{Ratio of Female Authors} & Proportion of women authors in the assigned readings.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Interdisciplinarity}\label{interdisciplinarity}
+
+We measured interdisciplinarity by analysing course descriptions from syllabi, following Evans et al. (\citeproc{ref-han2023interdisciplinary}{3}, \citeproc{ref-evans2016measuring}{26}). This approach converts course descriptions into ``bags of words'', where word frequencies are normalised by the inverse ratio of term frequency to document frequency (TF-IDF). We then computed a correlation matrix of word usage across academic fields to quantify the conceptual distances between them. The interdisciplinarity score for each syllabus was calculated as a weighted average of pairwise correlations with other syllabi, with weights reflecting field distance (see Supporting Information, Section \ref{si-interdisciplinarity}). This method ensures that syllabi associated with distant fields, either academically or conceptually, are considered more interdisciplinary.\footnote{To scale to millions of documents, we used random subsampling of academic fields over years and averaged results across subsamples for robustness (see Supporting Information, Section \ref{si-interdisciplinarity}).}
+
+We expressed interdisciplinarity for each syllabus \(i\) as the percentile rank within each academic year of the interdisciplinarity score:
+\[
+  \text{Interdisciplinarity}_i = \text{PR}_{yr} (\text{Interdisciplinarity Score}_i),
+\]
+Where \(\text{PR}_{yr}\) represents the percentile rank function applied to all syllabi within a given year \(yr\). This normalisation controls for skewed score distributions and allows comparison across years.
+
+\subsubsection{Readings Selection}\label{readings-selection}
+
+To characterise the assigned readings, we calculated two key dimensions: the age of the readings and the proportion of female authors represented. First, we define the total number of references, \(N_i\), as the sum of articles, books, and chapters listed in a syllabus \(i\). This variable serves as a broad measure of a course's ``breadth,'' as more assigned readings may indicate a more extensive or comprehensive curriculum. Then, we define the \emph{Age of Readings} variable as the difference between the syllabus year (\(\text{Year}_i\)) and the average publication year of the assigned readings \(k=1,\cdots,K\):\\
+\[
+  \text{Age of Readings}_i = \text{PR}_{yr}\left(\text{Year}_i - \sum_{k=1}^{N_i} \text{Publication Year}_k / N_i\right),
+\]
+Where \(\text{PR}_{yr}\) represents the percentile rank function applied to all syllabi within a given year \(yr\). This variable provides a proxy of how recent, or ``novel,'' the readings are. While more sophisticated methods to measure novelty are available (\citeproc{ref-uzzi2013atypical}{36}, \citeproc{ref-wang2017bias}{37}), we employ this more straightforward approach because pedagogical innovation tends to be incremental, and computationally intensive methods are impractical for large-scale datasets like ours. We anticipate that novelty will vary across fields (e.g., history courses may cite older texts more frequently than computer science courses). Still, within-field differences in novelty serve as a proxy for how close a course is to the current frontier of knowledge (``novelty'').
+
+Finally, we define the \emph{Ratio of Female Authors} as the proportion of female authors among all authors in the assigned readings:
+\[
+  \text{Ratio of Female Authors}_i = \frac{\text{Female Authors}_i + 1} {\text{Female Authors}_i + \text{Male Authors}_i + 2}.
+\]
+Here, we add two pseudo-observations (one for each gender) to stabilise the ratio, preventing extreme values in cases with very few authors (\citeproc{ref-agresti2000simple}{38}). This metric enables us to examine whether gender and collaboration are associated with the representation of female-authored work in teaching.
+
+\subsection{Simulating Teaching Collaborations}\label{simulating-teaching-collaborations}
+
+Building on previous research showing that gender-diverse teams are underrepresented in science (\citeproc{ref-guimera2005team}{11}), we investigate the evolution of the gender composition of co-teaching teams to determine whether it deviates from what is expected under a gender-neutral matching process. Crucially, this analysis accounts for the fact that team formation is influenced not only by individual preferences but also by institutional factors, such as departmental affiliation or academic field, as co-teaching typically occurs among faculty within the same department or the same academic field. To account for these institutional constraints, we employ a Monte Carlo randomisation approach adapted from Uzzi et al. (\citeproc{ref-guimera2005team}{11}, \citeproc{ref-uzzi2013atypical}{36}). This approach preserves the overall gender composition and team size distribution while randomly reassigning instructors within strata defined by institution, field, and academic year. This simulation generates a randomised network in which instructors form teams independently of gender while maintaining the underlying institutional and disciplinary constraints. Therefore, by comparing actual data against teams formed in the randomised network, we can assess the difference between the observed team gender composition in the data and a counterfactual situation where instructors formed teams in a gender-neutral manner. See the details in the Supplementary Information (Section \ref{si-simulations}).
+
+\subsection{Regression analysis}\label{regression-analysis}
+
+To evaluate the association between gender composition, team size, and course content, we define four teaching team configurations, \(j\in \{F, M, MM, MF/FM, FF\}\), where F and M denote female and male instructors teaching alone, respectively. MM represents two male instructors; FM/MF indicates mixed-gender pairs; and FF corresponds to two female instructors. We then employ regression analysis to study the association between these team configurations and course outcomes across academic years, \(t = 1999, \cdots, 2020\). As discussed before, the outcomes of interest include (1) interdisciplinarity, (2) the average age of readings, and (3) the proportion of cited female authors. To estimate these effects, we employ the following linear mixed-effects model:
+\[
+Y_{j, t} = 
+ \alpha_t + 
+ \text{Team}_{j, t} + 
+ \text{STEM}_t + \eta_{f,t} +  % fields
+ \text{Country}_{t} + \text{Enroll}_t + \delta_{t} + 
+ \epsilon_{j, t}.
+\]
+Where:
+
+\begin{itemize}
+\item
+  \(Y_{j, t, f, c, s}\) is the outcome variable for team configuration \(j\) in year \(t\), field \(f\), and school \(s\),
+\item
+  \(\alpha_t\) is a fixed effect for the academic year \(t\),
+\item
+  \(\text{Team}_{j, t}\) is a fixed effect for team configuration \(j\) in year \(t\),
+\item
+  \(STEM_t\) is a fixed effect for STEM courses in year \(t\),
+\item
+  \(\eta_{f,t}\) is a random intercept for academic field \(f = 1,\cdots, 69\) at year \(t\),
+\item
+  \(\text{Country}_{c, t}\) is fixed effects for the institution \(s\)'s country \(c\) in year \(t\),
+\item
+  \(\text{Enroll}_{t}\) is an effect for the institution's enrollment size at year \(t\),
+\item
+  \(\delta_{s, t}\) is a random intercept for each of approximately 4000 unique institutions,
+\item
+  \(\epsilon_{j,t}\) is the residual error term.
+\end{itemize}
+
+Together, the model allows us to examine the association between teaching team configurations and citation-related course outcomes while accounting for potential confounding factors across disciplines and institutions.
+
+\section{Results}\label{results}
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{/Users/andreablasco/Documents_local/Work/02_Projects/01_Education_Projects/03_OpenSyllabus/gender-teaching-prefs/output/figures//evolution-1} 
+
+}
+
+\caption{Evolution of Teaching Teams by Gender Composition and Size. Trends in course gender composition from 2000 to 2019 reveal a steady increase in women's participation (both in solo-taught and two-instructor courses), while the proportion of mixed-gender teams has remained relatively stable over time. (A) Percentage of solo-taught courses by instructor gender over time. (B) Percentage of two-instructor courses by gender composition over time. N = 5.1 million courses. The shaded area represents 95\% confidence interval of the proportion per academic year.}\label{fig:team-trends}
+\end{figure}
+
+Figure \ref{fig:team-trends} illustrates gender composition and team size trends in university courses for single- and two-instructor courses (2000-2019). Panel A shows a decline in male-only single-instructor courses, from approximately 60\% in 2000 to 46\% in 2019, alongside an increase in female-only single-instructor courses, from roughly 25\% to 36\%.\footnote{This overall trend aligns with the increase in women holding academic positions worldwide. In 2000, women comprised approximately 35\% of the global academic staff. By 2022, this figure had risen to about 44\%, according to data from the World Bank. The data are available at: \url{https://data.worldbank.org/indicator/SE.TER.TCHR.FE.ZS}} Panel B shows male-only two-instructor courses also decreased, from about 8\% in the early 2000s to 6\% in 2020, while female-only and mixed-gender two-instructor courses remained relatively stable, each accounting for approximately 4\% and 3\%, respectively. These patterns indicate a consistent shift toward greater gender diversity in course instruction over time, with mixed-gender teaching teams (3\%) consistently less common than same-gender teams (10\%).
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{/Users/andreablasco/Documents_local/Work/02_Projects/01_Education_Projects/03_OpenSyllabus/gender-teaching-prefs/output/figures//montecarlo-1} 
+
+}
+
+\caption{Comparison of gender composition between actual courses and courses simulated with Monte Carlo. Simulations ensure gender neutrality while keeping constant institutional constraints (i.e., number of teams by size, institution, academic year, and 69 academic fields). Simulated mixed-gender teams consistently exceed observed proportions, highlighting persistent barriers to forming gender-diverse teaching teams.}\label{fig:montecarlo}
+\end{figure}
+
+To assess whether gender imbalances in co-teaching teams persist after accounting for institutional constraints across fields and institutions, Figure \ref{fig:montecarlo} compares observed teaching team compositions (2000--2019) with those generated by a gender-neutral Monte Carlo simulation. This model randomly shuffles instructors while preserving the overall distribution of course loads per year by institution and academic field but ignoring gender-based preferences or constraints (see Section \ref{sec:methods}).
+
+The results reveal that actual data systematically deviate from simulated expectations: same-gender teams, such as female-female (FF) and male-male (MM) courses, occur \emph{more} frequently in actual data than in simulations by 66\% and 20\%, respectively, in 2019. By contrast, mixed-gender collaborations (MF/FM) are consistently \emph{underrepresented} in the actual data (3\%) compared to simulations (6\%). These findings suggest that significant social or institutional dynamics---beyond chance---reinforce same-gender pairings, especially among women. Such dynamics may include gender-based homophily, mentoring networks, or within-department barriers or assignment practices.
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{/Users/andreablasco/Documents_local/Work/02_Projects/01_Education_Projects/03_OpenSyllabus/gender-teaching-prefs/output/figures//montecarlo-by-field-1} 
+
+}
+
+\caption{This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender (MF/FM) courses by academic field. The shaded bar indicates a 95\% confidence level of the proportion.}\label{fig:montecarlo-by-field}
+\end{figure}
+
+Figure \ref{fig:montecarlo-by-field} disaggregates the comparison between actual and simulated mixed-gender (MF/FM) courses by academic field. Nearly all fields exhibit a stark underrepresentation of mixed-gender teams (relative to expectations) by a factor of two to four times. For instance, in Medicine (Health and Welfare), the actual share of mixed-gender collaborations is 4.8\% compared to an expected 9.1\%, indicating a significant imbalance. Similar gaps are evident in Law (3.8\% actual vs.~6.4\% simulated) and Linguistics (4.3\% vs.~6.7\%), underscoring the pervasiveness of barriers to mixed-gender teams across various academic fields. Remarkably, we observe no differences in these patterns between male-dominated and female-dominated fields (e.g., Engineering or Accounting vs.~Nursing or Chemistry), suggesting that the underrepresentation of mixed-gender teams may be a structural feature rather than one driven by field-specific gender imbalances.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio]{/Users/andreablasco/Documents_local/Work/02_Projects/01_Education_Projects/03_OpenSyllabus/gender-teaching-prefs/output/figures//sim-by-cntry-1.pdf}}
+\caption{\label{fig:montecarlo-by-cntry}This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender courses (MF/FM) by country. Simulated mixed-gender teams consistently exceed observed proportions in all countries. EU countries are Austria, Denmark, France, Germany, Ireland, Italy, Netherlands, Poland, Portugal, Spain and Sweden.}
+\end{figure}
+
+Figure \ref{fig:montecarlo-by-cntry} illustrates that the proportion of mixed-gender teams in the simulations consistently exceeds the observed proportions across various geographic regions, despite notable variations in the magnitude of these differences. In 2019, for example, mixed-gender teams are relatively rare in Great Britain (1\%) compared to Canada (4\%). However, in the simulations, the proportion of mixed-gender teams in both countries increases substantially, 1\% to 3\% and 4\% to 5\%, respectively. In 2019, the most considerable discrepancy between simulated and observed proportions is in EU countries, where it ranges from 5\% to 12\%. Overall, these patterns underscore the robustness of the findings across diverse geographic contexts.
+
+\subsection{The Association Between Team Configuration and Course Content}\label{the-association-between-team-configuration-and-course-content}
+
+To examine how teaching team size and gender composition are associated with important aspects of course materials, we analyse three key metrics: the percentile rank of the interdisciplinarity score per year (``interdisciplinarity''), the average publication year of the readings (``age of readings''), and the share of female authors cited in the assigned readings (``share of female authors''). As previously discussed, we employ linear mixed-effects regressions to examine these relationships while accounting for unobserved differences across academic fields, institutions, time, and other relevant covariates.
+
+\subsubsection{Interdisciplinarity}\label{interdisciplinarity-1}
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{/Users/andreablasco/Documents_local/Work/02_Projects/01_Education_Projects/03_OpenSyllabus/gender-teaching-prefs/output/figures//plot-interdisciplinarity-1} 
+
+}
+
+\caption{This figure illustrates the yearly difference in interdisciplinarity relative to courses taught by a single male instructor (baseline = 0) for each team configuration. The values are regression coefficients obtained separately for each academic year, with controls for country and field. Interdisciplinarity is the percentile rank of each course’s interdisciplinarity score within its cohort; positive values, therefore, indicate a greater interdisciplinarity. The shaded area represents 95\% confidence intervals.}\label{fig:interdisciplinarity}
+\end{figure}
+
+Figure \ref{fig:interdisciplinarity} illustrates the evolving variation in interdisciplinarity across different team configurations, accounting for unobserved effects for academic field and country. When teaching alone, our analysis reveals little differences in interdisciplinarity between female and male instructors. However, in recent years, female instructors have increasingly taught significantly more interdisciplinary solo courses. By contrast, mixed-gender consistently exhibit higher interdisciplinarity compared to all-male teams. As the figure illustrates, in most years, the difference between mixed-gender and male-alone courses is statistically significant (p \textless{} 0.05), and teams with two male instructors tend to be less interdisciplinary than solo-male courses. Notably, we find no significant evidence of a difference between mixed-gender and teams with two female instructors. These results point to a robust association between gender diversity and interdisciplinarity.
+
+\subsubsection{Citing Women Authors}\label{citing-women-authors}
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{/Users/andreablasco/Documents_local/Work/02_Projects/01_Education_Projects/03_OpenSyllabus/gender-teaching-prefs/output/figures//plot-female-ratio-1} 
+
+}
+
+\caption{This figure plots the yearly difference in the share of female-authored readings relative to courses taught by a single male instructor (baseline = 0), for each team configuration. The values are regression coefficients obtained separately for each academic year, with controls for country and field. The outcome is the percentage-point gap in the proportion of female authors cited in the course readings; positive values, therefore, indicate a larger share of female authors over total authors associated with a given team configuration in that year. The shaded area represents 95\% confidence intervals.}\label{fig:female-authors}
+\end{figure}
+
+Figure \ref{fig:female-authors} highlights significant and persistent gender association with the percentage of female authors over total authors cited in course readings per year, controlling for academic field and country.\footnote{This analysis excludes syllabi with no matched readings with the available bibliographic sources and, within the matched readings, excludes the references where the authors' gender remained unidentified.} All-female courses consistently cite a higher fraction of female authors than all-male ones in the same year, with an effect that decreases over time, going from 6\% in 2000 to 3\% in 2019, with minor or insignificant differences between courses taught by one vs.~two instructors. Mixed-gender courses are in between, as they cite a larger share of women than all-male courses but less than all-female courses. Overall, these results indicate a consistent association between gender and cited patterns, suggesting that readings tend to cluster based on the gender of the instructors, and mixed-gender teams could promote greater diversity in assigned readings.
+
+\subsubsection{Age of Readings (``novelty'')}\label{age-of-readings-novelty}
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{/Users/andreablasco/Documents_local/Work/02_Projects/01_Education_Projects/03_OpenSyllabus/gender-teaching-prefs/output/figures//plot-age-of-references-1} 
+
+}
+
+\caption{This figure illustrates the yearly difference in the percentile rank of the Age of References relative to courses taught by a single male instructor (baseline = 0) for each team configuration. The Age of Reference variable is the syllabus’ year minus the average publication year of the assigned readings. The coefficients are estimated separately for each academic year, controlling for country and broad field. Positive values indicate that the team configuration assigns newer readings compared to the male-alone baseline in the same year. The shaded area represents 95\% confidence intervals.}\label{fig:age-readings}
+\end{figure}
+
+Figure \ref{fig:age-readings} reveals significant gender differences in the publication age of the selected readings after accounting for differences across fields and country.\footnote{This analysis includes only courses with matched bibliographic data.} Between 2000 and 2019, courses taught by a single female instructor tend to assign newer readings than otherwise similar courses taught by a single man in that year, with a difference that goes from -3\% in 2000 to -1\% in 2019. Similarly, courses led by two women also assign newer material than those taught by two men, with a decreasing difference. Mixed-gender teams tend to assign newer readings than the baseline in a few years but not consistently across all years. There are no significant differences between courses taught by two male instructors and the single-male baseline. Overall, these findings suggest that women tend to assign more novel readings, although this gender difference tends to decrease over time.
+
+\subsection{Robustness}\label{robustness}
+
+To ensure the reliability and robustness of our results, we conducted several additional analyses. In addition to reporting results from separate regressions on subsets of data by year, we also estimated mixed-effects regressions using the full dataset. These results are broadly consistent with those presented in the paper.
+
+Furthermore, while the reported model specification is our preferred one, we explored several alternatives. First, we log-transformed our dependent variables -- the age of readings, interdisciplinarity score, and count of female authors --- to explore potential non-linear relationships, particularly relevant for disciplines with old readings (e.g., history)
+
+Second, we employed a quasi-Poisson mixed-effect model instead of the reported linear mixed-effect regression to better account for non-linearities in the count of female authors. We also trimmed the data to exclude outliers, such as courses with an unusually high number of readings. These changes yield similar results.
+
+We further tested alternative model specifications, such as considering the number of instructors as a numeric variable interacted with the proportion of female instructors to explore a linear association with the dependent variables. While we observe similar results, the linear association could be misleading when extrapolated beyond two instructors. So, we preferred to keep team configurations as fixed effects, as reported here.
+
+Finally, we further explored the specifications that distinguish between male-led and female-led courses, using the gender of the first listed instructor as a proxy for seniority. Overall, results appear robust to these additional analyses.
+
+\section{Discussion}\label{discussion}
+
+\subsection{Summary of the findings}\label{summary-of-the-findings}
+
+Our analysis of approximately five million syllabi from over 4,000 universities in fifteen countries reveals several key findings. First, while the share of classes taught by female instructors has been increasing over the last twenty years, the fraction of mixed-gender co-teaching classes has remained consistently low (3\%) and significantly below that of same-gender teams (10\%). This trend can stem from a lack of gender diversity in specific fields or administrative practices that limit opportunities for forming mixed-gender collaborations. However, it can also arise from gender preferences in team formation, whereby instructors tend to form teams with same-gender partners (``homophily''), a tendency already observed in research collaborations and other academic domains (e.g., \citeproc{ref-kwiek2021gender}{17}).
+
+Moreover, our analysis shows that the underrepresentation of mixed-gender teams persists even after accounting for unobserved differences across fields, institutions, and years. Specifically, employing Monte Carlo simulations that randomly form teams in a gender-neutral manner, our analysis controls for typical institutional constraints, such as maintaining constant course loads across institutions and 69 academic fields within a given year. By comparing simulated to actual teams, we find that instructors tend to partner with same-gender colleagues more than twice as expected between 2005 and 2019. This result is robust across academic fields, although it is more pronounced in specific fields (e.g., Chemistry, Business, Medicine). Additionally, the underrepresentation of mixed-gender teams is consistent across different countries, with the most substantial effect in EU countries, where only 5\% of courses are taught by mixed-gender teams, compared to an expected 12\%.
+
+\subsection{Main Contributions}\label{main-contributions}
+
+These findings extend prior research on academic collaboration, which has traditionally focused on research partnerships (\citeproc{ref-guimera2005team}{11}, \citeproc{ref-wuchty2007increasing}{12}, \citeproc{ref-yang2022gender}{14}, \citeproc{ref-boschini2007team}{15}, \citeproc{ref-maddi2021gender}{31}), to the domain of teaching. The significant gender patterns and underrepresentation of mixed-gender co-teaching teams echo the literature on homophily and bias in team formation within research collaborations (e.g., \citeproc{ref-kwiek2021gender}{17}) and underscore the critical role of gender dynamics not only in scientific production but also in shaping pedagogical practices. Moreover, by combining the analysis of a massive syllabi dataset with Monte Carlo simulations of a gender-neutral team formation, our findings show that these patterns cannot be explained solely by country-level, institutional and field-specific factors, such as cultural barriers or a gender imbalance in specific fields. This evidence highlights the need to investigate these gender dynamics further, focusing on the underlying causal mechanisms that limit gender-diverse collaborations in teaching, a critical direction for future research.
+
+Our analysis further highlights how different team configurations are associated with key aspects of teaching: (1) mixed-gender teams tend to be more interdisciplinary than all-male teams, (2) all-female teams tend to assign more novel readings, and (3) mixed-gender teams tend to cite a higher share of female authors than all-male teams, but less than all-female teams. These associations are not driven by unobserved differences across fields, institutions, and years that we account for in the regressions. Furthermore, these findings expand existing literature in the following ways.
+
+First, building on prior research that measures interdisciplinary curricula (\citeproc{ref-evans2016measuring}{26}) and examines their effects on student outcomes (\citeproc{ref-han2023interdisciplinary}{3}), our study shifts the focus to the drivers of interdisciplinarity, linking it to the size and gender composition of teaching teams. While we find only minor and inconsistent gender differences in solo-taught teams, interdisciplinarity significantly increases in mixed-gender teaching teams. This effect is associated with the presence of women collaborators, who tend to be more interdisciplinary when working in teams. These findings extend the literature that compares interdisciplinarity between men and women in academic research (\citeproc{ref-pinheiro2022women}{39}) to the teaching domain, establishing a novel connection between gender diversity and interdisciplinary teaching practices. This connection highlights a potential lever for universities and academic institutions seeking to foster interdisciplinarity in their curricula.
+
+Secondly, our study advances our understanding of the determinants of gender disparities in academic recognition {[}by extending the focus beyond scholarly citations to teaching materials. While prior research has extensively focused on gender citation gaps in academic publications {[}REFs{]}, our findings illustrate the critical role of gender dynamics in the content presented in class and assigned readings. These findings suggest new potential drivers of gender stereotypes in academia (\citeproc{ref-chatterjee2021gender}{34}), underscoring the need to broaden research on the causal mechanisms underlying gender disparities in citation practices to include teaching contexts, thereby moving beyond the current emphasis on scholarly citations alone.
+
+Finally, our findings reveal a persistent gender-based association with the assignment of novel materials, whereby female instructors tend to include more novel content in their syllabi than male instructors. This trend holds even when accounting for the order of appearance in the syllabus, which serves as a proxy for the instructional experience or hierarchical position. This evidence contributes to understanding the drivers of the observed gender-innovation gap in tertiary education (e.g., \citeproc{ref-biasi2022education}{10}). While our results suggest a strong gender association, they remain inconclusive regarding its underlying drivers, whether the pattern reflects gender per se or is confounded by age or career stage (e.g., younger vs.~female instructors). Notably, this trend coincides with the growing presence of women entering academia during the study period, suggesting that newer instructors may play a key role in pushing curricular boundaries. Nonetheless, further research is needed to disentangle the influence of gender from other intersecting factors, such as cohort effects, field-specific norms, and institutional context.
+
+\subsection{Limitations}\label{limitations}
+
+Our analysis bears several limitations. First, we lack more granular information on the course's subfields that go beyond the 69 top-level fields identified in the dataset. If male and female instructors tend to concentrate on different subfields (e.g., Econometrics and Macroeconomics, within Economics), the observed underrepresentation of mixed-gender teams may reflect limited availability of instructors of the other gender in the subfield, especially for advanced courses where teaching teams are more likely to form around narrower areas of expertise. This limitation prevents disentangling the exact driver of mixed-gender underrepresentation, which can derive from gender-based preferences towards subfields, limiting availability, or a tendency to seek same-gender partners or homophily. Further research is needed to disentangle these underlying mechanisms fully.
+
+Similarly, another limitation is the lack of data on potential determinants of team formation that operate within institutions, such as instructor experience or academic rank. Hierarchical differences or administrative structures may contribute to the observed gap in cross-gender collaborations --- for example, if newly appointed female instructors are less likely to be selected by higher-ranking male instructors. However, our results illustrate that the under-representation of mixed-gender teams persists even when co-teaching teams are disaggregated by male-led and female-led courses (as measured by the order of appearance in the syllabus), demonstrating that the trend holds regardless of hierarchical differences. Therefore, while we cannot entirely exclude other institutional constraints, the observed gap in mixed-gender teams likely reflects strong gender-based homophily.
+
+Our findings underscore a significant and consistent underrepresentation of gender-mixed teaching teams, carrying profound implications. Limited mixed-gender collaborations in teaching may limit the exchange of information among instructors of different genders and restrict students' access to diverse courses. These dynamics, in turn, could hinder interdisciplinary engagement or reinforce structural disadvantages for women within academic networks. Our work thus identifies a potential additional driver of gender bias, complementing existing research on gender disparities in various academic settings, including research collaboration, access to funding, and student gender stereotypes.
+
+\subsection{Conclusion}\label{conclusion}
+
+Overall, this study offers critical insights into the academic market. As for research teams, teaching teams can impact instructors in multiple ways. First, junior faculty may have access to the experience and advice of senior faculty, which could increase their chances of promotion. Secondly, diverse teaching teams may inspire research collaborations, including interdisciplinary work. Finally, teaching assistants can actively seek out mentors and may benefit from these collaborations when applying for PhD programs or entering the labour market. Therefore, understanding how teaching teams are formed can help explain career trajectories.
+
+\newpage
+\processdelayedfloats
+
+\newpage 
+\appendix
+\renewcommand{\thefigure}{SI-\arabic{figure}}
+\renewcommand{\thesection}{SI}
+\renewcommand{\thesubsection}{SI-\arabic{subsection}}
+\setcounter{figure}{0}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+\renewcommand{\thetable}{SI-\arabic{table}}
+
+\section{Supporting Information}\label{supporting-information}
+
+\subsection{Simulating Gender-Neutral Courses}\label{si-simulations}
+
+We employed a simlar methodology to that developed by (\citeproc{ref-uzzi2013atypical}{36}) for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with \(n\) instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with \(m\) male instructors and \(f\) female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
+
+\subsection{Interdiscipline Similarity}\label{si-interdisciplinarity}
+
+We measured interdisciplinarity using text similarity between syllabi as in (\citeproc{ref-evans2016measuring}{26}) and (\citeproc{ref-han2023interdisciplinary}{3}). We transformed text from course descriptions into ``bags of words,'' with term frequences (TF) normalised using the inverse document frequency (IDF). For each year, we calculated the TF-IDF scores for all syllabi and for 69 academic fields, using concatenated descriptions for the fields. We then computed the weighted average of the cosine similarity, \(\cos (i, f)\), between each course \(i\) and field \(f\), where the weight is based on the similarity between field \(f\) and the course's closest field \(f_{\max}\). Specifically, \(w(f_{\max}, f) = \cos(f_{\max}, f)\), where \(f_{\max}\) is the field that has the highest cosine similarity with course \(i\) (i.e., \(f_{\max} = \arg\max_f \cos(i, f)\)) in that academic year.
+
+Thus, the interdisciplinarity score for course \(i\) is:
+\[
+  \text{interdisciplinarity score}_i = 1 - \frac{\sum_{f \in (1, 69)} \cos(f_{\max}, f) \cdot \cos(i, f)}{\sum_{f \in (1, 69)} \cos(f_{\max}, f)}. 
+\]
+To reduce computational costs, we ``bootstrap'' the field-by-field cosine similarity matrix by using a 10\% random sample of syllabi for each academic year. We repeated the sub-sampling procedure ten times and averaged the results.
+
+\clearpage
+
+\subsection{Addtional Tables}\label{addtional-tables}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:SI-country}Number of Syllabi per Country}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrr}
+\toprule
+Country & N (thousands) & \%\\
+\midrule
+\cellcolor{gray!10}{Austria} & \cellcolor{gray!10}{33.3} & \cellcolor{gray!10}{0.6}\\
+Other & 55.3 & 1.0\\
+\cellcolor{gray!10}{Canada} & \cellcolor{gray!10}{389.8} & \cellcolor{gray!10}{7.3}\\
+Germany & 62.4 & 1.2\\
+\cellcolor{gray!10}{Denmark} & \cellcolor{gray!10}{24.3} & \cellcolor{gray!10}{0.5}\\
+Spain & 37.8 & 0.7\\
+\cellcolor{gray!10}{France} & \cellcolor{gray!10}{5.9} & \cellcolor{gray!10}{0.1}\\
+Great Britain & 583.6 & 10.9\\
+\cellcolor{gray!10}{Ireland} & \cellcolor{gray!10}{50.9} & \cellcolor{gray!10}{0.9}\\
+Italy & 299.9 & 5.6\\
+\cellcolor{gray!10}{Netherlands} & \cellcolor{gray!10}{86.5} & \cellcolor{gray!10}{1.6}\\
+Poland & 107.2 & 2.0\\
+\cellcolor{gray!10}{Portugal} & \cellcolor{gray!10}{42.1} & \cellcolor{gray!10}{0.8}\\
+Sweden & 42.1 & 0.8\\
+\cellcolor{gray!10}{USA} & \cellcolor{gray!10}{3554.1} & \cellcolor{gray!10}{66.1}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:SI-fields}Number of Syllabi per Field}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrlrr}
+\toprule
+Field & N (thousands) & \% & Field & N (thousands) & \%\\
+\midrule
+\cellcolor{gray!10}{Accounting} & \cellcolor{gray!10}{76.9} & \cellcolor{gray!10}{1.4} & \cellcolor{gray!10}{Agriculture} & \cellcolor{gray!10}{36.2} & \cellcolor{gray!10}{0.7}\\
+Anthropology & 51.9 & 1 & Architecture & 48.5 & 0.9\\
+\cellcolor{gray!10}{Astronomy} & \cellcolor{gray!10}{13.9} & \cellcolor{gray!10}{0.3} & \cellcolor{gray!10}{Atmospheric Sciences} & \cellcolor{gray!10}{6.6} & \cellcolor{gray!10}{0.1}\\
+Basic Computer Skills & 51.1 & 0.9 & Basic Skills & 50.7 & 0.9\\
+\cellcolor{gray!10}{Biology} & \cellcolor{gray!10}{250.3} & \cellcolor{gray!10}{4.7} & \cellcolor{gray!10}{Business} & \cellcolor{gray!10}{450.4} & \cellcolor{gray!10}{8.4}\\
+Career Skills & 13.9 & 0.3 & Chemistry & 106.4 & 2\\
+\cellcolor{gray!10}{Chinese} & \cellcolor{gray!10}{10.6} & \cellcolor{gray!10}{0.2} & \cellcolor{gray!10}{Classics} & \cellcolor{gray!10}{23.3} & \cellcolor{gray!10}{0.4}\\
+Computer Science & 310.5 & 5.8 & Construction & 10.9 & 0.2\\
+\cellcolor{gray!10}{Cosmetology} & \cellcolor{gray!10}{6.9} & \cellcolor{gray!10}{0.1} & \cellcolor{gray!10}{Criminal Justice} & \cellcolor{gray!10}{45.5} & \cellcolor{gray!10}{0.8}\\
+Criminology & 10.5 & 0.2 & Culinary Arts & 9.7 & 0.2\\
+\cellcolor{gray!10}{Dance} & \cellcolor{gray!10}{14.2} & \cellcolor{gray!10}{0.3} & \cellcolor{gray!10}{Dentistry} & \cellcolor{gray!10}{13.9} & \cellcolor{gray!10}{0.3}\\
+Earth Sciences & 49.5 & 0.9 & Economics & 130.9 & 2.4\\
+\cellcolor{gray!10}{Education} & \cellcolor{gray!10}{240.3} & \cellcolor{gray!10}{4.5} & \cellcolor{gray!10}{Engineering} & \cellcolor{gray!10}{215.1} & \cellcolor{gray!10}{4}\\
+Engineering Technician & 61.2 & 1.1 & English Literature & 357.3 & 6.6\\
+\cellcolor{gray!10}{Film and Photography} & \cellcolor{gray!10}{49.8} & \cellcolor{gray!10}{0.9} & \cellcolor{gray!10}{Fine Arts} & \cellcolor{gray!10}{112.4} & \cellcolor{gray!10}{2.1}\\
+Fitness and Leisure & 93.0 & 1.7 & French & 33.5 & 0.6\\
+\cellcolor{gray!10}{Geography} & \cellcolor{gray!10}{43.3} & \cellcolor{gray!10}{0.8} & \cellcolor{gray!10}{German} & \cellcolor{gray!10}{42.2} & \cellcolor{gray!10}{0.8}\\
+Health Technician & 31.9 & 0.6 & Hebrew & 3.1 & 0.1\\
+\cellcolor{gray!10}{History} & \cellcolor{gray!10}{227.4} & \cellcolor{gray!10}{4.2} & \cellcolor{gray!10}{Japanese} & \cellcolor{gray!10}{10.7} & \cellcolor{gray!10}{0.2}\\
+Journalism & 19.9 & 0.4 & Law & 99.5 & 1.9\\
+\cellcolor{gray!10}{Liberal Arts} & \cellcolor{gray!10}{16.7} & \cellcolor{gray!10}{0.3} & \cellcolor{gray!10}{Library Science} & \cellcolor{gray!10}{25.0} & \cellcolor{gray!10}{0.5}\\
+Linguistics & 32.3 & 0.6 & Marketing & 51.6 & 1\\
+\cellcolor{gray!10}{Mathematics} & \cellcolor{gray!10}{406.2} & \cellcolor{gray!10}{7.6} & \cellcolor{gray!10}{Mechanic / Repair Tech} & \cellcolor{gray!10}{23.4} & \cellcolor{gray!10}{0.4}\\
+Media / Communications & 118.8 & 2.2 & Medicine & 110.0 & 2\\
+\cellcolor{gray!10}{Military Science} & \cellcolor{gray!10}{2.9} & \cellcolor{gray!10}{0.1} & \cellcolor{gray!10}{Music} & \cellcolor{gray!10}{101.2} & \cellcolor{gray!10}{1.9}\\
+Natural Resource Management & 28.0 & 0.5 & Nursing & 98.5 & 1.8\\
+\cellcolor{gray!10}{Nutrition} & \cellcolor{gray!10}{19.6} & \cellcolor{gray!10}{0.4} & \cellcolor{gray!10}{Philosophy} & \cellcolor{gray!10}{70.8} & \cellcolor{gray!10}{1.3}\\
+Physics & 80.4 & 1.5 & Political Science & 167.3 & 3.1\\
+\cellcolor{gray!10}{Psychology} & \cellcolor{gray!10}{222.7} & \cellcolor{gray!10}{4.1} & \cellcolor{gray!10}{Public Administration} & \cellcolor{gray!10}{7.8} & \cellcolor{gray!10}{0.1}\\
+Public Safety & 7.4 & 0.1 & Religion & 29.9 & 0.6\\
+\cellcolor{gray!10}{Sign Language} & \cellcolor{gray!10}{6.9} & \cellcolor{gray!10}{0.1} & \cellcolor{gray!10}{Social Work} & \cellcolor{gray!10}{48.8} & \cellcolor{gray!10}{0.9}\\
+Sociology & 107.5 & 2 & Spanish & 60.5 & 1.1\\
+\cellcolor{gray!10}{Theatre Arts} & \cellcolor{gray!10}{36.3} & \cellcolor{gray!10}{0.7} & \cellcolor{gray!10}{Theology} & \cellcolor{gray!10}{36.9} & \cellcolor{gray!10}{0.7}\\
+Transportation & 4.3 & 0.1 & Veterinary Medicine & 11.9 & 0.2\\
+\cellcolor{gray!10}{Women's Studies} & \cellcolor{gray!10}{7.4} & \cellcolor{gray!10}{0.1} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:SI-years}Number of Syllabi per Year}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrr}
+\toprule
+Academic year & N (thousands) & \%\\
+\midrule
+\cellcolor{gray!10}{1999 or older} & \cellcolor{gray!10}{40.5} & \cellcolor{gray!10}{0.8}\\
+2000 & 20.0 & 0.4\\
+\cellcolor{gray!10}{2001} & \cellcolor{gray!10}{27.2} & \cellcolor{gray!10}{0.5}\\
+2002 & 40.1 & 0.7\\
+\cellcolor{gray!10}{2003} & \cellcolor{gray!10}{55.1} & \cellcolor{gray!10}{1.0}\\
+2004 & 73.8 & 1.4\\
+\cellcolor{gray!10}{2005} & \cellcolor{gray!10}{77.2} & \cellcolor{gray!10}{1.4}\\
+2006 & 95.5 & 1.8\\
+\cellcolor{gray!10}{2007} & \cellcolor{gray!10}{100.6} & \cellcolor{gray!10}{1.9}\\
+2008 & 124.0 & 2.3\\
+\cellcolor{gray!10}{2009} & \cellcolor{gray!10}{153.0} & \cellcolor{gray!10}{2.8}\\
+2010 & 200.4 & 3.7\\
+\cellcolor{gray!10}{2011} & \cellcolor{gray!10}{256.3} & \cellcolor{gray!10}{4.8}\\
+2012 & 302.2 & 5.6\\
+\cellcolor{gray!10}{2013} & \cellcolor{gray!10}{375.3} & \cellcolor{gray!10}{7.0}\\
+2014 & 446.5 & 8.3\\
+\cellcolor{gray!10}{2015} & \cellcolor{gray!10}{464.6} & \cellcolor{gray!10}{8.6}\\
+2016 & 547.8 & 10.2\\
+\cellcolor{gray!10}{2017} & \cellcolor{gray!10}{658.5} & \cellcolor{gray!10}{12.3}\\
+2018 & 669.2 & 12.5\\
+\cellcolor{gray!10}{2019} & \cellcolor{gray!10}{647.0} & \cellcolor{gray!10}{12.0}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:SI-composition}Teaching Team Configurations}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrr}
+\toprule
+Team composition & N (thousands) & \%\\
+\midrule
+\cellcolor{gray!10}{Male only (M)} & \cellcolor{gray!10}{2587.6} & \cellcolor{gray!10}{48.1}\\
+Female only (F) & 1828.6 & 34.0\\
+\cellcolor{gray!10}{Male-Male (MM)} & \cellcolor{gray!10}{349.6} & \cellcolor{gray!10}{6.5}\\
+Female-Female (FF) & 228.6 & 4.3\\
+\cellcolor{gray!10}{Mixed Gender (MF/FM)} & \cellcolor{gray!10}{83.4} & \cellcolor{gray!10}{1.6}\\
+Mixed Gender (MF/FM) & 67.9 & 1.3\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\processdelayedfloats
+\clearpage
+\singlespacing
+
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{0}{1}
+\bibitem[\citeproctext]{ref-bakkenes2010teacher}
+\CSLLeftMargin{1. }%
+\CSLRightInline{I. Bakkenes, J. D. Vermunt, T. Wubbels, Teacher learning in the context of educational innovation: Learning activities and learning outcomes of experienced teachers. \emph{Learning and instruction} \textbf{20}, 533--548 (2010).}
+
+\bibitem[\citeproctext]{ref-vembye2024effects}
+\CSLLeftMargin{2. }%
+\CSLRightInline{M. H. Vembye, F. Weiss, B. Hamilton Bhat, The effects of co-teaching and related collaborative models of instruction on student achievement: A systematic review and meta-analysis. \emph{Review of Educational Research} \textbf{94}, 376--422 (2024).}
+
+\bibitem[\citeproctext]{ref-han2023interdisciplinary}
+\CSLLeftMargin{3. }%
+\CSLRightInline{S. Han, J. LaViolette, C. Borkenhagen, W. McAllister, P. S. Bearman, Interdisciplinary college curriculum and its labor market implications. \emph{Proceedings of the National Academy of Sciences} \textbf{120}, e2221915120 (2023).}
+
+\bibitem[\citeproctext]{ref-ellemers2018gender}
+\CSLLeftMargin{4. }%
+\CSLRightInline{N. Ellemers, Gender stereotypes. \emph{Annual review of psychology} \textbf{69}, 275--298 (2018).}
+
+\bibitem[\citeproctext]{ref-lockwood2006someone}
+\CSLLeftMargin{5. }%
+\CSLRightInline{P. Lockwood, {``Someone like me can be successful''}: Do college students need same-gender role models? \emph{Psychology of women quarterly} \textbf{30}, 36--46 (2006).}
+
+\bibitem[\citeproctext]{ref-canaan2023impact}
+\CSLLeftMargin{6. }%
+\CSLRightInline{S. Canaan, P. Mouganie, The impact of advisor gender on female students' STEM enrollment and persistence. \emph{Journal of Human Resources} \textbf{58}, 593--632 (2023).}
+
+\bibitem[\citeproctext]{ref-buckingham2021learning}
+\CSLLeftMargin{7. }%
+\CSLRightInline{L. R. Buckingham, A. López-Hernández, B. Strotmann, Learning by comparison: The benefits of co-teaching for university professors' professional development in \emph{Frontiers in Education}, (Frontiers Media SA, 2021), p. 776991.}
+
+\bibitem[\citeproctext]{ref-nowogrodzki2016mining}
+\CSLLeftMargin{8. }%
+\CSLRightInline{A. Nowogrodzki, Mining the secrets of college syllabuses. \emph{Nature} \textbf{539}, 125--126 (2016).}
+
+\bibitem[\citeproctext]{ref-gao2023quantifying}
+\CSLLeftMargin{9. }%
+\CSLRightInline{J. Gao, D. Wang, Quantifying the benefit of artificial intelligence for scientific research. \emph{arXiv preprint arXiv:2304.10578} (2023).}
+
+\bibitem[\citeproctext]{ref-biasi2022education}
+\CSLLeftMargin{10. }%
+\CSLRightInline{B. Biasi, S. Ma, {``The education-innovation gap''} (National Bureau of Economic Research, 2022).}
+
+\bibitem[\citeproctext]{ref-guimera2005team}
+\CSLLeftMargin{11. }%
+\CSLRightInline{R. Guimera, B. Uzzi, J. Spiro, L. A. N. Amaral, Team assembly mechanisms determine collaboration network structure and team performance. \emph{Science} \textbf{308}, 697--702 (2005).}
+
+\bibitem[\citeproctext]{ref-wuchty2007increasing}
+\CSLLeftMargin{12. }%
+\CSLRightInline{S. Wuchty, B. F. Jones, B. Uzzi, The increasing dominance of teams in production of knowledge. \emph{Science} \textbf{316}, 1036--1039 (2007).}
+
+\bibitem[\citeproctext]{ref-milojevic2014principles}
+\CSLLeftMargin{13. }%
+\CSLRightInline{S. Milojević, Principles of scientific research team formation and evolution. \emph{Proceedings of the National Academy of Sciences} \textbf{111}, 3984--3989 (2014).}
+
+\bibitem[\citeproctext]{ref-yang2022gender}
+\CSLLeftMargin{14. }%
+\CSLRightInline{Y. Yang, T. Y. Tian, T. K. Woodruff, B. F. Jones, B. Uzzi, Gender-diverse teams produce more novel and higher-impact scientific ideas. \emph{Proceedings of the National Academy of Sciences} \textbf{119}, e2200841119 (2022).}
+
+\bibitem[\citeproctext]{ref-boschini2007team}
+\CSLLeftMargin{15. }%
+\CSLRightInline{A. Boschini, A. Sjögren, Is team formation gender neutral? Evidence from coauthorship patterns. \emph{Journal of Labor Economics} \textbf{25}, 325--365 (2007).}
+
+\bibitem[\citeproctext]{ref-love2022impact}
+\CSLLeftMargin{16. }%
+\CSLRightInline{H. B. Love, A. Stephens, B. K. Fosdick, E. Tofany, E. R. Fisher, The impact of gender diversity on scientific research teams: A need to broaden and accelerate future research. \emph{Humanities and Social Sciences Communications} \textbf{9}, 1--12 (2022).}
+
+\bibitem[\citeproctext]{ref-kwiek2021gender}
+\CSLLeftMargin{17. }%
+\CSLRightInline{M. Kwiek, W. Roszka, Gender-based homophily in research: A large-scale study of man-woman collaboration. \emph{Journal of Informetrics} \textbf{15}, 101171 (2021).}
+
+\bibitem[\citeproctext]{ref-boivin2024sexism}
+\CSLLeftMargin{18. }%
+\CSLRightInline{N. Boivin, S. Täuber, U. Beisiegel, U. Keller, J. G. Hering, Sexism in academia is bad for science and a waste of public funding. \emph{Nature Reviews Materials} \textbf{9}, 1--3 (2024).}
+
+\bibitem[\citeproctext]{ref-weisshaar2017publish}
+\CSLLeftMargin{19. }%
+\CSLRightInline{K. Weisshaar, Publish and perish? An assessment of gender gaps in promotion to tenure in academia. \emph{Social Forces} \textbf{96}, 529--560 (2017).}
+
+\bibitem[\citeproctext]{ref-bedi2012gender}
+\CSLLeftMargin{20. }%
+\CSLRightInline{G. Bedi, N. T. Van Dam, M. Munafo, Gender inequality in awarded research grants. \emph{The Lancet} \textbf{380}, 474 (2012).}
+
+\bibitem[\citeproctext]{ref-sarsons2017recognition}
+\CSLLeftMargin{21. }%
+\CSLRightInline{H. Sarsons, Recognition for group work: Gender differences in academia. \emph{American Economic Review} \textbf{107}, 141--145 (2017).}
+
+\bibitem[\citeproctext]{ref-card2022gender}
+\CSLLeftMargin{22. }%
+\CSLRightInline{D. Card, S. DellaVigna, P. Funk, N. Iriberri, Gender differences in peer recognition by economists. \emph{Econometrica} \textbf{90}, 1937--1971 (2022).}
+
+\bibitem[\citeproctext]{ref-card2022impact}
+\CSLLeftMargin{23. }%
+\CSLRightInline{D. Card, C. Domnisoru, S. G. Sanders, L. Taylor, V. Udalova, {``The impact of female teachers on female students' lifetime well-being''} (National Bureau of Economic Research, 2022).}
+
+\bibitem[\citeproctext]{ref-bromham2016interdisciplinary}
+\CSLLeftMargin{24. }%
+\CSLRightInline{L. Bromham, R. Dinnage, X. Hua, Interdisciplinary research has consistently lower funding success. \emph{Nature} \textbf{534}, 684--687 (2016).}
+
+\bibitem[\citeproctext]{ref-lariviere2010relationship}
+\CSLLeftMargin{25. }%
+\CSLRightInline{V. Larivière, Y. Gingras, On the relationship between interdisciplinarity and scientific impact. \emph{Journal of the American Society for Information Science and Technology} \textbf{61}, 126--131 (2010).}
+
+\bibitem[\citeproctext]{ref-evans2016measuring}
+\CSLLeftMargin{26. }%
+\CSLRightInline{E. D. Evans, Measuring interdisciplinarity using text. \emph{Socius} \textbf{2}, 2378023116654147 (2016).}
+
+\bibitem[\citeproctext]{ref-skitka2021gender}
+\CSLLeftMargin{27. }%
+\CSLRightInline{L. J. Skitka, Z. J. Melton, A. B. Mueller, K. Y. Wei, The gender gap: Who is (and is not) included on graduate-level syllabi in social/personality psychology. \emph{Personality and Social Psychology Bulletin} \textbf{47}, 863--872 (2021).}
+
+\bibitem[\citeproctext]{ref-colgan2017gender}
+\CSLLeftMargin{28. }%
+\CSLRightInline{J. Colgan, Gender bias in international relations graduate education? New evidence from syllabi. \emph{PS: Political Science \& Politics} \textbf{50}, 456--460 (2017).}
+
+\bibitem[\citeproctext]{ref-harris2020diversify}
+\CSLLeftMargin{29. }%
+\CSLRightInline{J. K. Harris, M. A. Croston, E. T. Hutti, A. A. Eyler, Diversify the syllabi: Underrepresentation of female authors in college course readings. \emph{PLoS One} \textbf{15}, e0239012 (2020).}
+
+\bibitem[\citeproctext]{ref-bear2011role}
+\CSLLeftMargin{30. }%
+\CSLRightInline{J. B. Bear, A. W. Woolley, The role of gender in team collaboration and performance. \emph{Interdisciplinary science reviews} \textbf{36}, 146--153 (2011).}
+
+\bibitem[\citeproctext]{ref-maddi2021gender}
+\CSLLeftMargin{31. }%
+\CSLRightInline{A. Maddi, Y. Gingras, Gender diversity in research teams and citation impact in economics and management. \emph{Journal of Economic Surveys} \textbf{35}, 1381--1404 (2021).}
+
+\bibitem[\citeproctext]{ref-oecd2022}
+\CSLLeftMargin{32. }%
+\CSLRightInline{OECD, {``\href{https://doi.org/10.1787/bb6ee273-en}{What is the profile of academic staff and what is the student-academic staff ratio?}''} in \emph{Education at a Glance 2022: OECD Indicators}, (OECD Publishing, 2022).}
+
+\bibitem[\citeproctext]{ref-aksnes2011female}
+\CSLLeftMargin{33. }%
+\CSLRightInline{D. W. Aksnes, K. Rorstad, F. Piro, G. Sivertsen, Are female researchers less cited? A large-scale study of norwegian scientists. \emph{Journal of the American Society for Information Science and Technology} \textbf{62}, 628--636 (2011).}
+
+\bibitem[\citeproctext]{ref-chatterjee2021gender}
+\CSLLeftMargin{34. }%
+\CSLRightInline{P. Chatterjee, R. M. Werner, Gender disparity in citations in high-impact journal articles. \emph{JAMA network open} \textbf{4}, e2114509--e2114509 (2021).}
+
+\bibitem[\citeproctext]{ref-tekles2022same}
+\CSLLeftMargin{35. }%
+\CSLRightInline{A. Tekles, K. Auspurg, L. Bornmann, Same-gender citations do not indicate a substantial gender homophily bias. \emph{Plos one} \textbf{17}, e0274810 (2022).}
+
+\bibitem[\citeproctext]{ref-uzzi2013atypical}
+\CSLLeftMargin{36. }%
+\CSLRightInline{B. Uzzi, S. Mukherjee, M. Stringer, B. Jones, Atypical combinations and scientific impact. \emph{Science} \textbf{342}, 468--472 (2013).}
+
+\bibitem[\citeproctext]{ref-wang2017bias}
+\CSLLeftMargin{37. }%
+\CSLRightInline{J. Wang, R. Veugelers, P. Stephan, Bias against novelty in science: A cautionary tale for users of bibliometric indicators. \emph{Research Policy} \textbf{46}, 1416--1436 (2017).}
+
+\bibitem[\citeproctext]{ref-agresti2000simple}
+\CSLLeftMargin{38. }%
+\CSLRightInline{A. Agresti, B. Caffo, Simple and effective confidence intervals for proportions and differences of proportions result from adding two successes and two failures. \emph{The American Statistician} \textbf{54}, 280--288 (2000).}
+
+\bibitem[\citeproctext]{ref-pinheiro2022women}
+\CSLLeftMargin{39. }%
+\CSLRightInline{H. Pinheiro, M. Durning, D. Campbell, Do women undertake interdisciplinary research more than men, and do self-citations bias observed differences? \emph{Quantitative science studies} \textbf{3}, 363--392 (2022).}
+
+\end{CSLReferences}
+
+\end{document}
