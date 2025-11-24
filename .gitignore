@@ -8,6 +8,7 @@ figures/
 *cache/
 
 data/
+docs/
 
 *.log
 *.fff 
