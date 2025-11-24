@@ -17,6 +17,8 @@ REPORT_DOCX = $(REPORT_PDF:.pdf=.docx)
 all:
 
 html: $(OUTPUT_DIR)/index.html
+	@open $<
+
 pdf: $(REPORT_PDF)
 
 $(REPORT_DIR):

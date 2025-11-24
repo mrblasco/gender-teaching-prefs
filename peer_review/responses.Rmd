@@ -42,9 +42,7 @@ Each expectation is explicitly connected to prior research on gendered collabora
 
 We added a paragraph comparing our findings to Dion et al. (2018) and related studies. We also expanded the discussion of institutional variation in team teaching, acknowledging that instructors’ ability to co-teach depends on administrative structures and credit systems that vary across institutions and countries. 
 
-Changes: Literature/Background [pp. X-Y, lines A-B]; Discussion [pp. X-Y, lines C-D]. 
-
-
+Changes: Literature/Background [pp. X-Y, lines A-B]; Discussion [pp. X-Y, lines C-D].
 
 **Third, research methodology and interpretation of the results. Please follow the suggestions from the review team to address issues related to research methodology, including but not limited to use of controls, lack of representativeness of your data coverage, missing data, and measures (e.g., novelty). Please also pay attention to presentation and interpretation of your findings (e.g., temporal changes seen in the graphs). Would you be able to get more data and see the influence of COVID 19 on the findings? The review team also requested you run additional analyses (e.g., US versus non-US and by subject areas such as natural sciences, humanities, social sciences).**
 
