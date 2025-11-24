@@ -25,15 +25,6 @@ header-includes: |
   ```{=latex}
   \usepackage{colortbl}
   \usepackage[footnotesize,bf,singlelinecheck=false]{caption}
-  
-  \usepackage{hyperref}
-  \hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    citecolor=blue,
-    urlcolor=blue
-  }
-  % for drafting
   \usepackage[nomarkers,nolists]{endfloat} % nomarkers, nolists
   %\let\oldsection\section
   %\renewcommand{\section}{\clearpage\oldsection}
@@ -51,15 +42,18 @@ Keywords: education | gender bias | teams | interdisciplinarity | novelty | syll
 \newpage
 
 
-```{r main-setup, include = FALSE}
-library(knitr)
-opts_chunk$set(echo = FALSE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = TRUE # debug mode
+)
 ```
 
-```{r, child = list.files(pattern = "[0-9]+.*.Rmd", full.names = TRUE)}
+```{r, child = list.files(pattern = "01-intro.Rmd", full.names = TRUE)}
 ```
 
-<!--  -->
 \processdelayedfloats
 \clearpage
 \singlespacing

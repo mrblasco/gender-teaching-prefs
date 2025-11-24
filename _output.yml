@@ -4,7 +4,6 @@ bookdown::html_document2:
   bibliography: [bibliography/refs.bib]
 
 
-
 bookdown::pdf_document2:
   toc: false
   number_sections: true
