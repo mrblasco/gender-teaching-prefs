@@ -62,3 +62,7 @@ knitr::opts_chunk$set(
 
 ::: {#refs}
 :::
+
+
+```{r, child = list.files(pattern = "50-supporting.Rmd", full.names = TRUE)}
+```

@@ -82,7 +82,11 @@ Changes: Introduction [pp. X-Y].
 
 **There seems to be no control for the level of courses (ie., 101, 200+, 300+ and so on based on course code), but that could greatly influence the level of interdisciplinarity, age of course readings, or who teaches it. This is totally doable with Open Syllabus data to my knowledge**
 
-> TBA
+We thank the reviewer for this valuable suggestion. While course level is not explicitly provided in the Open Syllabus (OS) data, it can be inferred from course codes (e.g., “Psychology 101” typically indicating an introductory course, and “Psychology 401” an advanced one). Following @biasi2022education, we classified courses into four levels based on their codes (basic, advanced, gradaute or unknown); their validation suggests this approach achieves roughly 85% accuracy in the U.S. context. Although no equivalent validation exists for European institutions—and accuracy may therefore be lower—we additionally used the number of assigned readings in each syllabus as a proxy for course level. Our results remain robust when incorporating these measures.
+
+> Changes: In the revised manuscript, we dicuss this procedure in the supporting Information [p. xxx]. 
+
+
 
 **Although it is understandable to not have perfectly representative coverage of fields and schools given the scraped nature of this online based dataset -- this lack of representativeness is indeed heavily related to the aggregated estimates that the authors presented in the graphs throughout the results section. For example, when estimating whether mixed gender teaching groups have more interdisciplinarity than male-only groups, we need to know whether both types of teaching groups that are used in the analysis are proportional to the real distribution of the specific discipline in the specific institution and the specific country. Otherwise, how can we be sure that the aggregated / average estimates are not affected by the distribution of the cases selected in the operational data in this study?** 
 
@@ -99,16 +103,27 @@ Changes: Methods [pp. X-Y].
 
 **Genderizer: 12% of the syllabi were reported to have unknown gender (p 5). Is this a problem of missing, or is it a problem of the genderizer being unable to estimate the gender (many asian names are gender neutral) -- how is this going to affect the estimates?**
 
- 
+We thank the reviewer for the opportunity to clarify this point. In the Supporting Information, we have included a section on gender that describes the process of gender disambiguation. In brief, OpenSyllabus uses a version of Genderize.io, which has an estimated overall accuracy of 98% in academic publications. If the probability of an author being female exceeds 0.5, the author is classified as female; otherwise, they are classified as male. However, not all instructors listed in the syllabi provide their full first names; some list only initials (e.g., "J." for "John" or "Jane"). In such cases, OpenSyllabus assigns the author to the "unknown" category.
 
-Response: We now explain that “unknown” genders (~12%) primarily reflect abbreviated or gender-neutral names that cannot be assigned by the Genderize algorithm by OpensSyllabus. Results remain stable when excluding these cases. 
-
-Changes: Methods [pp. X-Y]; Supplement Table S1. 
-
+> Changes: Supporting Information [pp. XX]. 
 
 **novelty = using more recent readings in the syllabus: a decision the authors tried to defend on page 6. However, I do not really buy it. It is NOT a conventional construction of novelty simply by using the age of readings (especially given that the authors are aware that STS literature developed much better measurements of it) -- for example, old readings can also be rediscovered as highly novel in new contexts where they regain relevance and attention that they did not have before.** 
 
-Response: We now refer to this variable as “recency” rather than “novelty.” We acknowledge that recency (the publication year of readings relative to course year) does not equate to conceptual novelty, but it serves as a clear and replicable indicator of up-to-date reading selections. 
+Thank you for this insightful comment. We agree with your point and have revised the manuscript accordingly.
+ 
+First, we now clarify that measuring “novelty” in the context of syllabi is inherently challenging. Syllabi often cite only a few textbooks, making it difficult to compute standard novelty metrics, such as atypicality (based on the network of journal publications). Moreover, novelty measured at the time of publication may not reflect the novelty students experience at the time of teaching; i.e., a paper that was highly novel in year x may be perceived as well-established or even dated when incorporated into a later syllabus.
+ 
+Second, your comment helped us recognise that teaching novelty is multidimensional. An instructor may rely on older material but use it in pedagogically innovative ways (“teaching innovation”). Alternatively, they may assign papers at the frontier of scientific knowledge (“scientific novelty”). Or they may introduce newer readings (“recency”).
+ 
+In response, we have revised our measurement strategy to address these distinctions:
+ 
+1. We no longer label the age of readings as “novelty.” Instead, we now explicitly refer to this dimension as the recency of assigned materials.
+2. We introduce two new novelty measures to more appropriately capture the multidimensional nature of teaching innovation:
+    - Teaching novelty: the number of times the same resource appears in other syllabi. Rarely used readings indicate greater pedagogical novelty.
+    - Scientific novelty: the atypicality of papers at the time they were taught, which we compute by matching the readings DOIs to SciCite (a large dataset of pre-computed measures of novelty).
+ 
+These changes improve conceptual clarity and allow us to more accurately capture different forms of novelty relevant to teaching
+ 
 
 Changes: Methods [pp. X-Y]. 
 

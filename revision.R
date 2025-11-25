@@ -1,26 +1,223 @@
+# List of things to do
+# - [ ] COVID data team formation
+# - [ ] Explain temporal variation
 # - [ ] by country, by field
+# - [ ] Teaching innovativeness
 # - [ ] Atypicality (why? is this a good?)
-# - [ ] Pooled regression 
+# - [ ] Pooled regression
 # - [ ] log-transformed
 
 
-# 
-require(dplyr)
-require(stargazer)
-require(lme4)
+# Setup
+library(dplyr)
+library(lme4)
 library(lmerTest)
-library(MASS)
-library(ggplot2)
-#library(glmmTMB)
 library(broom.mixed)
+library(MASS)
+library(stargazer)
+library(ggplot2)
+library(parallel)
+#library(glmmTMB)
 
 code_path <- file.path("data", "processed", "class_code.rds")
 data_path <- file.path("data", "processed", "os_final.rds")
+novel_path <- file.path("data", "processed", "novel_v2.rds")
 
-# Load data
+outdir <- file.path("data", "results")
+dir.create(outdir)
+
+source("R/theme.R")
+theme_set(theme_custom())
+
+# ---- pre process ---
+
+ds_novel <- readRDS(novel_path)
+str(ds_novel) # new work cited
+
+# ----- data -----
+
 ds_raw <- readRDS(data_path)
 str(ds_raw)
 
+# ---- Replicate baseline results  ---- 
+
+# ---- Teaching Novelty ---- 
+
+ds <- ds_raw %>%
+    left_join(ds_novel) %>%
+    dplyr::filter(nchar(team) < 3, year > 1998, !is.na(novel_count)) %>% 
+    dplyr::mutate(
+        team = relevel(factor(team), ref = "m"),
+    ) %>% 
+    dplyr::mutate(
+        .by = year,
+        novel_med_pc_year = 100 * (rank(novel_med) - 1)  / (length(novel_med) - 1)
+    )
+message(sprintf("Loaded n = %.2fM", nrow(ds)/1e6))
+
+summary(ds)
+
+system.time(
+    fit0 <- glm(
+        novel_med_pc_year ~ team + course_level + country + (1|field) + (1|institution) + offset(tot_count),
+        data = ds,
+    )
+)
+summary(fit0)
+
+years <- sort(unique(ds$year))
+fit_list <- list()
+for (y in years) {
+    init <- Sys.time()
+    fit_list[[as.character(y)]] <- lmer(
+        novel_med_pc_year ~ team + course_level + country + (1|field) + (1|institution),
+        data = ds,
+        subset = year == y
+    )
+    end <- Sys.time()
+    message(sprintf("Year = %i fitted in %.2f seconds", y, end - init))
+}
+
+coeffs <- fit_list %>% 
+    lapply(broom::tidy, conf.int = TRUE) %>% 
+    dplyr::bind_rows(.id = "year")
+
+p <- coeffs %>%
+    dplyr::filter(grepl("team", term)) %>%
+    dplyr::mutate(year = as.Date(year, '%Y')) %>%
+    ggplot(
+        aes(
+            x = year,
+            y = estimate,
+            ymin = conf.low,
+            ymax = conf.high,
+            color = term
+        )
+    ) + 
+    facet_grid(~term) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    geom_errorbar(width = .1) +
+    geom_point()
+
+p
+
+
+# ---- Recency  ---- 
+
+ds <- ds_raw %>%
+    dplyr::filter(nchar(team) < 3, year > 1998, !is.na(novelty)) %>% 
+    dplyr::mutate(
+        team = relevel(factor(team), ref = "m"),
+        recency = year - novelty,
+        recency_pc = 100 * (rank(recency) - 1 ) / (length(recency) - 1),
+        .by = year
+    )
+
+# pooled regression
+system.time({
+    fit <- lmer(
+        recency_pc ~ team + course_level + country + year + (1|field) + (1|institution),
+        data = ds
+    )
+})
+message(sprintf("Saving to %s", "..."))
+saveRDS(fit, file.path(outdir, "fit_lmer_recency_pc_by_team_course_country_year.rds"))
+
+summary(fit)
+
+coeffs <- tidy(fit, conf.int = TRUE)
+
+coeffs %>% 
+    filter(grepl("team", term)) %>%
+    dplyr::select(
+        Variable = term,
+        Estimate = estimate,
+        SE = std.error,
+        Low = conf.low,
+        High = conf.high
+    ) %>%
+    knitr::kable(
+        caption = "Regression coefficients and 95% confidence intervals",
+        digits = 2
+    )
+
+years <- sort(unique(ds$year))
+fit_list <- list()
+for (y in years) {
+    init <- Sys.time()
+    fit_list[[as.character(y)]] <- update(fit, ~ . - year, data = ds, subset = year == y)
+    end <- Sys.time()
+    message(sprintf("Year = %i fitted in %.2f seconds", y, end - init))
+}
+
+
+fit_list <- parallel::mclapply(
+  years,
+  function(y) {
+    init <- Sys.time()
+    f <- update(fit, ~ . - year, data = ds, subset = year == y)
+    end <- Sys.time()
+    message(sprintf("Year = %i fitted in %.2f seconds", y, end - init))
+    f
+  },
+  mc.cores = parallel::detectCores() - 2
+)
+
+coeffs <- fit_list %>% 
+    lapply(broom::tidy, conf.int = TRUE) %>% 
+    dplyr::bind_rows(.id = "year")
+
+saveRDS(coeffs, file.path(outdir, "lmer_coeffs_recency_pc_by_year.rds"))
+
+plot_recency_pc <- coeffs %>%
+    dplyr::filter(grepl("team", term)) %>%
+    dplyr::mutate(year = as.Date(year, '%Y')) %>%
+    ggplot(
+        aes(
+            x = year,
+            y = estimate,
+            ymin = conf.low,
+            ymax = conf.high,
+            color = term
+        )
+    ) + 
+    facet_grid(~term) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    geom_errorbar(width = .1) +
+    geom_point()
+
+plot_recency_pc + 
+    labs(
+        x = "Year",
+        y = "Difference in Age of readings\n(Percentile rank)"
+    )
+
+# Testing temporal patterns
+coeffs %>%
+    dplyr::filter(grepl("team", term)) %>%
+    dplyr::mutate(year = as.Date(year, '%Y')) %>% 
+    ggplot(
+        aes(x = year, y = estimate, color = term),
+    ) + 
+    facet_grid(~term) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+    geom_smooth(
+        method = "lm",
+        formula = y ~ 1,
+        aes(weight = 1 / (std.error^2)),
+        linetype = "dashed",
+        color = "black"
+    ) +
+    geom_smooth(
+        method = "gam",
+        formula = y ~ s(x, k = 6),
+        mapping = aes(weight = 1/(std.error^2)), 
+        color = "blue",
+        se = TRUE
+    )
+
+
+# ----- OLD NOTES 
 
 # Difference between course with atyp
 ds <- mutate(ds_raw, has_atyp = !is.na(atyp_med)) %>% 

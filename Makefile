@@ -14,9 +14,9 @@ FIGURE_LOGS = $(FIGURE_SCRIPTS:%.R=$(OUTPUT_DIR)/%.pdf)  # Corresponding log fil
 REPORT_PDF = $(REPORT_DIR)/Gender_Teaching_Syllabi.pdf
 REPORT_DOCX = $(REPORT_PDF:.pdf=.docx)
 
-all:
+all: 
 
-html: $(OUTPUT_DIR)/index.html
+draft: $(OUTPUT_DIR)/index.html
 	@open $<
 
 pdf: $(REPORT_PDF)
@@ -41,18 +41,6 @@ clean:
 	rm *.fff *.log *.ttt
 
 .PHONY: all clean view
-
-# ---- Word
-
-docx: $(REPORT_DOCX)
-
-$(REPORT_DOCX): $(REPORT_SRC) $(REPORT_SECTIONS) $(FIGURE_LOGS) | $(REPORT_DIR)
-	Rscript -e "rmarkdown::render('$<', output_file = '$@', output_yaml = '_output_docx.yml')"
-	ln -sf "main_$(VERSION).docx" $(REPORT_LATEST_DOCX)
-
-draft:
-	open $(REPORT_LATEST_DOCX)
-
 
 # ---- review 
 
