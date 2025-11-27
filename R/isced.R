@@ -1,7 +1,6 @@
 isced_mapping <- list(
-  "Education" = c("Education"),
-
-  "Arts and Humanities" = c("Anthropology", "Chinese", "Classics",
+    "Education" = c("Education"),
+    "Arts and Humanities" = c("Anthropology", "Chinese", "Classics",
                             "Dance", "English Literature",
                             "Film and Photography", "Fine Arts",
                             "French", "German", "Hebrew",
@@ -10,7 +9,7 @@ isced_mapping <- list(
                             "Religion", "Spanish", "Theatre Arts",
                             "Theology", "Women's Studies"),
 
-  "Social Sciences, Journalism, and Information" = c("Criminal Justice", 
+    "Social Sciences, Journalism, and Information" = c("Criminal Justice", 
                                                      "Criminology", "Economics",
                                                      "Geography", "Journalism",
                                                      "Library Science",
@@ -22,10 +21,10 @@ isced_mapping <- list(
                                                      "Social Work",
                                                      "Sociology"),
 
-  "Business, Administration, and Law" = c("Accounting", "Law",
+    "Business, Administration, and Law" = c("Accounting", "Law",
                                           "Business", "Marketing"),
 
-  "Natural Sciences, Mathematics, and Statistics" = c("Astronomy",
+    "Natural Sciences, Mathematics, and Statistics" = c("Astronomy",
                                                       "Atmospheric Sciences", 
                                                       "Biology", "Chemistry",
                                                       "Earth Sciences",
@@ -33,23 +32,23 @@ isced_mapping <- list(
                                                       "Natural Resource Management",
                                                       "Physics"),
 
-  "Information and Communication Technologies (ICTs)" = c("Basic Computer Skills",
+    "Information and Communication Technologies (ICTs)" = c("Basic Computer Skills",
                                                           "Computer Science"),
 
-  "Engineering, Manufacturing, and Construction" = c("Architecture", 
+    "Engineering, Manufacturing, and Construction" = c("Architecture", 
                                                      "Construction",
                                                      "Engineering",
                                                      "Engineering Technician",
                                                      "Mechanic / Repair Tech",
                                                      "Transportation"),
-  
-  "Agriculture, Forestry, Fisheries, and Veterinary" = c("Agriculture", 
+
+    "Agriculture, Forestry, Fisheries, and Veterinary" = c("Agriculture", 
                                                          "Veterinary Medicine"),
-  
-  "Health and Welfare" = c("Dentistry", "Health Technician",
+
+    "Health and Welfare" = c("Dentistry", "Health Technician",
                            "Medicine", "Nursing", "Nutrition"),
 
-  "Services" = c("Basic Skills", "Career Skills", "Cosmetology",
+    "Services" = c("Basic Skills", "Career Skills", "Cosmetology",
                  "Culinary Arts", "Fitness and Leisure",
                  "Military Science", "Sign Language")
 )
