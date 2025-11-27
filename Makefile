@@ -46,3 +46,18 @@ clean:
 
 review: 
 	$(MAKE) -C peer_review
+
+
+# --- drafts 
+
+intro: /tmp/01-intro.html
+	open $<
+
+methods: /tmp/20-methods.html
+	open $<
+
+SI: /tmp/50-supporting.html
+	open $<
+
+/tmp/%.html : %.Rmd
+	Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_format = "distill::distill_article")'
