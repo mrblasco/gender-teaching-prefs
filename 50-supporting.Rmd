@@ -19,6 +19,12 @@ library(yaml)
 library(dplyr)
 library(tidyr)
 library(kableExtra)
+library(ggplot2)
+
+source("R/theme.R")
+theme_set(theme_custom())
+
+knitr::opts_chunk$set(echo = FALSE)
 
 create_table <- function(x, ...) {
   kableExtra::kbl(x, ...) %>%
@@ -29,7 +35,6 @@ create_table <- function(x, ...) {
       position = "center"
     )
 }
-
 ```
 
 ```{r, data-supporting, cache = TRUE, include = FALSE}
@@ -197,3 +202,34 @@ ds %>%
   )
 ```
 
+
+## Representativeness of the gender distribution
+
+One potential concern for our analysis is the representativeness of the data. Our dataset covers several million courses and thousands of educational institutions, corresponding to about 50% of the educational organisations in the ROR, which makes the results interesting in their own right. Nevertheless, one may question how representative these data are of the broader population of instructors. Although we cannot directly test representativeness, we evaluate it in two ways. First, we examine whether the overall female-to-male ratio over time in each country correlates with OECD statistics on academic staff by gender. Second, for the U.S., we assess whether the sex ratio by field and year correlates with NCSES data on Ph.D. graduates by academic field, country, and year, which serves as a proxy for the maximum number of employable instructors.
+
+As illustrated in Figure \@ref(fig:country-coverage), our analysis of overall trends reveals a very high correlation for English-speaking countries (U.S. = .98, U.K. = .90), and greater heterogeneity for non-English-speaking countries, where representativeness is expected to be weaker given our focus on English-language syllabi. The analysis based on Ph.D. graduates similarly shows strong field-level correlations in many fields (Figure \@ref(fig:field-coverage-us)), such as in Natural Sciences (rho = .91), Social sciences and journalism (rho = .90), Education (rho = .77). However, there are fields with considerably lower correlation, such as in Health and welfare (rho = .14) or IT (rho = .29). This heterogeneity may stem from differences across disciplines in the proportion of Ph.D. graduates who remain in academia (e.g., biology has a comparatively high share of graduates who pursue careers outside academia). Nevertheless, these patterns suggest that, at least for English-speaking countries and in many academic fields, our data are reasonably representative.
+
+```{r, include = FALSE}
+results_dir <- file.path("data", "results")
+figs <- readRDS(file.path(results_dir, "figs_representative.rds"))
+```
+
+```{r country-coverage, fig.cap = cap, fig.width = 7, fig.asp = 1}
+cap <- paste(
+    "Women-men ratio of instructors in OpenSyllabus (OS)",
+    "vs academic staff in tertiary education (ISCED 5-8) per country and year.",
+    "Pearson correlation between OS and Eurostat series shown in each panel.",
+    "Source: Eurostat (educ_uoe_perd02)."
+)
+figs$all + labs(title = NULL, subtitle = NULL)
+```
+
+```{r field-coverage-us, fig.cap = cap, fig.width = 7, fig.asp = 1}
+cap <- paste(
+    "Women-men ratio of instructors in OpenSyllabus (OS)",
+    "vs PhD graduates in the US by academic field per year.",
+    "Pearson correlation between OS and representative series shown in each panel.",
+    "Source: NCES (Survey of Earned Doctorates)."
+)
+figs$by_field + labs(title = NULL, subtitle = NULL)
+```

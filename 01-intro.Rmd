@@ -30,6 +30,18 @@ Another topic we aim to investigate is how gender composition and size of teachi
 
 Research on scientific collaboration shows that teams play an increasingly important role in knowledge production and often draw on multiple fields [@wuchty2007increasing; @milojevic2014principles]. Recent evidence suggests that women, on average, undertake more interdisciplinary research than men [@pinheiro2022women], and that interdisciplinary collaborations can produce broader scientific outcomes [@specht2022interdisciplinary]. Taken together, this work suggests that the presence of women in a team is associated with more interdisciplinary intellectual contributions. In a teaching context, however, other factors may influence this relationship. For example, being interdisciplinary in resarch does not necessiarly translte into interdisciplinary teaching styles. Furtheormore, students may not demand for interdisciplinary courses. Or there might be institutional constraints where programs are not designed to support interdisciplinarity. Finally, also team dynamics or matching patterns, may prevent instructors to find good partners for interdisciplinary courses. To shed lights on these issues, we explored at a large scale the relationships between course interdisciplinarity, team size, and gender composition in teaching. [?]
 
+
+## Covid-19 
+
+The COVID-19 pandemic generated a large, system-wide shock to how academics work and collaborate. Research on the topic documents that during COVID there was a decrease in research time, project initiation, and scientific productivity, with particularly strong effects for women and researchers with caregiving responsibilities [@myers2020unequal; @viglione2020women; @gao2021potentially;@cui2022gender].^[
+    Although the effect of lockdowns and restricted mobility on productivity is found to be country- and field-dependent [@garcia2024silver].
+]
+At the same time, bibliometric studies show that the crisis reshaped collaboration networks: for instance, a decrease in new co-authorships [@gao2021potentially] and changes in the geographical distribution of collaboration, including an increase in cross-border teaming [@venturini2025effectsremoteworkingscientific]. Commentaries on scientific meetings emphasise that the pandemic-driven shift to virtual conferences reshaped scientific networking: while online formats broadened participation — including a modest increase in women’s representation [@olechnicka2025impact] — they also reduced opportunities for informal, in-person interactions that are seen as vital for collaboration and idea generation [@bray2022together].
+
+In parallel, universities were forced into a rapid transition to online and hybrid teaching, potentially altering how teaching teams are formed and how often instructors collaborate across gender and disciplinary boundaries. We therefore exploit the onset of COVID-19 as a quasi-exogenous shock and estimate an event study around 2020 to examine whether the prevalence and composition of mixed-gender teams changed after the pandemic, conditional on institution and field.
+
+
+
 # OLD NOTES
 ---- 
 

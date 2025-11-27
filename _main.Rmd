@@ -54,6 +54,15 @@ knitr::opts_chunk$set(
 ```{r, child = list.files(pattern = "01-intro.Rmd", full.names = TRUE)}
 ```
 
+
+```{r, child = "20-methods.Rmd"}
+```
+```{r, child = "30-results.Rmd", eval = FALSE}
+```
+
+```{r, child = "40-discussion.Rmd"}
+```
+
 \processdelayedfloats
 \clearpage
 \singlespacing
@@ -64,5 +73,8 @@ knitr::opts_chunk$set(
 :::
 
 
-```{r, child = list.files(pattern = "50-supporting.Rmd", full.names = TRUE)}
+```{r, child = "50-supporting.Rmd"}
+```
+
+```{r, child = "99-statements.Rmd"}
 ```
