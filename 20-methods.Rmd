@@ -8,7 +8,7 @@ bibliography: refs.bib
 
 ### Open Syllabus corpus
 
-The core dataset consists of a corpus of more than six million university syllabi compiled by Open Syllabus (New York, US) through web extractions from university websites. These extractions identified syllabi with a median confidence level of 99.8%. A tagging algorithm extracts key course details, such as the title, description, academic year, language, a list of anonymised instructors, and the assigned readings.^[Documentation available at: https://docs.opensyllabus.org] OpenSyllabus also assigns each syllabus to one of 69 top-level disciplinary fields, derived from the U.S. Department of Education’s CIP classification system.^[
+The core dataset consists of a corpus of more than six million university syllabi compiled by Open Syllabus (New York, US) through web extractions from university websites. These extractions identified syllabi with a median confidence level of 99.8%. A tagging algorithm extracts key course details, such as the title, description, academic year, language, a list of anonymised instructors, and the assigned readings.^[Documentation available at: https://docs.opensyllabus.org] OpenSyllabus also assigns each syllabus to one of 69 top-level disciplinary fields, derived from the U.S. Department of Education's CIP classification system.^[
   The CIP classification is available at: 
   https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55
 ] 

@@ -19,16 +19,17 @@ all:
 draft: $(OUTPUT_DIR)/index.html
 	@open $<
 
-pdf: $(REPORT_PDF)
+pdf: $(OUTPUT_DIR)/report.pdf
+	@open -a Skim $<
 
-$(REPORT_DIR):
+$(OUTPUT_DIR):
 	@mkdir -p $@
 
 $(OUTPUT_DIR)/index.html : _main.Rmd $(RMD_FILES)
 	@Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_format = "distill::distill_article")'
 	@open $@
 
-$(REPORT_PDF): _main.Rmd $(PDF_CONFIG) $(REPORT_SECTIONS) $(FIGURE_LOGS) $(REPORT_DIR)
+$(OUTPUT_DIR)/report.pdf: _main.Rmd $(PDF_CONFIG) $(RMD_FILES)
 	Rscript -e 'rmarkdown::render("$<", "$(PDF_FORMAT)", "$@")'
 
 $(FIGURE_LOGS): output/%.pdf: %.R
