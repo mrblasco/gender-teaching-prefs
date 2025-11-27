@@ -110,3 +110,11 @@ Second, we employed a quasi-Poisson mixed-effect model instead of the reported l
 We further tested alternative model specifications, such as considering the number of instructors as a numeric variable interacted with the proportion of female instructors to explore a linear association with the dependent variables. While we observe similar results, the linear association could be misleading when extrapolated beyond two instructors. So, we preferred to keep team configurations as fixed effects, as reported here. 
 
 Finally, we further explored the specifications that distinguish between male-led and female-led courses, using the gender of the first listed instructor as a proxy for seniority. Overall, results appear robust to these additional analyses.
+
+
+
+# Analysis of the impact of COVID-19 in Europe
+
+Using an ancillary dataset of 2.2 million syllabi, we analyze the composition of teaching teams in European countries over six years (2017-2022), focusing on patterns before and after the COVID-19 pandemic.
+
+Figure XXX shows 
