@@ -8,35 +8,34 @@ bibliography: refs.bib
 
 ### Open Syllabus corpus
 
-The core dataset consists of a corpus of more than six million university syllabi compiled by Open Syllabus (New York, US) through web extractions from university websites. These extractions identified syllabi with a median confidence level of 99.8%. A tagging algorithm extracts key course details, such as the title, description, academic year, language, a list of anonymised instructors, and the assigned readings.^[Documentation available at: https://docs.opensyllabus.org] OpenSyllabus also assigns each syllabus to one of 69 top-level disciplinary fields, derived from the U.S. Department of Education's CIP classification system.^[
+The core dataset consists of a corpus of more than six million university syllabi compiled by Open Syllabus (New York, US) through web extractions from university websites. These extractions identify syllabi with a median confidence level of 99.8%. A tagging algorithm extracts key course details, such as the title, description, academic year, language, a list of anonymised instructors, and the assigned readings.^[Documentation available at: https://docs.opensyllabus.org] OpenSyllabus also assigns each syllabus to one of 69 top-level disciplinary fields, derived from the U.S. Department of Education's CIP classification system.^[
   The CIP classification is available at: 
   https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55
 ] 
-
-Because course level (e.g., undergraduate or graduate) was not explicitly reported in our data, we inferred it from course codes. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into four levels: basic, advanced, graduate, or unknown (see SI).^[
-  According to @biasi2022education, this classification procedure is approximately 85% accurate for a sample of U.S. courses that could be matched to catalogues with verifiable information.
-]
 
 While the original dataset includes syllabi in 49 languages, most documents (96%) are in English. For simplicity, we focused exclusively on English-language syllabi.^[
   Our focus on English-language courses means that, while we have comprehensive data for English-speaking countries such as Canada, Ireland, the United States, and Great Britain, the sample in non-English-speaking countries tends to be more representative of internationally oriented universities. These are typically institutions offering programs in English or advanced-level courses, such as postgraduate programs or disciplines where English is the primary medium of instruction within traditional universities.
 ] This choice resulted in a total of 5.4 million syllabi (1990-2019) from approximately 4,000 higher education institutions across fifteen countries (Table \@ref(tab:SI-country)).
 
-## Instructor genders
+Because course level (e.g., undergraduate or graduate) was not explicitly reported in the data, we inferred it from course codes. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into four levels: basic, advanced, graduate, or unknown (see Section \@ref(course-level) for the details).^[
+  According to @biasi2022education, this classification procedure is approximately 85% accurate for a sample of U.S. courses that could be matched to catalogues with verifiable information.
+]
 
-Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically determines the instructors’ gender based on their names. This gender disambiguation process employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], as detailed in the Supplementary Information (\@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories. (Table \@ref(tab:SI-composition) illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors.
+### Instructor genders
 
-These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. A detailed empirical analysis of the representativeness of our gender population shows that the proportions of women and men in our datasets are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors), as illustrated in the Supplementary Information (\@ref(representativeness-of-the-gender-distribution)).
+Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically determines the instructors’ gender based on their names. This gender disambiguation process employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], which are detailed in the Supplementary Information (\@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories. (Table \@ref(tab:SI-composition) illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors.
 
+These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. Although official statistics to assess the representativeness of this gender population are not available, a detailed comparison with official statistics (\@ref(representativeness-of-the-gender-distribution)) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors). This analysis indicates a reasonable representativeness of our data.
 
 ### Linking syllabi to bibliometric data
 
-About 2.9 million syllabi (53% of the total) list readings matched with bibliographic sources, providing additional metadata on authorship, journal of publication, and publication year. Institutions are matched to a list of more than 22,000 entities from the Research Organisation Registry, providing further metadata on institutional characteristics, including country and enrollment figures. Overall, the institutions in our sample account for over 35 million enrolled students today.^[
+About 2.9 million syllabi (53% of the total) list readings matched with bibliographic sources, providing additional metadata on authorship, journal of publication, and publication year. Institutions are matched to a list of more than 22,000 entities from the Research Organisation Registry (ROR), providing further metadata on institutional characteristics, including country and enrollment figures. Overall, the institutions in our sample account for over 35 million enrolled students today.^[
   For more details on how OpenSyllabus classify and match the data, the related documentation is available online at https://docs.opensyllabus.org.
-]
-
-To assess the scientific novelty of the readings assigned in each syllabus, we further linked the data to SciSciNet (v2) [@lin2023sciscinet], a large-scale database of scientific publications that includes pre-computed indicators of novelty, such as the atypicality measure introduced by Uzzi et al. [@uzzi2013atypical]. Matches were performed using article DOIs, corresponding to 80% of all readings with at least an available DOI in the readings. These matched publications appear in roughly 400,000 syllabi, representing about 14% of the 2.9 million syllabi containing reading lists.^[
+]. Overall, our dataset captures roughly 50% of the educational institutions listed in ROR, underscoring its broad coverage.^[
   The same methods used to identify the gender of the instructors were used for the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with 12% of the authors having an unknown gender.
 ]
+
+To assess the scientific novelty of the readings assigned in each syllabus, we further linked the data to SciSciNet (v2) [@lin2023sciscinet], a large-scale database of scientific publications that includes pre-computed indicators of novelty, such as the atypicality measure introduced by Uzzi et al. [@uzzi2013atypical]. Matches were performed using article DOIs. Unfortunately, most syllabi include textbooks that do not have a DOI and a corresponding atypicality measure. Even so, the process resulted in a match  with 80% of all readings with at least an available DOI in the readings. These matched publications appear in roughly 400,000 syllabi, representing about 14% of the 2.9 million syllabi containing reading lists.
 
 ### Supplementary Covid-19 dataset
 
@@ -48,17 +47,17 @@ Building on prior research highlighting the value of exposing student to cutting
 
 ```{r outcomes, echo = FALSE, warning = FALSE, message = FALSE}
 names <- c(
-    "Interdisciplinarity", 
+    "Course Interdisciplinarity", 
     "Age of Readings", 
-    "Atypicality",
-    "Novelty of readings",
+    "Atypicality of Readings",
+    "Conventionality of Readings",
     "Ratio of Female Authors"
 )
 def <- c(
     "Percentile rank of the course's interdisciplinarity score for the year.",
     "Percentile rank of the average publication age of assigned readings.",
-    "Average of the atypicality measure of assigned readings",
-    "Percentile rank of the average of new readings",
+    "Percentile rank of the median atypicality of assigned readings",
+    "Percentile rank of the median citation of the assigned readings as referenced in other syllabi",
     "Proportion of women authors in the assigned readings."
 )
 
@@ -79,8 +78,8 @@ kableExtra::kbl(
 
 ### Interdisciplinarity
 
-We measured interdisciplinarity by analysing course descriptions from syllabi, following Evans et al. [@evans2016measuring; @han2023interdisciplinary]. This approach converts course descriptions into "bags of words", where word frequencies are normalised by the inverse ratio of term frequency to document frequency (TF-IDF). We then computed a correlation matrix of word usage across academic fields to quantify the conceptual distances between them. The interdisciplinarity score for each syllabus was calculated as a weighted average of pairwise correlations with other syllabi, with weights reflecting field distance (see Supporting Information, Section \@ref(si-interdisciplinarity)). This method ensures that syllabi associated with distant fields, either academically or conceptually, are considered more interdisciplinary.^[
-  To scale to millions of documents, we used random subsampling of academic fields over years and averaged results across subsamples for robustness (see Supporting Information, Section \@ref(si-interdisciplinarity)).
+We measured interdisciplinarity by analysing course descriptions from syllabi, following Evans et al. [@evans2016measuring; @han2023interdisciplinary]. This approach converts course descriptions into "bags of words", where word frequencies are normalised by the inverse ratio of term frequency to document frequency (TF-IDF). We then computed a correlation matrix of word usage across academic fields to quantify the conceptual distances between them. The interdisciplinarity score for each syllabus was calculated as a weighted average of pairwise correlations with other syllabi, with weights reflecting field distance (see Section \@ref(si-interdisciplinarity)). This method ensures that syllabi associated with distant fields, either academically or conceptually, are considered more interdisciplinary.^[
+  To scale to millions of documents, we used random subsampling of academic fields over years and averaged results across subsamples for robustness, as outlined in Section \@ref(si-interdisciplinarity).
 ]
 
 We expressed interdisciplinarity for each syllabus $i$ as the percentile rank within each academic year of the interdisciplinarity score:
@@ -89,15 +88,25 @@ $$
 $$
 Where $\text{PR}_{yr}$ represents the percentile rank function applied to all syllabi within a given year $yr$. This normalisation controls for skewed score distributions and allows comparison across years.
 
-### Novelty, Recency, and Atypicality
+### Recency, Conventionality, and Atypicality of the Readings
 
-To characterise the novelty of the assigned readings, we used three key dimensions: (1) the age of the readings and the proportion of female authors represented; (2) the frequency of new articles or books introduced in the syllabus; and (3) the median pre-computed measure of Uzzi et al's atypicality [@uzzi2013atypical]. 
+To characterise the novelty of the assigned readings, we used three key dimensions: (1) the publication year of the assigned readings (2) the frequency of new articles or books introduced in the syllabus; and (3) the median scientific novelty of the readings as measured by the Uzzi et al's atypicality measure [@uzzi2013atypical].
 
 First, we define the total number of references, $N_i$, as the sum of articles, books, and chapters listed in a syllabus $i$. This variable serves as a broad measure of a course's "breadth," as more assigned readings may indicate a more extensive or comprehensive curriculum. Then, we define the _Age of Readings_ variable as the difference between the syllabus year ($\text{Year}_i$) and the average publication year of the assigned readings $k=1,\cdots,K$:  
 $$
   \text{Age of Readings}_i = \text{PR}_{yr}\left(\text{Year}_i - \sum_{k=1}^{N_i} \text{Publication Year}_k / N_i\right),
 $$
-Where $\text{PR}_{yr}$ represents the percentile rank function applied to all syllabi within a given year $yr$. This variable provides a proxy of how recent, or "novel," the readings are. While more sophisticated methods to measure novelty are available [@uzzi2013atypical; @wang2017bias], we employ this more straightforward approach because pedagogical innovation tends to be incremental, and computationally intensive methods are impractical for large-scale datasets like ours. We anticipate that novelty will vary across fields (e.g., history courses may cite older texts more frequently than computer science courses). Still, within-field differences in novelty serve as a proxy for how close a course is to the current frontier of knowledge ("novelty").
+Where $\text{PR}_{yr}$ represents the percentile rank function applied to all syllabi within a given year $yr$. This variable provides a proxy of how recent, or "novel," the readings are. 
+
+Second, to capture the conventionality of the readings, we compute the _Share of Conventional Readings_ as the proportion of references in syllabus $i$ that appear in any earlier iteration of the same course (as observed in our dataset). This measure reflects how frequently instructors refresh their syllabi by incorporating newly selected books or articles, which is an important dimension of curricular innovation that is not captured by publication dates alone.
+
+Third, to quantify the scientific novelty of the assigned readings, we use the median atypicality score of all references in syllabus $i$. Atypicality, introduced by Uzzi et al. [@uzzi2013atypical], measures how unexpectedly different a paper's combination of prior knowledge is relative to conventional citation patterns. We rely on the pre-computed atypicality values provided in SciSciNet (v2) by Lin et al. [@lin2023sciscinet]. Higher values indicate that the readings draw from more unconventional or cross-disciplinary combinations of ideas, offering a complementary dimension of novelty that is orthogonal to recency or syllabus updating.^[
+  Note that this measure only captures the atypicality at the time of publication, hence, it may not entirely reflect the atypicality at the time of the course. This issue can be partly accounted for in the analysis by (1) aggregating over multiple readings and (2) controlling for the average publication year of the readings or alternatively by imposing a discount for articles published beyond a certain threshold from the course date (e.g., imposing a mean atypicality for readings five years or more older than the course year).
+]
+
+Together, these three measures, recency of publications, the conventionality of readings, and the scientific atypicality of the readings, provide a multidimensional characterisation of curricular novelty. 
+
+<!-- While more sophisticated methods to measure novelty are available [@uzzi2013atypical; @wang2017bias], we employ this more straightforward approach because pedagogical innovation tends to be incremental, and computationally intensive methods are impractical for large-scale datasets like ours. We anticipate that novelty will vary across fields (e.g., history courses may cite older texts more frequently than computer science courses). Still, within-field differences in novelty serve as a proxy for how close a course is to the current frontier of knowledge ("novelty"). -->
 
 ### Women Authors Cited
 
@@ -106,7 +115,6 @@ $$
   \text{Ratio of Female Authors}_i = \frac{\text{Female Authors}_i + 1} {\text{Female Authors}_i + \text{Male Authors}_i + 2}.
 $$
 Here, we add two pseudo-observations (one for each gender) to stabilise the ratio, preventing extreme values in cases with very few authors [@agresti2000simple]. This metric enables us to examine whether gender and collaboration are associated with the representation of female-authored work in teaching.
-
 
 ## Simulating Teaching Collaborations
 
@@ -120,7 +128,9 @@ Y_{j, t} =
  \alpha_t + 
  \text{Team}_{j, t} + 
  \text{STEM}_t + \eta_{f,t} +  % fields
- \text{Country}_{t} + \text{Enroll}_t + \delta_{t} + 
+ \text{Country}_{t} + 
+ \text{CourseLevel}_{l,t} + 
+ \delta_{t} + 
  \epsilon_{j, t}.
 \]
 Where: 
@@ -137,7 +147,7 @@ Where:
 
 - $\text{Country}_{c, t}$ is fixed effects for the institution $s$'s country $c$ in year $t$,
 
-- $\text{Enroll}_{t}$ is an effect for the institution's enrollment size at year $t$,
+- $\text{CourseLevel}_{t}$ is an effect for the level of the course ($l$ = basic, advanced, graduate, unknown) at year $t$,
 
 - $\delta_{s, t}$ is a random intercept for each of approximately 4000 unique institutions,
 

@@ -11,6 +11,7 @@ authors:
 mainfont: Arial
 linestretch: 1.5
 geometry: "margin=1in"
+bibliography: [../refs.bib]
 --- 
 
 Dear Editor and Reviewers, 
@@ -76,29 +77,50 @@ Changes: Methods and Supplement [pp. X-Y; Tables S1-S3]; Discussion [pp. X-Y].
 
 **The literature review needs to be re-organized into three subsections that clearly delineate the three arguments that the paper wants to make. * first, on "how courses taught by FEMALE instructors may contain more female authored readings".    * second, on "why MIXED-gender team would assign more novel readings".   * third, on "how MIXED-gender teams can increase interdisciplinary teaching"   * Currently, the structure looks very hidden to me, especially given that sometimes the authors discuss the effect of "female" while other times they discuss the effect of "mixed gender".**
 
-We reorganized the Introduction and theoretical framework to match the three core arguments: (1) female instructors assign more female-authored readings, (2) mixed-gender teams select more recent readings, and (3) mixed-gender teams promote greater interdisciplinarity.  
 
-Changes: Introduction [pp. X-Y]. 
+We thank the reviewer for this helpful comment. We agree that the original literature review did not sufficiently highlight the conceptual foundation of our analysis. In response, we have restructured the literature into a new “Literature” section with clearly delineated subsections. Although the reviewer suggested a three-part organization, we separated gendered collaboration patterns from gendered course content to enhance conceptual clarity. The introductory paragraph to the revised literature review now reads:
+
+> Research shows that gender and institutional structures shape key aspects of academic work, from team formation to curriculum design. Four strands of this literature are particularly relevant to our study: (i) research on how gender influences collaboration patterns, (ii) the representation of women in course materials, (iii) the interdisciplinarity of mixed-gender teams, and (iv) the propensity of such teams to innovate. These insights provide the conceptual foundation for our study, which we review in detail below.
+
+In addition, following Reviewer 2’s request to expand our analysis to the pre- and post-Covid-19 periods, we now include a fifth subsection summarizing the literature on how Covid-19 has affected academic collaboration. This addition further clarifies the context for our extended empirical analysis.
+
 
 **There seems to be no control for the level of courses (ie., 101, 200+, 300+ and so on based on course code), but that could greatly influence the level of interdisciplinarity, age of course readings, or who teaches it. This is totally doable with Open Syllabus data to my knowledge**
 
-We thank the reviewer for this valuable suggestion. While course level is not explicitly provided in the Open Syllabus (OS) data, it can be inferred from course codes (e.g., “Psychology 101” typically indicating an introductory course, and “Psychology 401” an advanced one). Following @biasi2022education, we classified courses into four levels based on their codes (basic, advanced, gradaute or unknown); their validation suggests this approach achieves roughly 85% accuracy in the U.S. context. Although no equivalent validation exists for European institutions—and accuracy may therefore be lower—we additionally used the number of assigned readings in each syllabus as a proxy for course level. Our results remain robust when incorporating these measures.
+We thank the reviewer for this valuable suggestion. While course level is not explicitly provided in the Open Syllabus data, it can be inferred from course codes (e.g., “Psychology 101” typically indicating an introductory course, and “Psychology 401” an advanced one). Following @biasi2022education, we classified courses into four levels based on their codes (basic, advanced, graduate or unknown); their validation suggests this approach achieves roughly 85% accuracy in the U.S. context. Although no equivalent validation exists for European institutions, and accuracy may therefore be lower, we additionally used the number of assigned readings in each syllabus as a further proxy for course level. Our results remain robust when incorporating these measures.
 
-> Changes: In the revised manuscript, we dicuss this procedure in the supporting Information [p. xxx]. 
+In the revised manuscript:
+
+**Methods**: p. 9, we included: 
+
+> Because course level (e.g., undergraduate or graduate) was not explicitly reported in the data, we inferred it from course codes. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into four levels: basic, advanced, graduate, or unknown (see Section \@ref(course-level) for the details).^[
+  According to @biasi2022education, this classification procedure is approximately 85% accurate for a sample of U.S. courses that could be matched to catalogues with verifiable information.
+]
+
+**Results**: All the regression results reported in figures 7 to 12 include course level controls. 
+
+**Supporting Information**: We included a new subsection (p. 45) that reads:
+
+> To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were assigned an *unknown* level. This approach enabled consistent categorisation across heterogeneous code formats. Furthermore, on a subset of 56,000 U.S. syllabi, prior work [@biasi2022education] showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. For EU countries, no comparable benchmark currently exists. 
 
 
 
 **Although it is understandable to not have perfectly representative coverage of fields and schools given the scraped nature of this online based dataset -- this lack of representativeness is indeed heavily related to the aggregated estimates that the authors presented in the graphs throughout the results section. For example, when estimating whether mixed gender teaching groups have more interdisciplinarity than male-only groups, we need to know whether both types of teaching groups that are used in the analysis are proportional to the real distribution of the specific discipline in the specific institution and the specific country. Otherwise, how can we be sure that the aggregated / average estimates are not affected by the distribution of the cases selected in the operational data in this study?** 
 
-1. Add course-level controls.  
 
-Response: We included course-level indicators (introductory/intermediate/advanced) based on course numbering, which may affect interdisciplinarity and reading selection. 
+We thank the reviewer for raising this important concern about representativeness and its implications for the aggregated estimates presented in the results. We agree that understanding how well our dataset reflects the underlying disciplinary, institutional, and national distributions is essential. In response, we have expanded both the Methods and Supporting Information to make the representativeness assessment more explicit and transparent. 
 
-Changes: Methods [pp. X-Y]; Table S1. 
+Specifically, we compared the proportions of women and men instructors in our dataset with official statistics on academic staff across countries. This analysis shows strong correlations for most countries, particularly English-speaking ones, where coverage of syllabi is highest. We also examined representativeness at the field level by correlating the gender distribution in our data with U.S. NCSES statistics on Ph.D. graduates by academic field. Here too we observe high correlations in many major fields. Taken together, these analyses indicate that the dataset is reasonably representative for the purposes of our study.
 
-Response: We acknowledge that coverage is uneven and that no external benchmark exists for course completeness.  We discuss potential biases due to differential representation and include fixed effects for institution, year, and subject area to account for systematic differences. 
+**Methods**: we included the following sentence:
 
-Changes: Methods [pp. X-Y]. 
+> These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. Although official statistics to assess the representativeness of this gender population are not available, a detailed comparison with official statistics (\@ref(representativeness-of-the-gender-distribution)) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors). This analysis indicates a reasonable representativeness of our data.
+
+**Supporting Information**: We added a dedicated subsection titled "Representativeness of the gender distribution": 
+
+> One potential concern for our analysis is the representativeness of the data. Our dataset covers several million courses and thousands of educational institutions, corresponding to about 50% of the educational organisations in the ROR, which makes the results interesting in their own right. Nevertheless, one may question how representative these data are of the broader population of instructors. Although we cannot directly test representativeness, we evaluate it in two ways. First, we examine whether the overall female-to-male ratio over time in each country correlates with OECD statistics on academic staff by gender. Second, for the U.S., we assess whether the sex ratio by field and year correlates with NCSES data on Ph.D. graduates by academic field, country, and year, which serves as a proxy for the maximum number of employable instructors.
+
+> As illustrated in Figure \@ref(fig:country-coverage), our analysis of overall trends reveals a very high correlation for English-speaking countries (U.S. = .98, U.K. = .90), and greater heterogeneity for non-English-speaking countries, where representativeness is expected to be weaker given our focus on English-language syllabi. The analysis based on Ph.D. graduates similarly shows strong field-level correlations in many fields (Figure \@ref(fig:field-coverage-us)), such as in Natural Sciences (rho = .91), Social sciences and journalism (rho = .90), Education (rho = .77). However, there are fields with considerably lower correlation, such as in Health and welfare (rho = .14) or IT (rho = .29). This heterogeneity may stem from differences across disciplines in the proportion of Ph.D. graduates who remain in academia (e.g., biology has a comparatively high share of graduates who pursue careers outside academia). Nevertheless, these patterns suggest that, at least for English-speaking countries and in many academic fields, our data are reasonably representative.
 
 
 **Genderizer: 12% of the syllabi were reported to have unknown gender (p 5). Is this a problem of missing, or is it a problem of the genderizer being unable to estimate the gender (many asian names are gender neutral) -- how is this going to affect the estimates?**
@@ -156,3 +178,7 @@ Changes: Figures [F1-Fx]; caption notes updated.
 > TBA
 
 **It could be interesting to run separate analyses in general areas as well (e.g., sciences, humanities, social sciences) to see if the general patterns generalize across these areas.**
+
+
+
+# References 

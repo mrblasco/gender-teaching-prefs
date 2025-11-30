@@ -131,12 +131,12 @@ Figure \@ref(fig:covid-simulations) shows the results of our Montecarlo simulati
 
 ```{r covid-simulations, fig.cap = cap, fig.width = 7, fig.asp = .45}
 cap <- paste(
-    "Simulated gender-neutral vs observed teaching teams for 2.2M syllabi from institutions in thirty-three European countries. Covid-19 period highlighted (2020-2021). This shows that the gap between mixed-gender and same-gender collaborations widens after Covid." # nolint
+    "**Post-Pandemic Team Formation**. Simulated gender-neutral vs observed teaching teams for 2.2M syllabi from institutions in thirty-three European countries. Covid-19 period highlighted (2020-2021). This shows that the gap between mixed-gender and same-gender collaborations widens after Covid." # nolint
 )
 fig_covid$simulations + labs(title = NULL, subtitle = NULL)
 ```
 
-## The Association Between Team Configuration and Course Content
+## Associations Between Teams and Course Content
 
 To examine how teaching team size and gender composition are associated with important aspects of course materials, we analyse three key metrics: the percentile rank of the interdisciplinarity score per year ("interdisciplinarity"), the average publication year of the readings ("age of readings"), and the share of female authors cited in the assigned readings ("share of female authors"). As previously discussed, we employ linear mixed-effects regressions to examine these relationships while accounting for unobserved differences across academic fields, institutions, time, and other relevant covariates.
 

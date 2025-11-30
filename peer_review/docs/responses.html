@@ -20,9 +20,8 @@ visibility: hidden;
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -87,6 +86,28 @@ code span.vs { color: #20794d; }
 code span.wa { color: #5e5e5e; font-style: italic; } 
 </style>
 
+<style>
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
 
   <!--radix_placeholder_meta_tags-->
   <title>Responses to Reviewers: 
@@ -112,10 +133,13 @@ code span.wa { color: #5e5e5e; font-style: italic; }
 " />
 
   <!--/radix_placeholder_meta_tags-->
+  
+  <meta name="citation_reference" content="citation_title=The education-innovation gap;citation_publisher=National Bureau of Economic Research;citation_author=Barbara Biasi;citation_author=Song Ma" />
+  <meta name="citation_reference" content="citation_title=What is the profile of academic staff and what is the student-academic staff ratio?;citation_publisher=OECD Publishing;citation_doi=10.1787/bb6ee273-en;citation_author=What is the profile of academic staff and what is the student-academic staff ratio?" />
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","subtitle","authors","mainfont","linestretch","geometry","author"]}},"value":[{"type":"character","attributes":{},"value":["Responses to Reviewers: \n\"Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections\"\n"]},{"type":"character","attributes":{},"value":["Manuscript ID: PNASNEXUS-2025-00959-T\n"]},{"type":"character","attributes":{},"value":["Andrea Blasco","Elisa Orlandi"]},{"type":"character","attributes":{},"value":["Arial"]},{"type":"double","attributes":{},"value":[1.5]},{"type":"character","attributes":{},"value":["margin=1in"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Andrea Blasco"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Elisa Orlandi"]}]}]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","subtitle","authors","mainfont","linestretch","geometry","bibliography","author"]}},"value":[{"type":"character","attributes":{},"value":["Responses to Reviewers: \n\"Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections\"\n"]},{"type":"character","attributes":{},"value":["Manuscript ID: PNASNEXUS-2025-00959-T\n"]},{"type":"character","attributes":{},"value":["Andrea Blasco","Elisa Orlandi"]},{"type":"character","attributes":{},"value":["Arial"]},{"type":"double","attributes":{},"value":[1.5]},{"type":"character","attributes":{},"value":["margin=1in"]},{"type":"character","attributes":{},"value":["../refs.bib"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Andrea Blasco"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Elisa Orlandi"]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   
@@ -2415,21 +2439,37 @@ distill-header .nav a {
 <h1 id="reviewer-1">Reviewer 1</h1>
 <p><strong>The paper examines an interesting and important topic: how the composition of teaching teams in higher education matters for three pedagogical outcomes - the age of readings assigned, the gender of the authors of the readings assigned, and the interdisciplinarity of the course. This is an area lacking systematic quantitative analysis, and I believe that if the analysis and results become more improved and robust, it could make a contribution to the literature. However, a few problems exist that require revision.</strong></p>
 <p><strong>The literature review needs to be re-organized into three subsections that clearly delineate the three arguments that the paper wants to make. * first, on “how courses taught by FEMALE instructors may contain more female authored readings”. * second, on “why MIXED-gender team would assign more novel readings”. * third, on “how MIXED-gender teams can increase interdisciplinary teaching” * Currently, the structure looks very hidden to me, especially given that sometimes the authors discuss the effect of “female” while other times they discuss the effect of “mixed gender”.</strong></p>
-<p>We reorganized the Introduction and theoretical framework to match the three core arguments: (1) female instructors assign more female-authored readings, (2) mixed-gender teams select more recent readings, and (3) mixed-gender teams promote greater interdisciplinarity.</p>
-<p>Changes: Introduction [pp. X-Y].</p>
-<p><strong>There seems to be no control for the level of courses (ie., 101, 200+, 300+ and so on based on course code), but that could greatly influence the level of interdisciplinarity, age of course readings, or who teaches it. This is totally doable with Open Syllabus data to my knowledge</strong></p>
-<p>We thank the reviewer for this valuable suggestion. While course level is not explicitly provided in the Open Syllabus (OS) data, it can be inferred from course codes (e.g., “Psychology 101” typically indicating an introductory course, and “Psychology 401” an advanced one). Following <span class="citation" data-cites="biasi2022education">@biasi2022education</span>, we classified courses into four levels based on their codes (basic, advanced, gradaute or unknown); their validation suggests this approach achieves roughly 85% accuracy in the U.S. context. Although no equivalent validation exists for European institutions—and accuracy may therefore be lower—we additionally used the number of assigned readings in each syllabus as a proxy for course level. Our results remain robust when incorporating these measures.</p>
+<p>We thank the reviewer for this helpful comment. We agree that the original literature review did not sufficiently highlight the conceptual foundation of our analysis. In response, we have restructured the literature into a new “Literature” section with clearly delineated subsections. Although the reviewer suggested a three-part organization, we separated gendered collaboration patterns from gendered course content to enhance conceptual clarity. The introductory paragraph to the revised literature review now reads:</p>
 <blockquote>
-<p>Changes: In the revised manuscript, we dicuss this procedure in the supporting Information [p. xxx].</p>
+<p>Research shows that gender and institutional structures shape key aspects of academic work, from team formation to curriculum design. Four strands of this literature are particularly relevant to our study: (i) research on how gender influences collaboration patterns, (ii) the representation of women in course materials, (iii) the interdisciplinarity of mixed-gender teams, and (iv) the propensity of such teams to innovate. These insights provide the conceptual foundation for our study, which we review in detail below.</p>
+</blockquote>
+<p>In addition, following Reviewer 2’s request to expand our analysis to the pre- and post-Covid-19 periods, we now include a fifth subsection summarizing the literature on how Covid-19 has affected academic collaboration. This addition further clarifies the context for our extended empirical analysis.</p>
+<p><strong>There seems to be no control for the level of courses (ie., 101, 200+, 300+ and so on based on course code), but that could greatly influence the level of interdisciplinarity, age of course readings, or who teaches it. This is totally doable with Open Syllabus data to my knowledge</strong></p>
+<p>We thank the reviewer for this valuable suggestion. While course level is not explicitly provided in the Open Syllabus data, it can be inferred from course codes (e.g., “Psychology 101” typically indicating an introductory course, and “Psychology 401” an advanced one). Following <span class="citation" data-cites="biasi2022education">Biasi and Ma (<a href="#ref-biasi2022education" role="doc-biblioref">2022</a>)</span>, we classified courses into four levels based on their codes (basic, advanced, graduate or unknown); their validation suggests this approach achieves roughly 85% accuracy in the U.S. context. Although no equivalent validation exists for European institutions, and accuracy may therefore be lower, we additionally used the number of assigned readings in each syllabus as a further proxy for course level. Our results remain robust when incorporating these measures.</p>
+<p>In the revised manuscript:</p>
+<p><strong>Methods</strong>: p. 9, we included:</p>
+<blockquote>
+<p>Because course level (e.g., undergraduate or graduate) was not explicitly reported in the data, we inferred it from course codes. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into four levels: basic, advanced, graduate, or unknown (see Section <a href="#course-level"><strong>??</strong></a> for the details).<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+</blockquote>
+<p><strong>Results</strong>: All the regression results reported in figures 7 to 12 include course level controls.</p>
+<p><strong>Supporting Information</strong>: We included a new subsection (p. 45) that reads:</p>
+<blockquote>
+<p>To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as <em>basic</em>, those beginning with 3 or 4 as <em>advanced</em>, and those beginning with 5 or higher as <em>graduate</em>. Codes that did not contain a recognisable numeric component were assigned an <em>unknown</em> level. This approach enabled consistent categorisation across heterogeneous code formats. Furthermore, on a subset of 56,000 U.S. syllabi, prior work <span class="citation" data-cites="biasi2022education">(<a href="#ref-biasi2022education" role="doc-biblioref">Biasi and Ma 2022</a>)</span> showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. For EU countries, no comparable benchmark currently exists.</p>
 </blockquote>
 <p><strong>Although it is understandable to not have perfectly representative coverage of fields and schools given the scraped nature of this online based dataset – this lack of representativeness is indeed heavily related to the aggregated estimates that the authors presented in the graphs throughout the results section. For example, when estimating whether mixed gender teaching groups have more interdisciplinarity than male-only groups, we need to know whether both types of teaching groups that are used in the analysis are proportional to the real distribution of the specific discipline in the specific institution and the specific country. Otherwise, how can we be sure that the aggregated / average estimates are not affected by the distribution of the cases selected in the operational data in this study?</strong></p>
-<ol type="1">
-<li>Add course-level controls.</li>
-</ol>
-<p>Response: We included course-level indicators (introductory/intermediate/advanced) based on course numbering, which may affect interdisciplinarity and reading selection.</p>
-<p>Changes: Methods [pp. X-Y]; Table S1.</p>
-<p>Response: We acknowledge that coverage is uneven and that no external benchmark exists for course completeness. We discuss potential biases due to differential representation and include fixed effects for institution, year, and subject area to account for systematic differences.</p>
-<p>Changes: Methods [pp. X-Y].</p>
+<p>We thank the reviewer for raising this important concern about representativeness and its implications for the aggregated estimates presented in the results. We agree that understanding how well our dataset reflects the underlying disciplinary, institutional, and national distributions is essential. In response, we have expanded both the Methods and Supporting Information to make the representativeness assessment more explicit and transparent.</p>
+<p>Specifically, we compared the proportions of women and men instructors in our dataset with official statistics on academic staff across countries. This analysis shows strong correlations for most countries, particularly English-speaking ones, where coverage of syllabi is highest. We also examined representativeness at the field level by correlating the gender distribution in our data with U.S. NCSES statistics on Ph.D. graduates by academic field. Here too we observe high correlations in many major fields. Taken together, these analyses indicate that the dataset is reasonably representative for the purposes of our study.</p>
+<p><strong>Methods</strong>: we included the following sentence:</p>
+<blockquote>
+<p>These figures broadly align with the 45% of female academic staff reported in OECD countries <span class="citation" data-cites="oecd2022">(<a href="#ref-oecd2022" role="doc-biblioref">OECD 2022</a>)</span>. Although official statistics to assess the representativeness of this gender population are not available, a detailed comparison with official statistics (<a href="#representativeness-of-the-gender-distribution"><strong>??</strong></a>) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors). This analysis indicates a reasonable representativeness of our data.</p>
+</blockquote>
+<p><strong>Supporting Information</strong>: We added a dedicated subsection titled “Representativeness of the gender distribution”:</p>
+<blockquote>
+<p>One potential concern for our analysis is the representativeness of the data. Our dataset covers several million courses and thousands of educational institutions, corresponding to about 50% of the educational organisations in the ROR, which makes the results interesting in their own right. Nevertheless, one may question how representative these data are of the broader population of instructors. Although we cannot directly test representativeness, we evaluate it in two ways. First, we examine whether the overall female-to-male ratio over time in each country correlates with OECD statistics on academic staff by gender. Second, for the U.S., we assess whether the sex ratio by field and year correlates with NCSES data on Ph.D. graduates by academic field, country, and year, which serves as a proxy for the maximum number of employable instructors.</p>
+</blockquote>
+<blockquote>
+<p>As illustrated in Figure <a href="#fig:country-coverage"><strong>??</strong></a>, our analysis of overall trends reveals a very high correlation for English-speaking countries (U.S. = .98, U.K. = .90), and greater heterogeneity for non-English-speaking countries, where representativeness is expected to be weaker given our focus on English-language syllabi. The analysis based on Ph.D. graduates similarly shows strong field-level correlations in many fields (Figure <a href="#fig:field-coverage-us"><strong>??</strong></a>), such as in Natural Sciences (rho = .91), Social sciences and journalism (rho = .90), Education (rho = .77). However, there are fields with considerably lower correlation, such as in Health and welfare (rho = .14) or IT (rho = .29). This heterogeneity may stem from differences across disciplines in the proportion of Ph.D. graduates who remain in academia (e.g., biology has a comparatively high share of graduates who pursue careers outside academia). Nevertheless, these patterns suggest that, at least for English-speaking countries and in many academic fields, our data are reasonably representative.</p>
+</blockquote>
 <p><strong>Genderizer: 12% of the syllabi were reported to have unknown gender (p 5). Is this a problem of missing, or is it a problem of the genderizer being unable to estimate the gender (many asian names are gender neutral) – how is this going to affect the estimates?</strong></p>
 <p>We thank the reviewer for the opportunity to clarify this point. In the Supporting Information, we have included a section on gender that describes the process of gender disambiguation. In brief, OpenSyllabus uses a version of Genderize.io, which has an estimated overall accuracy of 98% in academic publications. If the probability of an author being female exceeds 0.5, the author is classified as female; otherwise, they are classified as male. However, not all instructors listed in the syllabi provide their full first names; some list only initials (e.g., “J.” for “John” or “Jane”). In such cases, OpenSyllabus assigns the author to the “unknown” category.</p>
 <blockquote>
@@ -2472,7 +2512,23 @@ distill-header .nav a {
 <p>TBA</p>
 </blockquote>
 <p><strong>It could be interesting to run separate analyses in general areas as well (e.g., sciences, humanities, social sciences) to see if the general patterns generalize across these areas.</strong></p>
+<h1 id="references">References</h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-biasi2022education" class="csl-entry" role="listitem">
+Biasi, Barbara, and Song Ma. 2022. <span>“The Education-Innovation Gap.”</span> National Bureau of Economic Research.
+</div>
+<div id="ref-oecd2022" class="csl-entry" role="listitem">
+OECD. 2022. <span>“What Is the Profile of Academic Staff and What Is the Student-Academic Staff Ratio?”</span> In <em>Education at a Glance 2022: OECD Indicators</em>. Paris: OECD Publishing. <a href="https://doi.org/10.1787/bb6ee273-en">https://doi.org/10.1787/bb6ee273-en</a>.
+</div>
+</div>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>
+According to <span class="citation" data-cites="biasi2022education">Biasi and Ma (<a href="#ref-biasi2022education" role="doc-biblioref">2022</a>)</span>, this classification procedure is approximately 85% accurate for a sample of U.S. courses that could be matched to catalogues with verifiable information.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -2484,7 +2540,10 @@ distill-header .nav a {
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
 <!--radix_placeholder_appendices-->
-<div class="appendix-bottom"></div>
+<div class="appendix-bottom">
+<h3 id="references">References</h3>
+<div id="references-listing"></div>
+</div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
 <!--/radix_placeholder_navigation_after_body-->

@@ -21,22 +21,13 @@ library(tidyr)
 library(kableExtra)
 library(ggplot2)
 
+source("R/tables.R")
 source("R/theme.R")
 theme_set(theme_custom())
 
 knitr::opts_chunk$set(echo = FALSE)
 
 results_dir <- file.path("data", "results")
-
-create_table <- function(x, ...) {
-  kableExtra::kbl(x, ...) %>%
-    kableExtra::kable_styling(
-      latex_options = c("striped", "hold_position"),
-      font_size = 10,
-      full_width = FALSE,
-      position = "center"
-    )
-}
 ```
 
 ```{r, data-supporting, cache = TRUE, include = FALSE}
@@ -60,7 +51,7 @@ ds <- readRDS(filename_data) %>%
 
 OpenSyllabus uses a Python implementation of Genderize.io to estimate the probability that an author's name corresponds to a female gender.^[See https://github.com/opensyllabus/osp-gender] Names with a predicted probability above 0.5 are classified as female; all others are classified as male. Prior research indicates that Genderize.io achieves high overall accuracy (92%) [@santamaria2018comparison]. In the context of academic authorship, a study hand-checking gender predictions in scholarly publications found that Genderize.io has an error rate of only about 2% [@teele2017gender]. Despite this reliability, many instructors listed in syllabi provide only initials (e.g., "J." instead of "John" or "Jane"), which introduces ambiguity and increases noise in gender classification. To mitigate this, OpenSyllabus assigns an "unknown" category when an author's first name cannot be reliably determined. 
 
-## Course Level: Basic, Advanced, Graduate
+## Course Level
 
 To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were assigned an *unknown* level. This approach enabled consistent categorisation across heterogeneous code formats. Furthermore, on a subset of 56,000 U.S. syllabi, prior work [@biasi2022education] showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. For EU countries, no comparable benchmark currently exists. 
 
@@ -88,37 +79,38 @@ To reduce computational costs, we "bootstrap" the field-by-field cosine similari
 
 ```{r, SI-country}
 ds %>%
-  filter(formation == "team") %>% 
-  count(country, wt = n) %>%
-  mutate(
-    country = case_when(
-      country == "US" ~ "USA",
-      country == "GB" ~ "Great Britain",
-      country == "CA" ~ "Canada",
-      country == "IT" ~ "Italy",
-      country == "PL" ~ "Poland",
-      country == "NL" ~ "Netherlands",
-      country == "DE" ~ "Germany",
-      country == "IE" ~ "Ireland",
-      country == "PT" ~ "Portugal",
-      country == "SE" ~ "Sweden",
-      country == "ES" ~ "Spain",
-      country == "AT" ~ "Austria",
-      country == "DK" ~ "Denmark",
-      country == "FR" ~ "France",
-      TRUE ~ "Other"
+    filter(formation == "team") %>%
+    count(country, wt = n) %>%
+    mutate(
+        country = dplyr::case_when(
+            country == "US" ~ "USA",
+            country == "GB" ~ "Great Britain",
+            country == "CA" ~ "Canada",
+            country == "IT" ~ "Italy",
+            country == "PL" ~ "Poland",
+            country == "NL" ~ "Netherlands",
+            country == "DE" ~ "Germany",
+            country == "IE" ~ "Ireland",
+            country == "PT" ~ "Portugal",
+            country == "SE" ~ "Sweden",
+            country == "ES" ~ "Spain",
+            country == "AT" ~ "Austria",
+            country == "DK" ~ "Denmark",
+            country == "FR" ~ "France",
+            TRUE ~ "Other"
+        )
+    ) %>%
+    mutate(pc = round(100 * n / sum(n), 1)) %>% 
+    arrange(desc(n)) %>%
+    mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+    create_table(
+        caption = "Number of Syllabi per Country",
+        col.names = c("Country", "Syllabi (thousands)", "%"),
+        align = c("l", "r", "r"),
+        booktabs = TRUE,
+        linesep = "",
+        format.args = list(big.mark = " ")
     )
-  ) %>%
-  mutate(pc = round(100 * n / sum(n), 1)) %>% 
-  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
-  create_table(
-    caption = "Number of Syllabi per Country",
-    col.names = c("Country", "N (thousands)", "%"),
-    align = c("l", "r", "r"),
-    booktabs = TRUE,
-    linesep = "",
-    format.args = list(big.mark = " ")
-  )
 ```
 <!-- ### Fields -->
 

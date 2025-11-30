@@ -11,12 +11,12 @@ abstract: |
   This study examines the formation of academic teaching teams and how their gender composition is associated with course design and gender disparity in academic recognition. Analysing over five million syllabi from higher education in fifteen countries, we document a persistent underrepresentation of mixed-gender co-teaching teams, which occur 50% less frequently than expected under gender-neutral team formation. We link team gender configurations to critical course characteristics: interdisciplinarity, novelty of reading materials, and gender balance in assigned citations. Courses taught by mixed-gender teams are significantly more interdisciplinary than those taught by same-gender teams. Male-only teams cite substantially fewer female authors than female-only teams, and mixed-gender teams do not eliminate this gap. Moreover, courses led by solo female instructors or teams including at least one woman tend to incorporate more novel reading materials. These findings reveal persistent gendered patterns in teaching collaboration and content and point to mixed-gender co-teaching as a potential lever to promote interdisciplinarity and gender equity in academic representation.
 
 always_allow_html: true
-fontsize: 11pt
-linestretch: 1.25
+fontsize: 12pt
+linestretch: 1.5
 colorlinks: true
 link-citations: true
 bibliography: [refs.bib]
-#csl: [https://www.zotero.org/styles/pnas]
+csl: [pnas.csl]
 geometry: margin=1in
 lang: en-UK
 mainfont: Arial
@@ -44,20 +44,22 @@ Keywords: education | gender bias | teams | interdisciplinarity | novelty | syll
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE,
-  error = TRUE # debug mode
+    echo = FALSE,
+    message = FALSE,
+    warning = FALSE,
+    error = TRUE
 )
 ```
 
-```{r, child = list.files(pattern = "01-intro.Rmd", full.names = TRUE)}
+```{r, child = "01-intro.Rmd"}
 ```
 
+```{r, child = "02-literature.Rmd"}
+```
 
 ```{r, child = "20-methods.Rmd"}
 ```
-```{r, child = "30-results.Rmd", eval = TRUE}
+```{r, child = "30-results.Rmd"}
 ```
 
 ```{r, child = "40-discussion.Rmd"}
@@ -71,7 +73,6 @@ knitr::opts_chunk$set(
 
 ::: {#refs}
 :::
-
 
 ```{r, child = "50-supporting.Rmd"}
 ```
