@@ -13,7 +13,7 @@ The core dataset consists of a corpus of more than six million university syllab
   https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55
 ] 
 
-Because course level (e.g., undergraduate or graduate) was not explicitly reported in our data, we inferred it from course codes. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into four levels: basic, advanced, graduate, or unknown (see Supplementary Methods).^[
+Because course level (e.g., undergraduate or graduate) was not explicitly reported in our data, we inferred it from course codes. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into four levels: basic, advanced, graduate, or unknown (see SI).^[
   According to @biasi2022education, this classification procedure is approximately 85% accurate for a sample of U.S. courses that could be matched to catalogues with verifiable information.
 ]
 
@@ -23,7 +23,9 @@ While the original dataset includes syllabi in 49 languages, most documents (96%
 
 ## Instructor genders
 
-Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. OpenSyllabus determined the instructors gender automatically based on their names, resulting in 52% male, 37% female, and 11% unknown categories. (Table \@ref(tab:SI-composition) illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors, which aligns closely with the 45% of female academic staff reported in OECD countries [@oecd2022]. A detailed empirical analysis of the represenativeness of our gender popoluation is in the Supplementary Information. 
+Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically determines the instructors’ gender based on their names. This gender disambiguation process employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], as detailed in the Supplementary Information (\@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories. (Table \@ref(tab:SI-composition) illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors.
+
+These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. A detailed empirical analysis of the representativeness of our gender population shows that the proportions of women and men in our datasets are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors), as illustrated in the Supplementary Information (\@ref(representativeness-of-the-gender-distribution)).
 
 
 ### Linking syllabi to bibliometric data
@@ -32,10 +34,9 @@ About 2.9 million syllabi (53% of the total) list readings matched with bibliogr
   For more details on how OpenSyllabus classify and match the data, the related documentation is available online at https://docs.opensyllabus.org.
 ]
 
-To assess the scientific novelty of the readings assigned in each syllabus, we further linked the data to SciSciNet (v2) [@lin2023sciscinet], a large-scale database of scientific publications that includes pre-computed indicators of novelty, such as the atypicality measure introduced by Uzzi et al. [@uzzi2013atypical]. Matches were performed using article DOIs, yielding approximately XXXX successfully matched publications, corresponding to XXX% of all readings with an available DOI. These matched publications appear in roughly 300,000 syllabi, representing about 10% of the 2.9 million syllabi containing reading lists. 
-
-The same methods used to identify the gender of the instructors were used for the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with 12% of the authors having an unknown gender.
-
+To assess the scientific novelty of the readings assigned in each syllabus, we further linked the data to SciSciNet (v2) [@lin2023sciscinet], a large-scale database of scientific publications that includes pre-computed indicators of novelty, such as the atypicality measure introduced by Uzzi et al. [@uzzi2013atypical]. Matches were performed using article DOIs, corresponding to 80% of all readings with at least an available DOI in the readings. These matched publications appear in roughly 400,000 syllabi, representing about 14% of the 2.9 million syllabi containing reading lists.^[
+  The same methods used to identify the gender of the instructors were used for the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with 12% of the authors having an unknown gender.
+]
 
 ### Supplementary Covid-19 dataset
 

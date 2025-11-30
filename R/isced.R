@@ -1,3 +1,15 @@
+
+require(dplyr)
+
+stem_categories <- c(
+    "Natural Sciences, Mathematics, and Statistics",
+    "Information and Communication Technologies (ICTs)",
+    "Engineering, Manufacturing, and Construction"
+)
+
+
+
+
 isced_mapping <- list(
     "Education" = c("Education"),
     "Arts and Humanities" = c("Anthropology", "Chinese", "Classics",
@@ -53,7 +65,12 @@ isced_mapping <- list(
                  "Military Science", "Sign Language")
 )
 
+isced_lookup <- tidyr::unnest(tibble(field = isced_mapping, isced = names(isced_mapping)), field) %>% 
+    dplyr::mutate(stem = isced %in% stem_categories)
+
+
 recode_field <- function(x) {
+  # DEPREC
   sapply(x, function(f) {
     category <- names(isced_mapping)[
         sapply(isced_mapping, function(fields) f %in% fields)

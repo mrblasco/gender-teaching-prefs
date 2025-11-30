@@ -49,16 +49,12 @@ review:
 	$(MAKE) -C peer_review
 
 
-# --- drafts 
+LOGDIR := logs
+TIMESTAMP := $(shell date +%Y-%m-%d_%H-%M-%S)
+LOGFILE := $(LOGDIR)/$(TIMESTAMP).log
 
-intro: /tmp/01-intro.html
-	open $<
+run:
+	mkdir -p $(LOGDIR)
+	Rscript $(FILE) > $(LOGFILE) 2>&1
+	@echo "Log saved to $(LOGFILE)"
 
-methods: /tmp/20-methods.html
-	open $<
-
-SI: /tmp/50-supporting.html
-	open $<
-
-/tmp/%.html : %.Rmd
-	Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_format = "distill::distill_article")'

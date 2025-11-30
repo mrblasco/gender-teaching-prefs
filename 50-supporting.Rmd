@@ -26,6 +26,8 @@ theme_set(theme_custom())
 
 knitr::opts_chunk$set(echo = FALSE)
 
+results_dir <- file.path("data", "results")
+
 create_table <- function(x, ...) {
   kableExtra::kbl(x, ...) %>%
     kableExtra::kable_styling(
@@ -232,4 +234,24 @@ cap <- paste(
     "Source: NCES (Survey of Earned Doctorates)."
 )
 figs$by_field + labs(title = NULL, subtitle = NULL)
+```
+
+## Pre-/Post- Covid-19 Patterns
+
+```{r covid-trend, fig.width = 9, fig.cap = cap, fig.asp = 1}
+cap <- paste(
+    "**Pre-/Post-Covid Courses**. Number of courses per CIP field (gray) in thirty-three European countries before and after Covid-19. Data from Open Syllabus (2017-2022). Smooth trend curves show the average pattern per broad field definition (ISCED-F). Most fields exhibit a significant drop in courses during the pandemic, especially Health and Welfare, Arts and Humanities, and Social Sciences and Journalism." #nolint
+)
+
+p_covid_trend <- readRDS(file.path(results_dir, "plot_covid_trends.rds"))
+p_covid_trend + labs(x = "Year")
+```
+
+## Heterogeneity: US vs non-US
+
+```{r hetero-us-plots, fig.asp = 1, fig.width = 9, fig.cap = cap}
+cap <- paste(
+    "**Heterogeneity within US courses**. Estimates and 95% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for courses from the US vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates. The comparison reveals no noticeable differences." # nolint
+)
+plots_us # see results section
 ```

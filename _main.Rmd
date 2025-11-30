@@ -16,7 +16,7 @@ linestretch: 1.25
 colorlinks: true
 link-citations: true
 bibliography: [refs.bib]
-csl: [https://www.zotero.org/styles/pnas]
+#csl: [https://www.zotero.org/styles/pnas]
 geometry: margin=1in
 lang: en-UK
 mainfont: Arial
@@ -57,7 +57,7 @@ knitr::opts_chunk$set(
 
 ```{r, child = "20-methods.Rmd"}
 ```
-```{r, child = "30-results.Rmd", eval = FALSE}
+```{r, child = "30-results.Rmd", eval = TRUE}
 ```
 
 ```{r, child = "40-discussion.Rmd"}
