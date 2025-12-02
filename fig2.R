@@ -127,6 +127,7 @@ fit_glm <- fit_and_save_glm(
     family = quasipoisson(link = "log")
 )
 
+
 broom::tidy(fit_glm) %>%
     filter(grepl("team", term)) %>%
     mutate(term = gsub("team", "Team: ", term)) %>% 

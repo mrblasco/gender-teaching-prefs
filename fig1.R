@@ -57,7 +57,7 @@ filename_data <- file.path(data_dir, "rds/final.rds")
 ds <- readRDS(filename_data) %>%
     filter(nchar(team) < 10) %>%
     select(field, year, team = team_ordered, team_rand, country) %>% 
-    pivot_longer(cols = c(team, team_rand),
+    tidyr::pivot_longer(cols = c(team, team_rand),
                 names_to = "formation",
                 values_to = "composition") %>%
     count(formation, composition, field, year, country) %>% 
@@ -353,7 +353,7 @@ print(p)
 cap <- "Montecarlo simulations by country."
 
 ds %>%
-  filter(team_size < 3, year > year_cutoff) %>%
+  filter(team_size < 3, year > 2019) %>%
   mutate(
     composition = composition %>%
       strsplit(split = "") %>%
@@ -449,6 +449,7 @@ p <- ds %>%
 
 print(p)
 
+saveRDS(p, file.path(results_dir, "plot_order_instructors.rds"))
 
 # ----- montecarlo-by-field, fig.width = 7, fig.height = 9 ------
 

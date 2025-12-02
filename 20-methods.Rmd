@@ -23,9 +23,9 @@ Because course level (e.g., undergraduate or graduate) was not explicitly report
 
 ### Instructor genders
 
-Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically determines the instructors’ gender based on their names. This gender disambiguation process employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], which are detailed in the Supplementary Information (\@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories. (Table \@ref(tab:SI-composition) illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors.
+Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically determines the instructors’ gender based on their names. This gender disambiguation process employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], which are detailed in the Supplementary Information (Section \@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories. (Table \@ref(tab:SI-composition) illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors.
 
-These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. Although official statistics to assess the representativeness of this gender population are not available, a detailed comparison with official statistics (\@ref(representativeness-of-the-gender-distribution)) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors). This analysis indicates a reasonable representativeness of our data.
+These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. Although official statistics to assess the representativeness of this gender population are not available, a detailed comparison with official statistics (Supporting Info, Section \@ref(representativeness-of-the-gender-distribution)) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors). This analysis indicates a reasonable representativeness of our data.
 
 ### Linking syllabi to bibliometric data
 
@@ -122,7 +122,7 @@ Building on previous research showing that gender-diverse teams are underreprese
 
 ## Regression analysis
 
-To evaluate the association between gender composition, team size, and course content, we define four teaching team configurations, $j\in \{F, M, MM, MF/FM, FF\}$, where F and M denote female and male instructors teaching alone, respectively. MM represents two male instructors; FM/MF indicates mixed-gender pairs; and FF corresponds to two female instructors. We then employ regression analysis to study the association between these team configurations and course outcomes across academic years, $t = 1999, \cdots, 2020$. As discussed before, the outcomes of interest include (1) interdisciplinarity, (2) the average age of readings, and (3) the proportion of cited female authors. To estimate these effects, we employ the following linear mixed-effects model:
+To evaluate the association between gender composition, team size, and course content, we define four teaching team configurations, $j\in \{F, M, MM, MF/FM, FF\}$, where F and M denote female and male instructors teaching alone, respectively. MM represents two male instructors; FM/MF indicates mixed-gender pairs; and FF corresponds to two female instructors. We then employ regression analysis to study the association between these team configurations and course outcomes across academic years, $t = 2000, \cdots, 2019$. As discussed before, the outcomes of interest include (1) interdisciplinarity, (2) the average age of readings, and (3) the proportion of cited female authors. To estimate these effects, we employ the following linear mixed-effects model:
 \[
 Y_{j, t} = 
  \alpha_t + 
@@ -137,17 +137,17 @@ Where:
 
 - $Y_{j, t, f, c, s}$ is the outcome variable for team configuration $j$ in year $t$, field $f$, and school $s$,
 
-- $\alpha_t$ is a fixed effect for the academic year $t$,
+- $\alpha_{t}$ is a fixed effect for the academic year $t$,
 
 - $\text{Team}_{j, t}$ is a fixed effect for team configuration $j$ in year $t$,
 
-- $STEM_t$ is a fixed effect for STEM courses in year $t$,
+- $STEM_{t}$ is a fixed effect for STEM courses in year $t$,
 
 - $\eta_{f,t}$ is a random intercept for academic field $f = 1,\cdots, 69$ at year $t$,
 
 - $\text{Country}_{c, t}$ is fixed effects for the institution $s$'s country $c$ in year $t$,
 
-- $\text{CourseLevel}_{t}$ is an effect for the level of the course ($l$ = basic, advanced, graduate, unknown) at year $t$,
+- $\text{CourseLevel}_{l, t}$ is an effect for the level of the course ($l$ = basic, advanced, graduate, unknown) at year $t$,
 
 - $\delta_{s, t}$ is a random intercept for each of approximately 4000 unique institutions,
 

@@ -69,9 +69,9 @@ To reduce computational costs, we "bootstrap" the field-by-field cosine similari
 
 We employed a simlar methodology to that developed by @uzzi2013atypical for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with $n$ instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with $m$ male instructors and $f$ female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
 
-\clearpage 
-
 ## Addtional Tables 
+
+In this section, we present additional descriptive statistics for the number of syllabi in each country  \@ref(tab:SI-country), the distribution of syllabi per field \@ref(tab:SI-fields), academic year \@ref(tab:tab:SI-years), and teaching teams \@ref(tab:SI-composition). 
 
 <!-- ### Countries -->
 
@@ -227,6 +227,8 @@ figs$by_field + labs(title = NULL, subtitle = NULL)
 
 ## Pre-/Post- Covid-19 Patterns
 
+Figure \@ref(fig:covid-trend) illustrates pre-/post-pandemic patterns in the teams across academic fields. 
+
 ```{r covid-trend, fig.width = 9, fig.cap = cap, fig.asp = 1}
 cap <- paste(
     "**Pre-/Post-Covid Courses**. Number of courses per CIP field (gray) in thirty-three European countries before and after Covid-19. Data from Open Syllabus (2017-2022). Smooth trend curves show the average pattern per broad field definition (ISCED-F). Most fields exhibit a significant drop in courses during the pandemic, especially Health and Welfare, Arts and Humanities, and Social Sciences and Journalism." #nolint
@@ -238,9 +240,71 @@ p_covid_trend + labs(x = "Year")
 
 ## Heterogeneity: US vs non-US
 
+Figure \@ref(fig:hetero-us-plots) illustrates heterogeneity in the associations between teams and outcomes within US courses and the other countries. 
+
 ```{r hetero-us-plots, fig.asp = 1, fig.width = 9, fig.cap = cap}
 cap <- paste(
     "**Heterogeneity within US courses**. Estimates and 95% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for courses from the US vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates. The comparison reveals no noticeable differences." # nolint
 )
 plots_us # see results section
+```
+
+
+## Robustness Analysis 
+
+To ensure the reliability and robustness of our results, we conducted several additional analyses. In addition to reporting results from separate regressions on subsets of data by year, we also estimated mixed-effects regressions using the full dataset. These results are broadly consistent with those presented in the paper. Figure \@ref(fig:robust-interdisc) shows robustness for interdisciplinarity, Figure \@ref(fig:robust-women) for the fraction of female authors cited in the readings, Figures \@ref(fig:robust-age-readings), \@ref(fig:robust-conventional), \@ref(fig:robust-atypical) show full-model results for the age, conventionality, and the atypicality of readings.
+
+While we report differences in percentile rank per year to address skewness in the outcome variables, we also explored alternative specificationss. First, we log-transformed our dependent variables, including the age, uncononventionality and atypicalty of readings, to explore potential non-linear relationships, particularly relevant for disciplines with old readings (e.g., history) or based on citations. Second, we employed a quasi-Poisson mixed-effect model instead of the reported linear mixed-effect regression to better account for non-linearities in the count of female authors (Figure \@ref(fig:robust-women), panel B). These changes yield similar results.
+<!-- We also trimmed the data to exclude outliers, such as courses with an unusually high number of readings. These changes yield similar results. -->
+
+Finally, we further explored differences in team formation that distinguish between male-led and female-led courses, using the gender of the first listed instructor as a proxy for seniority. Overall, team formation trends appear robust to these additional analyses (Figure \@ref(fig:order-instructors)).
+
+<!-- We further tested alternative model specifications, such as considering the number of instructors as a numeric variable interacted with the proportion of female instructors to explore a linear association with the dependent variables. While we observe similar results, the linear association could be misleading when extrapolated beyond two instructors. So, we preferred to keep team configurations as fixed effects, as reported here.  -->
+
+
+
+```{r robust-interdisc, fig.cap = cap, fig.asp = .5, fig.width = 5}
+cap <- paste(
+  "**Robustness analysis for interdisciplinarity.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank per year of interdisciplinarity score. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_interdisc.rds")) + aes(color = NULL)
+```
+
+```{r robust-women, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for female-authored readings.** Estimates and 95% confidence intervals from (A) a multiple linear regression (B) quasi-poisson regression on the full sample. Dependent variable = fraction of female-authored readings to toal readings. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+p_left <- readRDS(file.path(results_dir, "robust_women.rds"))
+p_right <- readRDS(file.path(results_dir, "glm_women_quasipoisson.rds"))
+(p_left + p_right) + plot_annotation(tag_levels = "A")
+```
+
+```{r robust-age-readings, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for age of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank of the age of publication of a syllabus' readings as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_age_readings_log.rds"))
+```
+
+```{r robust-conventional, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for conventionality of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable =  median citations of a syllabus' readings as from references in previous syllabi as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_conventional_log.rds"))
+```
+
+
+```{r robust-atypical, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for atypicality of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = median Uzzi et al's atypicality of a syllabus' readings as precomputed by SciSciNet v2 as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_atypical_log.rds"))
+```
+
+
+```{r order-instructors, fig.cap = cap, fig.asp = 0.5, fig.width = 7}
+cap <- paste(
+    "**Robustness in the order of listed instructors**. Comparing the gap between simulated and actual mixed-gender teams when the first listed instructor is a woman versus when the first listed instructor is a man." # nolint
+)
+readRDS(file.path(results_dir, "plot_order_instructors.rds"))
 ```

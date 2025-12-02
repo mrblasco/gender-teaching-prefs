@@ -169,7 +169,6 @@ coeffs %>%
     )
 ```
 
-
 Figure \@ref(fig:female-authors) highlights significant and persistent gender association with the percentage of female authors over total authors cited in course readings per year, controlling for academic field and country.[^female-authors] All-female courses consistently cite a higher fraction of female authors than all-male ones in the same year, with an effect that decreases over time, going from 8% in 2000 to 4% in 2019, with minor or insignificant differences between courses taught by one vs. two instructors. Mixed-gender courses are in between, as they cite a larger share of women than all-male courses but less than all-female courses. Overall, these results indicate a consistent association between gender and cited patterns, suggesting that readings tend to cluster based on the gender of the instructors, and mixed-gender teams could promote greater diversity in assigned readings.
 
 [^female-authors]: This analysis excludes syllabi with no matched readings with the available bibliographic sources and, within the matched readings, excludes the references where the authors' gender remained unidentified.
@@ -308,12 +307,4 @@ plots_us <- plots[[1]] / plots[[2]] / plots[[3]] / plots[[4]] / plots[[5]] +
 
 ## Robustness
 
-To ensure the reliability and robustness of our results, we conducted several additional analyses. In addition to reporting results from separate regressions on subsets of data by year, we also estimated mixed-effects regressions using the full dataset. These results are broadly consistent with those presented in the paper.
-
-Furthermore, while the reported model specification is our preferred one, we explored several alternatives. First, we log-transformed our dependent variables -- the age of readings, interdisciplinarity score, and count of female authors --- to explore potential non-linear relationships, particularly relevant for disciplines with old readings (e.g., history)
-
-Second, we employed a quasi-Poisson mixed-effect model instead of the reported linear mixed-effect regression to better account for non-linearities in the count of female authors. We also trimmed the data to exclude outliers, such as courses with an unusually high number of readings. These changes yield similar results. 
-
-We further tested alternative model specifications, such as considering the number of instructors as a numeric variable interacted with the proportion of female instructors to explore a linear association with the dependent variables. While we observe similar results, the linear association could be misleading when extrapolated beyond two instructors. So, we preferred to keep team configurations as fixed effects, as reported here. 
-
-Finally, we further explored the specifications that distinguish between male-led and female-led courses, using the gender of the first listed instructor as a proxy for seniority. Overall, results appear robust to these additional analyses.
+The robustness checks conducted, as detailed in the Supplementary Information (Section \@ref(robustness)), show that the main results are consistent across multiple alternative analyses. These included mixed-effects regressions on the full dataset, log-transformations of key dependent variables, quasi-Poisson models for counts of female authors, trimming outliers, and testing different specifications related to instructor composition and seniority. Across all these variations, the findings remained broadly stable, demonstrating that the results are not sensitive to specific modeling choices or data subsets.

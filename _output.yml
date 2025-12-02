@@ -6,9 +6,8 @@ bookdown::html_document2:
 distill::distill_article:
     toc: true
 
-
 bookdown::pdf_document2:
-    toc: true
+    toc: false
     number_sections: true
     latex_engine: xelatex
     keep_tex: true
