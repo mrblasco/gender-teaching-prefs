@@ -31,4 +31,3 @@
 - (1) ROR analysis (2) composition by gender in each field (3) search papers showing mixed-gender research teams in medicine (0.2 is perhaps consistent with our data); (4) SCOPUS compute fraction of mixed-gender teams for a sample of papers [?]
 
 - Novelty: classical cannot be computed (1) too few citations (2) books more than articles. Semnatic novelty requires a reference category of publications --> overlaps with interdisciplinarity. But we can (1) check how often same reference was cited before, ..., (2) redefine as nov;
-
