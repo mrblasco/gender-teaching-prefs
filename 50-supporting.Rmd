@@ -1,7 +1,4 @@
 \newpage
-\processdelayedfloats
-
-\newpage 
 \appendix
 \renewcommand{\thefigure}{SI-\arabic{figure}}
 \renewcommand{\thesection}{SI}
@@ -47,21 +44,17 @@ ds <- readRDS(filename_data) %>%
 
 # Supporting Information
 
-## Gender disambiguation 
+## Data
+
+### Gender disambiguation 
 
 OpenSyllabus uses a Python implementation of Genderize.io to estimate the probability that an author's name corresponds to a female gender.^[See https://github.com/opensyllabus/osp-gender] Names with a predicted probability above 0.5 are classified as female; all others are classified as male. Prior research indicates that Genderize.io achieves high overall accuracy (92%) [@santamaria2018comparison]. In the context of academic authorship, a study hand-checking gender predictions in scholarly publications found that Genderize.io has an error rate of only about 2% [@teele2017gender]. Despite this reliability, many instructors listed in syllabi provide only initials (e.g., "J." instead of "John" or "Jane"), which introduces ambiguity and increases noise in gender classification. To mitigate this, OpenSyllabus assigns an "unknown" category when an author's first name cannot be reliably determined. 
 
-## Course Level
+### Course Level
 
 To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were assigned an *unknown* level. This approach enabled consistent categorisation across heterogeneous code formats. Furthermore, on a subset of 56,000 U.S. syllabi, prior work [@biasi2022education] showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. For EU countries, no comparable benchmark currently exists. 
 
-<!-- TODO: To assess accuracy in these cases, we _______, which confirmed that the classification performs reliably in the European context as well. -->
-
-## Simulating Gender-Neutral Courses {#si-simulations}
-
-We employed a simlar methodology to that developed by @uzzi2013atypical for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with $n$ instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with $m$ male instructors and $f$ female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
-
-## Interdiscipline Similarity {#si-interdisciplinarity}
+### Interdiscipline Similarity {#si-interdisciplinarity}
 
 We measured interdisciplinarity using text similarity between syllabi as in @evans2016measuring and @han2023interdisciplinary. We transformed text from course descriptions into "bags of words," with term frequences (TF) normalised using the inverse document frequency (IDF). For each year, we calculated the TF-IDF scores for all syllabi and for 69 academic fields, using concatenated descriptions for the fields. We then computed the weighted average of the cosine similarity, $\cos (i, f)$, between each course \(i\) and field \(f\), where the weight is based on the similarity between field \(f\) and the course's closest field $f_{\max}$. Specifically, $w(f_{\max}, f) = \cos(f_{\max}, f)$, where $f_{\max}$ is the field that has the highest cosine similarity with course \(i\) (i.e., $f_{\max} = \arg\max_f \cos(i, f)$) in that academic year.
 
@@ -70,6 +63,11 @@ $$
   \text{interdisciplinarity score}_i = 1 - \frac{\sum_{f \in (1, 69)} \cos(f_{\max}, f) \cdot \cos(i, f)}{\sum_{f \in (1, 69)} \cos(f_{\max}, f)}. 
 $$
 To reduce computational costs, we "bootstrap" the field-by-field cosine similarity matrix by using a 10% random sample of syllabi for each academic year. We repeated the sub-sampling procedure ten times and averaged the results.
+
+
+## Simulating Gender-Neutral Courses {#si-simulations}
+
+We employed a simlar methodology to that developed by @uzzi2013atypical for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with $n$ instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with $m$ male instructors and $f$ female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
 
 \clearpage 
 
@@ -195,7 +193,6 @@ ds %>%
     linesep = ""
   )
 ```
-
 
 ## Representativeness of the gender distribution
 

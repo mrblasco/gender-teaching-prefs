@@ -4,7 +4,7 @@ library(ggplot2)
 library(ggrepel)
 library(knitr)
 
-opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(error = TRUE)
 
 source("R/theme.R")
 theme_set(theme_custom())
@@ -308,15 +308,12 @@ plots_us <- plots[[1]] / plots[[2]] / plots[[3]] / plots[[4]] / plots[[5]] +
 
 ## Robustness
 
-To ensure the reliability and robustness of our results, we conducted several additional analyses. In addition to reporting results from separate regressions on subsets of data by year, we also estimated mixed-effects regressions using the full dataset. These results are broadly consistent with those presented in the paper. 
+To ensure the reliability and robustness of our results, we conducted several additional analyses. In addition to reporting results from separate regressions on subsets of data by year, we also estimated mixed-effects regressions using the full dataset. These results are broadly consistent with those presented in the paper.
 
-Furthermore, while the reported model specification is our preferred one, we explored several alternatives. First, we log-transformed our dependent variables -- the age of readings, interdisciplinarity score, and count of female authors --- to explore potential non-linear relationships, particularly relevant for disciplines  with old readings (e.g., history)
+Furthermore, while the reported model specification is our preferred one, we explored several alternatives. First, we log-transformed our dependent variables -- the age of readings, interdisciplinarity score, and count of female authors --- to explore potential non-linear relationships, particularly relevant for disciplines with old readings (e.g., history)
 
 Second, we employed a quasi-Poisson mixed-effect model instead of the reported linear mixed-effect regression to better account for non-linearities in the count of female authors. We also trimmed the data to exclude outliers, such as courses with an unusually high number of readings. These changes yield similar results. 
 
 We further tested alternative model specifications, such as considering the number of instructors as a numeric variable interacted with the proportion of female instructors to explore a linear association with the dependent variables. While we observe similar results, the linear association could be misleading when extrapolated beyond two instructors. So, we preferred to keep team configurations as fixed effects, as reported here. 
 
 Finally, we further explored the specifications that distinguish between male-led and female-led courses, using the gender of the first listed instructor as a proxy for seniority. Overall, results appear robust to these additional analyses.
-
-
-

@@ -1,5 +1,5 @@
-- [ ] Report covid analysis
-- [ ] Report novelty analysis
-- [ ] Introduction literature review
+- [x] Report covid analysis
+- [x] Report novelty analysis
+- [x] Introduction literature review
 - [ ] Finalise letter to reviewers
 - [ ] ...

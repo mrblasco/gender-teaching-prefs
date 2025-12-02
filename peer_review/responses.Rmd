@@ -9,8 +9,9 @@ authors:
     - Elisa Orlandi
 
 mainfont: Arial
+fontsize: 12pt
 linestretch: 1.5
-geometry: "margin=1in"
+geometry: "margin=0.5in"
 bibliography: [../refs.bib]
 --- 
 
@@ -18,7 +19,7 @@ Dear Editor and Reviewers,
 
 We thank you for the constructive and thoughtful feedback on our manuscript. We have revised the paper substantially to address all comments. Below, we respond point by point. Reviewer comments are in italics; our responses follow. Page and line references refer to the clean revised manuscript. 
 
-# Editor Comments 
+# Editor Comments
  
 **Thank you for considering PNAS Nexus as an outlet for your work. We have solicited and now received two in-depth reviews of your paper.**
 
@@ -26,52 +27,44 @@ We thank you for the constructive and thoughtful feedback on our manuscript. We 
 
 **First, the review team suggested you reorganized the introduction of the manuscript so as to further clarify the major focus of your research.**
 
- 
-We substantially rewrote the Introduction and literature review to foreground the central research question and contributions. The revised text now clearly presents three linked arguments: 
-
-(i) courses taught by female instructors include a higher share of readings by women authors; 
-
-(ii) mixed-gender teams tend to assign more recent (up-to-date) readings; and 
-
-(iii) mixed-gender teams display greater interdisciplinarity. 
-
-Each expectation is explicitly connected to prior research on gendered collaboration. 
+We substantially rewrote the Introduction and literature review to clarify the central research question and contributions. As suggested by Reviewer 1, the revised text now includes a new Literature section with separate subsections each discussing separate strands of literature particularly relevant to our study: (i) research on how gender influences collaboration patterns, (ii) the representation of women in course materials, (iii) the interdisciplinarity of mixed-gender teams, and (iv) the propensity of such teams to innovate. We believe this new structure contributes to clarify our contribution and the relevant litereatute. 
 
 
 **Second, the review team raised questions the different findings from prior research (e.g., Dion et al., 2018) and you may also need to address the issue regarding whether teachers can have freedom to choose whether to engage in team teaching, the incentives, and how all these may affect your findings.**
 
-
-We added a paragraph comparing our findings to Dion et al. (2018) and related studies. We also expanded the discussion of institutional variation in team teaching, acknowledging that instructors’ ability to co-teach depends on administrative structures and credit systems that vary across institutions and countries. 
+We added a paragraph comparing our findings to Dion et al. (2018) and related studies both in the Literature and in the Discussion section. We also expanded the discussion of institutional variation in team teaching, acknowledging that instructors’ ability to co-teach depends on administrative structures and credit systems that vary across institutions and countries.
 
 Changes: Literature/Background [pp. X-Y, lines A-B]; Discussion [pp. X-Y, lines C-D].
 
 **Third, research methodology and interpretation of the results. Please follow the suggestions from the review team to address issues related to research methodology, including but not limited to use of controls, lack of representativeness of your data coverage, missing data, and measures (e.g., novelty). Please also pay attention to presentation and interpretation of your findings (e.g., temporal changes seen in the graphs). Would you be able to get more data and see the influence of COVID 19 on the findings? The review team also requested you run additional analyses (e.g., US versus non-US and by subject areas such as natural sciences, humanities, social sciences).**
 
-We expanded the Methods and Results sections to clarify the analytical design and robustness checks. 
 
-* Controls: We added course-level indicators along with subject area, year, and country fixed effects. 
 
-* Representativeness: Because no comprehensive census of syllabi exists, completeness cannot be verified at the institutional level. We acknowledge this limitation. 
+* Controls: As requested by Reviewer 1, we added course-level indicators for basic, advanced, graduate and a residual "unknown" category, along with our other controls in the regressions. The main results of our analysis remain the same.  
 
-* Instructor gender identification: Approximately 12% of instructors are classified as “unknown” due to ambiguous or abbreviated names (e.g., initials or gender-neutral forms). Excluding these cases does not materially affect results. 
+* Representativeness: We have clarified that our dataset includes 50% of ROR education organizations. Additionally, we conducted a detailed analysis of the representativeness of gender distribution. First, we show the correlation between the women-to-men ratio and the distribution of academic staff across countries. Next, we examine the gender distribution among graduates by field of education. Overall, our findings indicate a reasonable level of representativeness. However, because no comprehensive census of syllabi exists, we cannot fully verify completeness at the institutional level. We acknowledge this limitation in the Discussion section.
 
-* Measures: We replaced the term “novelty” with “recency,” defined as the average publication year of assigned readings relative to the course year. We explicitly note that recency does not necessarily capture conceptual novelty but provides a transparent, observable indicator of how up-to-date course materials are. 
+* Instructor gender identification: We have included a subsection in the Supporting Inoformation that outlines the gender disambiguiation process. We note that the process follows state-of-the-art methods (e.g., genderise.io) that have been employed in other dataset, including Dion et al. xxxx with high accuracy. We also clarify that approximately 12% of instructors are classified as “unknown” due to the use of initials or abbreviated names (e.g., J. instead of John or Jane). 
 
-* Additional analyses: We ran separate models for U.S. vs. non-U.S. institutions and by broad disciplinary area (humanities, social sciences, natural sciences). The main conclusions remain consistent. 
+* Measures: We have expaned the measures of novelty to better capture the multidimensional definition. We renamed the age of readings as "recenecy" as suggested by the reviewe rbut we also introduce two new measures (1) a measure of conventionality of readings, captured by the number of citations of a reading in the other syllabi published before; and (2) a maesure of the aerage scientific onvelty of the paper compuated as the average Uzzi et al. atypicality measure extracted from SciSciNet.  Overall, we believe the three measures provide a comprehnsive view of the novelty of the courses. 
 
-* Temporal patterns: We extended the discussion of time trends. 
+* Additional analyses: We ran separate models for U.S. vs. non-U.S. institutions and by broad disciplinary area, STEM vs non-STEM. The main conclusions remain consistent, although we find that the effect size varies across STEM vs non-STEM. 
+
+* Temporal patterns: We extended the discussion of time trends, highlighting the average in the plots with smooth trends that account for it.
 
 * Presentation: Reference groups are now standardized across all figures and specified explicitly in each caption. 
+
+* COVID-19. 
 
 * Robustness: All robustness analyses are included in the Supplementary Appendix (Tables S1-S3). 
 
 Changes: Methods and Supplement [pp. X-Y; Tables S1-S3]; Discussion [pp. X-Y]. 
 
+\clearpage
 
 # Responses to Reviewers
 
-
-# Reviewer 1 
+## Reviewer 1 
 
 **The paper examines an interesting and important topic: how the composition of teaching teams in higher education matters for three pedagogical outcomes - the age of readings assigned, the gender of the authors of the readings assigned, and the interdisciplinarity of the course. This is an area lacking systematic quantitative analysis, and I believe that if the analysis and results become more improved and robust, it could make a contribution to the literature. However, a few problems exist that require revision.**
 
@@ -83,7 +76,6 @@ We thank the reviewer for this helpful comment. We agree that the original liter
 > Research shows that gender and institutional structures shape key aspects of academic work, from team formation to curriculum design. Four strands of this literature are particularly relevant to our study: (i) research on how gender influences collaboration patterns, (ii) the representation of women in course materials, (iii) the interdisciplinarity of mixed-gender teams, and (iv) the propensity of such teams to innovate. These insights provide the conceptual foundation for our study, which we review in detail below.
 
 In addition, following Reviewer 2’s request to expand our analysis to the pre- and post-Covid-19 periods, we now include a fifth subsection summarizing the literature on how Covid-19 has affected academic collaboration. This addition further clarifies the context for our extended empirical analysis.
-
 
 **There seems to be no control for the level of courses (ie., 101, 200+, 300+ and so on based on course code), but that could greatly influence the level of interdisciplinarity, age of course readings, or who teaches it. This is totally doable with Open Syllabus data to my knowledge**
 
@@ -157,28 +149,40 @@ Response: We standardized reference categories across all models and clearly rep
 Changes: Figures [F1-Fx]; caption notes updated. 
 
 
+\clearpage
+
+
 ## Reviewer 2
 
 **In this study, the authors analyze 2.9 million syllabi across 15 countries from 1990 to 2019 to assess how the instructors’ sex (individually or in teams) influences the degree of interdisciplinarity, the average age of assigned readings, and the percentage of female authors included in the syllabus. A linear mixed effects model shows that female teams and mixed gender teams assign more work by women scholars and that the interdisciplinarity range is higher in these instances. Female instructors/teams tend to assign newer work as well. The study leverages an interesting dataset and uses a clever research design including 1) text analysis (bag of words) to capture a syllabus’ level of interdisciplinarity and 2) a Monte Carlo randomization approach to assess actual gender distributions of teaching teams and what is expected based on institutional data. The study also provides insights into how team-teaching influences syllabus content, especially in terms of the sex of the teams (MM, MF, FF). The findings will be of interest to readers of the journal.**
 
 **The finding that female teaching teams tend to include more readings by female authors accords with findings from the citation literature. See for example: Dion, Michelle L., Jane Lawrence Sumner, and Sara McLaughlin Mitchell. 2018. “Gendered citation patterns across political science and social science methodology fields.” Political Analysis 26(3): 312-327. On the other hand, Dion et al do not find that mixed gender teams cite more work by women in research articles than male teams, so there is an interesting bit of difference in these results.**
 
-> TBA
+Thank you for the reference. We have now highlighted it into the literature review and discussed its relevance in the Discussion section. That is (p. XX): 
+
+> *These findings align with prior research on gendered citation patterns in the academic literature (e.g., Dion, Sumner, & Mitchell, 2018), which shows that female scholars are more likely to cite work by other women. Interestingly, Dion et al. find that mixed-gender research teams do not cite more women than male-only teams, highlighting a divergence from our course-level results. Taken together, our analysis suggests that instructor gender shapes reading lists in ways that may differ from research citation patterns and that mixed-gender teaching teams could foster greater gender diversity in assigned readings.*
 
 **There are a lot of temporal changes seen in the graphs and I'm wondering what is driving them. In many cases, the expansion towards more mixed/female team teaching seems to experience a backsliding in the last few years of the data. I think the authors should try to identify what may be driving these changes. It’s unfortunate that the data end in 2019 because it would be interesting to see how the Covid-19 pandemic altered these patterns further.**
 
-> TBA
+We have analyzed the temporal patterns in detail. First, the trends in team compositions reflect broadly the increasing presence of women in the academic profession over the period 2000–2019. Second, while there are some year-to-year fluctuations in the associations between team composition and outcomes, these differences are rarely statistically significant and appear largely attributable to noise. However, to better highlight systematic temporal patterns, we have revised our plots to include a smoothed trend that averages the estimated effects over time using a generalized additive model (GAM) with cubic regression splines and shrinkage, weighting years according to estimation accuracy. This approach reveals an overall [decreasing effect of x] over time, which we now discuss in the revised Discussion section.
 
 **There’s almost an assumption that faculty can engage in team teaching if they desire, but that is not true in many disciplines or institutions. This possibility is briefly mentioned on page 11, but I think you should discuss this more. In my institution, it would be difficult to get credit for team teaching. I teach 4 courses per year and typically any team teaching would be done as an overload beyond the 4 courses. I realize your fixed effects for institutions and countries help to pick that up, but I'm curious what the data looks like descriptively across countries.**
 
-> TBA
+We thank the reviewer for raising this important point and share the same concern. Unfortunately, we cannot test this empirically with our current data. Instead, we have added a discussion of this issue in the Discussion section (p. XX):
+
+> *A further limitation is that institutional policies regarding teaching loads and the recognition of co-teaching vary substantially across countries and institutions. In many universities, team teaching does not fully count toward teaching loads or is treated as an overload, limiting faculty opportunities to engage in it even if they wish to. Moreover, teaching teams are not always determined by individual instructors’ preferences: in many institutions, course assignments and team composition are partially or entirely determined at the departmental or program level—for example, by course coordinators, curriculum structures, or administrative rules. In such cases, team formation may reflect institutional or organizational preferences rather than instructors’ choices. Our data do not capture these institutional constraints or assignment mechanisms, which may mechanically reduce or shape the observed incidence of mixed-gender teams. Consequently, our descriptive patterns reflect both individual preferences and the structural opportunities and assignment practices provided by institutions.*
+
 
 **Similarly, the data is very U.S. dominant (66% of all syllabi). What if you run a model for U.S. institutions and compare that to a model with institutions in non-U.S. countries? Are the results similar or different? Why is team teaching less common in EU countries? This is the kind of thing I wanted more discussion of and some analyses to explore these differences.**
 
-> TBA
+We appreciate this comment. As noted, we already discuss cross-country differences in team formation. Following your suggestion, we expanded this analysis to examine potential heterogeneity in the association between team composition and course readings across countries. Specifically, we compared the United States to all non-U.S. institutions with respect to (1) novelty, (2) female-authored readings, and (3) interdisciplinarity. The results reveal no systematic deviations across these outcomes: the estimates for U.S. institutions closely track those obtained for the full sample, suggesting that the main patterns we document are robust across national contexts. We now report these findings in the Supporting Information (Figure SI-4, p. 51).
+
+Hence, we clarified the trends by countries, showing that differences in teams. Although we lack data on college professors collaborations, the TALIS on secondary and primary do not show primarly driven by differences in Traditional teaching culture among teachers. Others reasons should be more on other lack of institutional support or other barriers [?]. 
 
 **It could be interesting to run separate analyses in general areas as well (e.g., sciences, humanities, social sciences) to see if the general patterns generalize across these areas.**
 
+Many thanks for this helpful suggestion. In response, we conducted additional heterogeneity analysis across major disciplinary areas. Specifically, we compared STEM against non-STEM fields. This exercise revealed several noteworthy differences:  while the direction of the associations is consistent across fields, the magnitude of the effects varies. We now report these results in a new subsection on Heterogeneity (p. 20). The new paragraph on STEM fields reads:
 
+> *Figure 12 highlights several key differences between STEM and non-STEM fields, based on separate models estimated for STEM fields compared against results from the full sample. The gap in female-author citations associated with women instructors remains consistent but is significantly smaller in STEM fields, roughly half the size observed in all fields. The positive association between mixed-gender teams and conventional readings is larger in STEM fields. Conversely, the gap in atypicality widens for women teaching alone, although the effect has been diminishing over time. In contrast, the gap in the age of assigned readings between women and men teaching alone is smaller in STEM. With respect to interdisciplinarity, the estimated differences are small and not consistently significant across years. Together, these results provide strong evidence of heterogeneity between STEM and non-STEM fields in the strength of the associations between team composition and course materials.*
 
 # References 

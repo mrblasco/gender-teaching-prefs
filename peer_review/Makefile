@@ -1,9 +1,11 @@
 OUTDIR = docs
 
-all: $(OUTDIR) pdf
+all: $(OUTDIR) pdf docx
+
 
 pdf: $(OUTDIR)/responses.pdf
 html: $(OUTDIR)/responses.html
+docx: $(OUTDIR)/responses.docx
 
 $(OUTDIR): 
 	mkdir -p $@
@@ -15,3 +17,7 @@ $(OUTDIR)/%.html : %.Rmd
 $(OUTDIR)/%.pdf : %.Rmd
 	@Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_format = "bookdown::pdf_document2")'
 	@open -a Skim $@
+
+$(OUTDIR)/%.docx : %.Rmd
+	@Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_format = "bookdown::word_document2")'
+	@open $@

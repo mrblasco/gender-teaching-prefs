@@ -1,3 +1,14 @@
+
+log_msg <- function(fmt, ...) {
+    message(sprintf(fmt = fmt, ...))
+}
+
+paste_sort <- function(x) {
+    paste0(sort(x), collapse = "")
+}
+
+
+
 get_gender_composition <- function(x) {
   x <- as.character(x)
   case_when(
@@ -8,7 +19,6 @@ get_gender_composition <- function(x) {
   )
 }
 
-paste_sort <- function(x) paste0(sort(x), collapse = "")
 
 convert_gender_label <- function(original_labels) {
   dplyr::case_match(
