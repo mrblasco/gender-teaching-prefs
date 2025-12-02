@@ -57,4 +57,3 @@ run:
 	mkdir -p $(LOGDIR)
 	Rscript $(FILE) > $(LOGFILE) 2>&1
 	@echo "Log saved to $(LOGFILE)"
-

@@ -21,3 +21,11 @@ $(OUTDIR)/%.pdf : %.Rmd
 $(OUTDIR)/%.docx : %.Rmd
 	@Rscript -e 'rmarkdown::render("$<", output_file = "$@", output_format = "bookdown::word_document2")'
 	@open $@
+
+# -- submission 
+
+DATE := $(shell date +%Y-%m-%d)
+
+submit : ../docs/report.pdf ./docs/responses.pdf 
+	@mkdir -p submissions/$(DATE)
+	@cp $+ submissions/$(DATE)/

@@ -9,15 +9,15 @@ authors:
     - Elisa Orlandi
 
 mainfont: Arial
-fontsize: 12pt
-linestretch: 1.5
+fontsize: 11pt
+linestretch: 1
 geometry: "margin=0.5in"
 bibliography: [../refs.bib]
 --- 
 
 Dear Editor and Reviewers, 
 
-We thank you for the constructive and thoughtful feedback on our manuscript. We have revised the paper substantially to address all comments. Below, we respond point by point. Reviewer comments are in italics; our responses follow. Page and line references refer to the clean revised manuscript. 
+We thank you for the constructive and thoughtful feedback on our manuscript. We have revised the paper substantially to address all comments. Below, we respond point by point. Reviewer comments are in bold; our responses follow. Page references refer to the clean revised manuscript. 
 
 # Editor Comments
  
@@ -27,33 +27,33 @@ We thank you for the constructive and thoughtful feedback on our manuscript. We 
 
 **First, the review team suggested you reorganized the introduction of the manuscript so as to further clarify the major focus of your research.**
 
-We substantially revised the Introduction and literature review to sharpen the central research questions and highlight our main contributions. Following Reviewer 1's recommendation, the revised Introduction now contains clearly delineated subsections that address distinct strands of relevant literature: (i) how gender influences collaboration patterns, (ii) the representation of women in citations and course materials, (iii) the interdisciplinarity of mixed-gender teams, and (iv) the propensity of such teams to innovate. We believe this new structure contributes to clarify our contribution within the appropriate bodies of literature. We have also included a subsection about the literature on the impact of Covid-19 on academics, supporting our new analysis of pre-/post-pandemic team formation (see below).
+We substantially revised the Introduction and literature review to sharpen the central research questions and highlight our main contributions. Following Reviewer 1's recommendation, the revised Introduction now contains clearly delineated subsections that address distinct strands of relevant literature. We believe this new structure contributes to clarify our contribution within the appropriate bodies of literature. We have also included a subsection about the literature on the impact of Covid-19 on academics, supporting our new analysis of pre-/post-pandemic team formation (see below).
 
 **Second, the review team raised questions the different findings from prior research (e.g., Dion et al., 2018) and you may also need to address the issue regarding whether teachers can have freedom to choose whether to engage in team teaching, the incentives, and how all these may affect your findings.**
 
-We added a paragraph comparing our findings to @dion2018gendered and related studies both in the Literature (Subsection 2.2 [p. 6]) and in the Discussion section (Discussion [p. 24]). We also expanded our discussion of institutional variation in team teaching (Discussion, [p. 26]). Specifically, we note that instructors' ability to engage in team teaching is shaped by administrative structures, credit allocation systems, and local policies that differ across institutions and national contexts. These factors may influence who opts into co-teaching and, consequently, the generalizability of our findings.
+We added a paragraph comparing our findings to @dion2018gendered and related studies both in the Literature (Subsection 2.2 [p. 6]) and in the Discussion section (Discussion [p. 24]). We also expanded our discussion of institutional variation in team teaching (Limitations, [p. 26]). Specifically, we note that instructors' ability to engage in team teaching is shaped by administrative structures, credit allocation systems, and local policies that differ across institutions and national contexts. These factors may influence who opts into co-teaching and, consequently, the generalizability of our findings.
 
 **Third, research methodology and interpretation of the results. Please follow the suggestions from the review team to address issues related to research methodology, including but not limited to use of controls, lack of representativeness of your data coverage, missing data, and measures (e.g., novelty). Please also pay attention to presentation and interpretation of your findings (e.g., temporal changes seen in the graphs). Would you be able to get more data and see the influence of COVID 19 on the findings? The review team also requested you run additional analyses (e.g., US versus non-US and by subject areas such as natural sciences, humanities, social sciences).**
 
 We thank the review team for their detailed methodological suggestions. We have revised the manuscript accordingly and summarize the changes below:
 
-* **Controls**: As requested by Reviewer 1, we added course-level indicators for basic, advanced, graduate and an "unknown" category, in addition to the existing controls in our regressions. The main results of our analysis remain the same.  
+* **Controls**: As requested by Reviewer 1, we added course-level indicators in addition to the existing controls in our regressions. The main results of our analysis remain the same.
 
-* **Representativeness**: We clarified that our dataset includes 50% of ROR education organizations in the selected countries, indicating a broad coverage. In response to Reviewer 1's comments, we conducted a detailed analysis of the representativeness of gender distribution (see discussion in Methods, Section 3.1.2 [p. 9] and the analysis is reported in the Supporting Information, Section SI-4). First, we examined the correlation between the women-to-men ratio in our data and the distribution of academic staff across countries. Second, we compared gender distributions among graduates by field of education in the US. Overall, our findings indicate a reasonable level of representativeness. However, because no comprehensive census of syllabi exists, institutional completeness cannot be fully verified; we explicitly acknowledge this limitation in the Discussion section.
+* **Representativeness**: We clarified that our dataset includes 50% of Research Organisations Registry (ROR)'s registered organizations in the selected countries, indicating a broad coverage. In response to Reviewer 1's comments, we conducted a detailed analysis of the representativeness of gender distribution (Methods, sub-section 3.1.2 [p. 9] and the analysis is reported in the Supporting Information, Section SI-4). First, we examined the correlation between the women-to-men ratio in our data and the distribution of academic staff across countries. Second, we compared gender distributions among graduates by field of education in the US. Overall, our findings indicate a reasonable level of representativeness. However, because no comprehensive census of syllabi exists, institutional completeness cannot be fully verified; we explicitly acknowledge this limitation in the Discussion section [pp. 24-25].
 
-* **Instructor gender identification**: We included a subsection in the Supporting Inoformation that describes in detail the gender disambiguiation process. We note that the process follows state-of-the-art methods (e.g., genderise.io), consistent with prior work, including Dion et al. [@dion2018gendered], and achieves  high accuracy. We also clarify that approximately 12% of instructors are classified as “unknown” due to the use of initials or abbreviated names (e.g., J. instead of John or Jane); See Section SI-1.1 [p. 48]. 
+* **Instructor gender identification**: We included a subsection in the Supporting Inoformation that describes in detail the gender disambiguiation process. We note that the process follows state-of-the-art methods (e.g., genderise.io), consistent with prior work, including Dion et al. [@dion2018gendered], and achieves  high accuracy. We also clarify that approximately 12% of instructors are classified as “unknown” due to the use of initials or abbreviated names (e.g., J. instead of John or Jane); See Section SI-1.1 [p. 48]; Since there is no study showing a significant association between initials and gender, our results are not affected.
 
-* **Novelty measures**: We expanded our measurement of course novelty to better capture its multidimensional nature. As suggested by Reviewer 1, we interpret the “age of readings” variable as a measure of readings' recency rather than novelty. In addition, we introduced two new measures: (1) a measure of the conventionality of readings, based on the number of citations a reading has received in syllabi published earlier; and (2) a measure of scientific novelty, calculated as the average Uzzi et al. [@uzzi2013atypical] atypicality score obtained from SciSciNet (v2) [@lin2023sciscinet]. Together, these three measures provide a more comprehensive assessment of course novelty.
+* **Novelty measures**: We expanded our measurement of course novelty to better capture its multidimensional nature. As suggested by Reviewer 1, we interpret the “age of readings” variable as a measure of readings' recency rather than novelty. In addition, we introduced two new measures: (1) a measure of the conventionality of readings, based on the number of citations a reading has received in syllabi published earlier; and (2) a measure of scientific novelty, calculated as the average Uzzi et al. [@uzzi2013atypical] atypicality score of the readings. The score was obtained by matching the readings' DOIs to SciSciNet (v2) [@lin2023sciscinet]. Together, these three measures provide a more comprehensive assessment of course novelty.
 
 * **Additional analyses**: We estimated separate models for U.S. vs. non-U.S. institutions and by disciplinary area (STEM vs. non-STEM). The main conclusions are consistent across these subsamples, though we observe variation in effect sizes between STEM and non-STEM fields. We present these results in a new Heterogeneity sub-section of the Results section [p. 20]. 
 
-* **Temporal patterns**: We now model time trends (using a general addtive model) explicitly and present the estimated trajectories using smoothed curves in the figures. These models help reduce noise and highlight the underlying variation over time. Overall, we find that temporal patterns are modest and do not materially alter our main conclusions.
+* **Temporal patterns**: We now model time trends explicitly and present the estimated trajectories using smoothed curves in the figures (Results, [pp. 17-19]). These models help reduce noise and highlight the underlying variation over time. Overall, we find that temporal patterns are modest and do not materially alter our main conclusions.
 
 * **Presentation**: Reference groups are now standardized across all figures and specified explicitly in each caption. 
 
 * **COVID-19**: As suggested by Reviewer 2, we expanded the dataset to include a new subset of 34 countries covering 2017–2022, enabling pre- and post-COVID analyses. We find that individual team formations declined more sharply than team-taught courses after COVID-19, reflecting broader contractions in course offerings. We also observe that mixed-gender teams were disproportionately affected during the post-COVID period, suggesting the pandemic may have disrupted formation of such teams. 
 
-* **Robustness**: All robustness analyses are included in the Supplementary Information. 
+* **Robustness**: All robustness analyses are included in the Supplementary Information (SI-7, p. 49). 
 
 \clearpage
 
@@ -109,6 +109,10 @@ These changes improve conceptual clarity and allow us to more accurately capture
 **On page 10, I found myself wondering why the figures tend to have different reference groups every now and then. For example, in section 3.1.3, the authors wrote, "between 2000 and 2019 courses taught by a single female instructor ... ...than otherwise similar courses taught by **a single man** in that year... ... Similarly, courses taught by two women also assign newer materials than those taught by **two men** " -- this seems to me that the reference group in the first comparison is "courses taught by single man" while the reference group for the second is "courses taught by two men".  This is highly confusing because in the note of the specific figure, it says the reference is "courses taught by single male" . If different reference groups are used, then it must be clarified early, and in the figures' notes as well**
 
 Thank you for the comment. We standardized reference categories across all models and clearly report them in figure captions (e.g., “single male instructor” as the baseline). 
+
+**On page 10, the robustness analyses need to be presented as appendices. Now they are only discussed but not displayed, so it is unable for readers to evaluate whether the results look good or not**
+
+In response, we have moved the robustness section in the Supplementary Information (section SI-7, p. 49). 
 
 \clearpage
 
