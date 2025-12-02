@@ -71,7 +71,7 @@ We employed a simlar methodology to that developed by @uzzi2013atypical for the 
 
 ## Addtional Tables 
 
-In this section, we present additional descriptive statistics for the number of syllabi in each country  \@ref(tab:SI-country), the distribution of syllabi per field \@ref(tab:SI-fields), academic year \@ref(tab:tab:SI-years), and teaching teams \@ref(tab:SI-composition). 
+In this section, we present additional descriptive statistics for the number of syllabi in each country  \@ref(tab:SI-country), the distribution of syllabi per field \@ref(tab:SI-fields), academic year \@ref(tab:SI-years), and teaching teams \@ref(tab:SI-composition). 
 
 <!-- ### Countries -->
 
