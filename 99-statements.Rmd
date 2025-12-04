@@ -1,7 +1,6 @@
 \newpage
 \processdelayedfloats
 
-
 ## Acknowledgements
 
 The contents of this publication do not necessarily reflect the position or opinion of the European Commission or the Joint Research Centre.
