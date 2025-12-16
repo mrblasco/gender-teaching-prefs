@@ -41,7 +41,6 @@ Keywords: education | gender bias | teams | interdisciplinarity | novelty | syll
 
 \newpage
 
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
     echo = FALSE,
@@ -51,6 +50,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Significance Statement {-}
+
+Despite growing gender diversity in academia, we reveal a persistent underrepresentation of mixed-gender teaching teams across universities. By analysing 5M syllabi (1999-2019), we find that instructors tend to collaborate with same-gender colleagues at a rate more than twice the expected rate. This is not fully explained by institutional or disciplinary constraints, suggesting a gender-based bias. Moreover, mixed-gender teams tend to design more interdisciplinary courses and assign more gender-diverse readings, whereas women tend to assign more recent readings. These findings extend the literature on gender bias in academia into the domain of teaching, revealing how collaboration dynamics influence the pedagogical content and the student experience. Understanding these patterns can inform policies aimed at improving equity and pedagogical quality in higher education.
+
 ```{r, child = "01-intro.Rmd"}
 ```
 
@@ -59,11 +62,13 @@ knitr::opts_chunk$set(
 
 ```{r, child = "20-methods.Rmd"}
 ```
+
 ```{r, child = "30-results.Rmd"}
 ```
 
 ```{r, child = "40-discussion.Rmd"}
 ```
+
 
 \clearpage
 \processdelayedfloats
@@ -71,13 +76,25 @@ knitr::opts_chunk$set(
 <!-- \clearpage -->
 <!-- \singlespacing -->
 
+<!--- 
+* The Data Availability Statement should be located in main text document, placing it before the reference list and not in the supplementary material section.
+--> 
+
+# Acknowledgements {-}
+
+The contents of this publication do not necessarily reflect the position or opinion of the European Commission or the Joint Research Centre.
+
+# Data Availability Statement {-}
+
+All the datasets generated during the current study are available online in the [name of repository], [persistent web link or DOI]. The raw data will be available from the corresponding author upon reasonable request and if the request meets the contractual agreements with OpenSyllabus.
+
+All the scripts and code used in the analyses is available at [GitHub link or DOI]. This includes two repositories one with all the Python scripts used to compute the interdisciplinarity score [LINK or DOI] and another with Rscripts to analyse the data and create the figures [LINK or DOI].
+
+
 # References {-}
 
 ::: {#refs}
 :::
 
 ```{r, child = "50-supporting.Rmd"}
-```
-
-```{r, child = "99-statements.Rmd"}
 ```
