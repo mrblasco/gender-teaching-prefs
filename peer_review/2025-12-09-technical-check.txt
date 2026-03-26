@@ -1,0 +1,32 @@
+Dear Dr. Blasco,
+
+Thank you for your submission to PNAS Nexus. We encountered the following issues with your manuscript submission that need to be addressed before it can be forwarded to the Editorial Board.
+
+
+* We noted a discrepancy in the co-author's email address and institutional information across the submission documents. The co-author's email address on the title page (eoralndi@unisa.it) does not match the one provided in the submission form (elisa.orlandi15@unibo.it). Please edit the file and/or submission form so that the email address is consistent in both places.
+
+Additionally, please ensure that the author institution is the same on the title page and in the submission form.
+
+* Please ensure that the Data Availability Statement, Significance Statement, and References section are all included in the Article Tracked Changes file.
+
+* The Data Availability Statement should be located in main text document, placing it before the reference list and not in the supplementary material section.
+
+* We have noticed an issue with several table and figure citations in the Article Tracked Changes, which are currently appearing as question marks (e.g., Figure??, in SI / Table??). Please review the document and correct this referencing issue.
+
+
+
+
+To view and remedy these issues, please click the link below, then select the link for this manuscript
+https://pnasnexus.msubmit.net/cgi-bin/main.plex?el=A1QV5EpNZ6B5KnGo3F2A9ftdLbOlhKq8b3Lsaql6evUIwZ
+
+Once all changes are made, you can send the manuscript back to us by clicking the Submit Manuscript button. Please be certain that you have made all necessary changes before clicking the Approve Manuscript button; you will not be able to make changes to your manuscript information after you click the link.
+
+If you have any questions, please feel free to contact the PNAS Nexus editorial office at pnasnexus.editorialoffice@oup.com.
+
+Sincerely,
+
+Adel Dalina
+Editorial Support Assistant
+PNAS Nexus
+pnexus.oup.ea@straive.com
+

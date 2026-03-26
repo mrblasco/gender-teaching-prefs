@@ -1,3 +1,18 @@
+
+# 12/02 Technical check
+
+[ ] marked/highlighted copy of the manuscript
+
+[ ] Please review the Data Availability Statement in both your manuscript file and the submission form to ensure they match.
+
+[ ] Please shorten your manuscript. Research Reports are limited to a maximum of 12 pages. The word count includes all of the main text, excluding references and title page details.
+
+[ ] Please provide a significance statement in your main text document, this is required for Research Report.
+
+[ ] We noted that the corresponding author's email address on the title page does not match the one provided in the submission form. Currently, the email address listed on the title page is andrea.blasco@ec.europa.eu, while in the submission form is mrblasco@gmail.com. Please edit the file/form so the email address matches on both parts of the submission.
+
+
+
 # Reviewer 1
 
 [EO] Literature (review three main points)
