@@ -1,0 +1,309 @@
+\newpage
+\appendix
+\renewcommand{\thefigure}{SI-\arabic{figure}}
+\renewcommand{\thesection}{SI}
+\renewcommand{\thesubsection}{SI-\arabic{subsection}}
+
+<!-- Set counters -->
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+\renewcommand{\thetable}{SI-\arabic{table}}
+
+```{r, SI-setup, include = FALSE}
+library(yaml)
+library(dplyr)
+library(tidyr)
+library(kableExtra)
+library(ggplot2)
+
+source("../R/tables.R")
+source("../R/theme.R")
+theme_set(theme_custom())
+
+knitr::opts_chunk$set(echo = FALSE)
+
+results_dir <- file.path("..", "data", "results")
+```
+
+```{r, data-supporting, cache = TRUE, include = FALSE}
+config <- yaml.load_file("config.yml")
+data_dir <- config$data_dir
+
+filename_data <- file.path(data_dir, "rds/final.rds")
+
+ds <- readRDS(filename_data) %>%
+  filter(nchar(team) < 10) %>%
+  select(field, year, team = team_ordered, team_rand, country) %>% 
+  pivot_longer(cols = c(team, team_rand),
+               names_to = "formation",
+               values_to = "composition") %>%
+  count(formation, composition, field, year, country)
+```
+
+# Supporting Information
+
+## Data
+
+### Gender disambiguation 
+
+OpenSyllabus uses a Python implementation of Genderize.io to estimate the probability that an author's name corresponds to a female gender.^[See https://github.com/opensyllabus/osp-gender] Names with a predicted probability above 0.5 are classified as female; all others are classified as male. Prior research indicates that Genderize.io achieves high overall accuracy (92%) [@santamaria2018comparison]. In the context of academic authorship, a study hand-checking gender predictions in scholarly publications found that Genderize.io has an error rate of only about 2% [@teele2017gender]. Despite this reliability, many instructors listed in syllabi provide only initials (e.g., "J." instead of "John" or "Jane"), which introduces ambiguity and increases noise in gender classification. To mitigate this, OpenSyllabus assigns an "unknown" category when an author's first name cannot be reliably determined. 
+
+### Course Level
+
+To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were assigned an *unknown* level. This approach enabled consistent categorisation across heterogeneous code formats. Furthermore, on a subset of 56,000 U.S. syllabi, prior work [@biasi2022education] showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. For EU countries, no comparable benchmark currently exists. 
+
+### Interdiscipline Similarity {#si-interdisciplinarity}
+
+We measured interdisciplinarity using text similarity between syllabi as in @evans2016measuring and @han2023interdisciplinary. We transformed text from course descriptions into "bags of words," with term frequences (TF) normalised using the inverse document frequency (IDF). For each year, we calculated the TF-IDF scores for all syllabi and for 69 academic fields, using concatenated descriptions for the fields. We then computed the weighted average of the cosine similarity, $\cos (i, f)$, between each course \(i\) and field \(f\), where the weight is based on the similarity between field \(f\) and the course's closest field $f_{\max}$. Specifically, $w(f_{\max}, f) = \cos(f_{\max}, f)$, where $f_{\max}$ is the field that has the highest cosine similarity with course \(i\) (i.e., $f_{\max} = \arg\max_f \cos(i, f)$) in that academic year.
+
+Thus, the interdisciplinarity score for course \(i\) is:
+$$
+  \text{interdisciplinarity score}_i = 1 - \frac{\sum_{f \in (1, 69)} \cos(f_{\max}, f) \cdot \cos(i, f)}{\sum_{f \in (1, 69)} \cos(f_{\max}, f)}. 
+$$
+To reduce computational costs, we "bootstrap" the field-by-field cosine similarity matrix by using a 10% random sample of syllabi for each academic year. We repeated the sub-sampling procedure ten times and averaged the results.
+
+
+## Simulating Gender-Neutral Courses {#si-simulations}
+
+We employed a simlar methodology to that developed by @uzzi2013atypical for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with $n$ instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with $m$ male instructors and $f$ female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
+
+## Addtional Tables 
+
+In this section, we present additional descriptive statistics for the number of syllabi in each country  \@ref(tab:SI-country), the distribution of syllabi per field \@ref(tab:SI-fields), academic year \@ref(tab:SI-years), and teaching teams \@ref(tab:SI-composition). 
+
+<!-- ### Countries -->
+
+```{r, SI-country}
+ds %>%
+    filter(formation == "team") %>%
+    count(country, wt = n) %>%
+    mutate(
+        country = dplyr::case_when(
+            country == "US" ~ "USA",
+            country == "GB" ~ "Great Britain",
+            country == "CA" ~ "Canada",
+            country == "IT" ~ "Italy",
+            country == "PL" ~ "Poland",
+            country == "NL" ~ "Netherlands",
+            country == "DE" ~ "Germany",
+            country == "IE" ~ "Ireland",
+            country == "PT" ~ "Portugal",
+            country == "SE" ~ "Sweden",
+            country == "ES" ~ "Spain",
+            country == "AT" ~ "Austria",
+            country == "DK" ~ "Denmark",
+            country == "FR" ~ "France",
+            TRUE ~ "Other"
+        )
+    ) %>%
+    mutate(pc = round(100 * n / sum(n), 1)) %>% 
+    arrange(desc(n)) %>%
+    mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+    create_table(
+        caption = "Number of Syllabi per Country",
+        col.names = c("Country", "Syllabi (thousands)", "%"),
+        align = c("l", "r", "r"),
+        booktabs = TRUE,
+        linesep = "",
+        format.args = list(big.mark = " ")
+    )
+```
+<!-- ### Fields -->
+
+```{r SI-fields, echo = FALSE}
+ds %>%
+  filter(formation == "team") %>% 
+  count(field, wt = n) %>%
+  mutate(index = row_number(),
+         col = ifelse(index %% 2 == 1, "left", "right"),
+         group = (index + 1) %/% 2) %>%
+  select(-index) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>% 
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  mutate(across(c(field, n, pc), as.character)) %>% 
+  pivot_wider(names_from = col, 
+              values_from = c(field, n, pc), 
+              values_fill =  "") %>%
+  select(field_left, n_left, pc_left, field_right, n_right, pc_right) %>%
+  create_table(
+    caption = "Number of Syllabi per Field",
+    col.names = rep(c("Field", "N (thousands)", "%"), 2),
+    align = c("l", "r", "r", "l", "r", "r"),
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
+
+<!-- ### Years -->
+
+```{r, SI-years}
+ds %>%
+  filter(formation == "team") %>%
+  mutate(
+    year_bc = ifelse(year < 2000, "1999 or older", as.character(year))
+  ) %>% 
+  count(year_bc, wt = n) %>%
+  mutate(pc = round(100 * n / sum(n), 1)) %>%
+  mutate(n = sprintf("%2.1f", n / 1e3)) %>% 
+  create_table(
+    caption = "Number of Syllabi per Year",
+    col.names = rep(c("Academic year", "N (thousands)", "%"), 1),
+    align = c("l", "r", "r"),
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
+
+<!-- ### Gender Composition -->
+
+```{r, SI-composition}
+convert_gender_label <- function(original_labels) {
+  dplyr::case_match(
+    original_labels,
+    "f"  ~ "Female only (F)",
+    "ff" ~ "Female-Female (FF)",
+    "mf" ~ "Mixed Gender (MF/FM)",
+    "fm" ~ "Mixed Gender (MF/FM)",
+    "mm" ~ "Male-Male (MM)",
+    "m"  ~ "Male only (M)",
+    .default = "Unknown"
+  )
+}
+
+ds %>%
+  filter(formation == "team") %>%
+  count(composition, wt = n) %>%
+  arrange(desc(n)) %>%
+  mutate(pc = round(100 * n / sum(n), 1),
+         n = sprintf("%2.1f", n / 1e3)) %>% 
+  filter(nchar(composition) < 3) %>% 
+  mutate(composition = convert_gender_label(composition)) %>%
+  rename(
+    "N (thousands)" = n,
+    "Team composition" = composition,
+    "%" = pc,
+  ) %>%
+  create_table(
+    caption = "Teaching Team Configurations",
+    format.args = list(big.mark = " "),
+    align = c("l", "r", "r"),
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
+
+## Representativeness of the gender distribution
+
+One potential concern for our analysis is the representativeness of the data. Our dataset covers several million courses and thousands of educational institutions, corresponding to about 50% of the educational organisations in the ROR, which makes the results interesting in their own right. Nevertheless, one may question how representative these data are of the broader population of instructors. Although we cannot directly test representativeness, we evaluate it in two ways. First, we examine whether the overall female-to-male ratio over time in each country correlates with OECD statistics on academic staff by gender. Second, for the U.S., we assess whether the sex ratio by field and year correlates with NCSES data on Ph.D. graduates by academic field, country, and year, which serves as a proxy for the maximum number of employable instructors.
+
+As illustrated in Figure \@ref(fig:country-coverage), our analysis of overall trends reveals a very high correlation for English-speaking countries (U.S. = .98, U.K. = .90), and greater heterogeneity for non-English-speaking countries, where representativeness is expected to be weaker given our focus on English-language syllabi. The analysis based on Ph.D. graduates similarly shows strong field-level correlations in many fields (Figure \@ref(fig:field-coverage-us)), such as in Natural Sciences (rho = .91), Social sciences and journalism (rho = .90), Education (rho = .77). However, there are fields with considerably lower correlation, such as in Health and welfare (rho = .14) or IT (rho = .29). This heterogeneity may stem from differences across disciplines in the proportion of Ph.D. graduates who remain in academia (e.g., biology has a comparatively high share of graduates who pursue careers outside academia). Nevertheless, these patterns suggest that, at least for English-speaking countries and in many academic fields, our data are reasonably representative.
+
+```{r, include = FALSE}
+figs <- readRDS(file.path(results_dir, "figs_representative.rds"))
+```
+
+```{r country-coverage, fig.cap = cap, fig.width = 7, fig.asp = 1}
+cap <- paste(
+    "Women-men ratio of instructors in OpenSyllabus (OS)",
+    "vs academic staff in tertiary education (ISCED 5-8) per country and year.",
+    "Pearson correlation between OS and Eurostat series shown in each panel.",
+    "Source: Eurostat (educ_uoe_perd02)."
+)
+figs$all + labs(title = NULL, subtitle = NULL)
+```
+
+```{r field-coverage-us, fig.cap = cap, fig.width = 7, fig.asp = 1}
+cap <- paste(
+    "Women-men ratio of instructors in OpenSyllabus (OS)",
+    "vs PhD graduates in the US by academic field per year.",
+    "Pearson correlation between OS and representative series shown in each panel.",
+    "Source: NCES (Survey of Earned Doctorates)."
+)
+figs$by_field + labs(title = NULL, subtitle = NULL)
+```
+
+## Pre-/Post- Covid-19 Patterns
+
+Figure \@ref(fig:covid-trend) illustrates pre-/post-pandemic patterns in the teams across academic fields. 
+
+```{r covid-trend, fig.width = 9, fig.cap = cap, fig.asp = 1}
+cap <- paste(
+    "**Pre-/Post-Covid Courses**. Number of courses per CIP field (gray) in thirty-three European countries before and after Covid-19. Data from Open Syllabus (2017-2022). Smooth trend curves show the average pattern per broad field definition (ISCED-F). Most fields exhibit a significant drop in courses during the pandemic, especially Health and Welfare, Arts and Humanities, and Social Sciences and Journalism." #nolint
+)
+
+p_covid_trend <- readRDS(file.path(results_dir, "plot_covid_trends.rds"))
+p_covid_trend + labs(x = "Year")
+```
+
+## Heterogeneity: US vs non-US
+
+Figure \@ref(fig:hetero-us-plots) illustrates heterogeneity in the associations between teams and outcomes within US courses and the other countries. 
+
+```{r hetero-us-plots, fig.asp = 1, fig.width = 9, fig.cap = cap}
+cap <- paste(
+    "**Heterogeneity within US courses**. Estimates and 95% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for courses from the US vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates. The comparison reveals no noticeable differences." # nolint
+)
+plots_us # see results section
+```
+
+
+## Robustness Analysis 
+
+To ensure the reliability and robustness of our results, we conducted several additional analyses. In addition to reporting results from separate regressions on subsets of data by year, we also estimated mixed-effects regressions using the full dataset. These results are broadly consistent with those presented in the paper. Figure \@ref(fig:robust-interdisc) shows robustness for interdisciplinarity, Figure \@ref(fig:robust-women) for the fraction of female authors cited in the readings, Figures \@ref(fig:robust-age-readings), \@ref(fig:robust-conventional), \@ref(fig:robust-atypical) show full-model results for the age, conventionality, and the atypicality of readings.
+
+While we report differences in percentile rank per year to address skewness in the outcome variables, we also explored alternative specificationss. First, we log-transformed our dependent variables, including the age, uncononventionality and atypicalty of readings, to explore potential non-linear relationships, particularly relevant for disciplines with old readings (e.g., history) or based on citations. Second, we employed a quasi-Poisson mixed-effect model instead of the reported linear mixed-effect regression to better account for non-linearities in the count of female authors (Figure \@ref(fig:robust-women), panel B). These changes yield similar results.
+<!-- We also trimmed the data to exclude outliers, such as courses with an unusually high number of readings. These changes yield similar results. -->
+
+Finally, we further explored differences in team formation that distinguish between male-led and female-led courses, using the gender of the first listed instructor as a proxy for seniority. Overall, team formation trends appear robust to these additional analyses (Figure \@ref(fig:order-instructors)).
+
+<!-- We further tested alternative model specifications, such as considering the number of instructors as a numeric variable interacted with the proportion of female instructors to explore a linear association with the dependent variables. While we observe similar results, the linear association could be misleading when extrapolated beyond two instructors. So, we preferred to keep team configurations as fixed effects, as reported here.  -->
+
+
+
+```{r robust-interdisc, fig.cap = cap, fig.asp = .5, fig.width = 5}
+cap <- paste(
+  "**Robustness analysis for interdisciplinarity.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank per year of interdisciplinarity score. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_interdisc.rds")) + aes(color = NULL)
+```
+
+```{r robust-women, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for female-authored readings.** Estimates and 95% confidence intervals from (A) a multiple linear regression (B) quasi-poisson regression on the full sample. Dependent variable = fraction of female-authored readings to toal readings. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+p_left <- readRDS(file.path(results_dir, "robust_women.rds"))
+p_right <- readRDS(file.path(results_dir, "glm_women_quasipoisson.rds"))
+(p_left + p_right) + plot_annotation(tag_levels = "A")
+```
+
+```{r robust-age-readings, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for age of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank of the age of publication of a syllabus' readings as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_age_readings_log.rds"))
+```
+
+```{r robust-conventional, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for conventionality of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable =  median citations of a syllabus' readings as from references in previous syllabi as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_conventional_log.rds"))
+```
+
+
+```{r robust-atypical, fig.cap = cap, fig.asp = .5, fig.width = 7}
+cap <- paste(
+  "**Robustness analysis for atypicality of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = median Uzzi et al's atypicality of a syllabus' readings as precomputed by SciSciNet v2 as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+)
+readRDS(file.path(results_dir, "robust_atypical_log.rds"))
+```
+
+
+```{r order-instructors, fig.cap = cap, fig.asp = 0.5, fig.width = 7}
+cap <- paste(
+    "**Robustness in the order of listed instructors**. Comparing the gap between simulated and actual mixed-gender teams when the first listed instructor is a woman versus when the first listed instructor is a man." # nolint
+)
+readRDS(file.path(results_dir, "plot_order_instructors.rds"))
+```
