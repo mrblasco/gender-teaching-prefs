@@ -17,14 +17,19 @@ get_gender_composition <- function(x) {
     )
 }
 
-
 center <- function(x) {
     as.numeric(scale(x, scale = FALSE, center = TRUE))
 }
 
 rank_percentile <- function(x) {
-    stopifnot(all(!is.na(x)))
-    100 * (rank(x) - 1) / (length(x) - 1)
+    if (anyNA(x)) {
+        warning("Missing values detected in `x`")
+    }
+    idx <- !is.na(x)
+    r <- rank(x[idx])
+    out <- rep(NA_real_, length(x))
+    out[idx] <- 100 * (r - 1) / (sum(idx) - 1)
+    return(out)
 }
 
 

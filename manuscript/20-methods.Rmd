@@ -122,7 +122,7 @@ Building on previous research showing that gender-diverse teams are underreprese
 
 ## Regression analysis
 
-To evaluate the association between gender composition, team size, and course content, we define four teaching team configurations, $j\in \{F, M, MM, MF/FM, FF\}$, where F and M denote female and male instructors teaching alone, respectively. MM represents two male instructors; FM/MF indicates mixed-gender pairs; and FF corresponds to two female instructors. We then employ regression analysis to study the association between these team configurations and course outcomes across academic years, $t = 2000, \cdots, 2019$. As discussed before, the outcomes of interest include (1) interdisciplinarity, (2) the average age of readings, and (3) the proportion of cited female authors. To estimate these effects, we employ the following linear mixed-effects model:
+To evaluate the association between gender composition, team size, and course content, we define four teaching team configurations, $j\in \{F, M, MM, MF/FM, FF\}$, where F and M denote female and male instructors teaching alone, respectively. MM represents two male instructors; FM/MF indicates mixed-gender pairs; and FF corresponds to two female instructors. We then employ regression analysis to study the association between these team configurations and course outcomes across academic years, $t = 2000, \cdots, 2019$.^[For this analysis, we dropped all syllabi with missing course description.] As discussed before, the outcomes of interest include (1) interdisciplinarity, (2) the average age of readings, and (3) the proportion of cited female authors. To estimate these effects, we employ the following linear mixed-effects model:
 \[
 Y_{j, t} = 
  \alpha_t + 
@@ -130,6 +130,7 @@ Y_{j, t} =
  \text{STEM}_t + \eta_{f,t} +  % fields
  \text{Country}_{t} + 
  \text{CourseLevel}_{l,t} + 
+ \text{Controls}_{j,t} + 
  \delta_{t} + 
  \epsilon_{j, t}.
 \]
@@ -148,6 +149,8 @@ Where:
 - $\text{Country}_{c, t}$ is fixed effects for the institution $s$'s country $c$ in year $t$,
 
 - $\text{CourseLevel}_{l, t}$ is an effect for the level of the course ($l$ = basic, advanced, graduate, unknown) at year $t$,
+
+- $\text{Controls}_{j,t}$ includes syllabus-level controls (predicted probability of the document being a syllabus and logged number of readings detected),
 
 - $\delta_{s, t}$ is a random intercept for each of approximately 4000 unique institutions,
 

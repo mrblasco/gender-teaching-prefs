@@ -4,6 +4,7 @@ library(tidyr)
 library(ggplot2)
 library(ggrepel)
 library(patchwork)
+library(ggforce)
 library(countrycode)
 
 knitr::opts_chunk$set(
@@ -23,8 +24,21 @@ source("R/utils.R")
 source("R/theme.R")
 source("R/paths.R")
 source("R/labels.R")
-source("R/utils.R")
 source("R/isced.R")
+
+save_plot <- function(plot, filename, formats = "pdf", ...) {
+    stopifnot(inherits(plot, "ggplot"))
+    
+    saveRDS(p, filename)
+    log_msg("Saved RDS: %s", filename)
+    
+    if (formats == "pdf") {
+        pdf_filename <- paste0(tools::file_path_sans_ext(filename), ".pdf")
+        ggplot2::ggsave(filename = filename, plot = plot, ...)
+        log_msg("Saved PDF: %s", pdf_filename)
+    }
+    invisible(filename)
+}
 
 # ------ Theme ------------------------------------
 
@@ -160,17 +174,14 @@ p <- ds_count %>%
         color = "Team gender",
         shape = "Team gender",
         fill = "Team gender",
-    )
-
-p <- p + 
+    ) + 
     facet_wrap(
-        ~ team_size, scales = "free", 
+        ~ team_size,
+        scales = "free", 
         labeller = labeller(team_size = team_size_labels)
     )
 
-# save
-saveRDS(p, file.path(results_dir, "fig_evolution.rds"))
-ggsave(file.path(results_dir, "fig_evolution.pdf"))
+save_plot(p, file.path(results_dir, "fig_evolution.rds"))
 
 # ----- montecarlo, fig.cap = cap -------
 cap <- "Montecarlo simulations."
@@ -324,6 +335,8 @@ p <- ds %>%
         x = "Academic year",
         y = "Actual - Simulated (% difference)",
     )
+
+ggsave(file.path(results_dir, "plot_ordered_teams.pdf"))
 
 saveRDS(p, file.path(results_dir, "plot_ordered_teams.rds"))
 

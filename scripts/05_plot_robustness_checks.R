@@ -127,10 +127,8 @@ p_coeffs <- coeffs %>%
         x = "Estimated coefficient (95% CIs)", y = NULL
     )
 
-p_coeffs
-
-saveRDS(p_coeffs, file.path(results_dir, "robust_interdisc.rds"))
-
+out <- ggsave(file.path(results_dir, "robust_interdisc.pdf"))
+system(paste("open", out))
 
 # ----------------------------------------------------------------------
 #  Women authors --- Separate regressions by year
@@ -155,7 +153,7 @@ coeffs <- list(fit) %>%
     lapply(broom::tidy, conf.int = TRUE) %>% 
     dplyr::bind_rows(.id = "model")
 
-p_coeffs <- coeffs %>% 
+p_left <- coeffs %>% 
     filter(grepl("team", term)) %>%
     ggplot(
         aes(
@@ -175,18 +173,13 @@ p_coeffs <- coeffs %>%
         x = "Estimated coefficient (95% CIs)", y = NULL
     )
 
-p_coeffs
-
-saveRDS(p_coeffs, file.path(results_dir, "robust_women.rds"))
-
-
 
 model <- female_authors ~ team + year + country + field + offset(log(total_authors))
 
 fit <- glm(model, family = quasipoisson, data = women, subset = total_authors > 0)
-summary(fit)$coef
+#summary(fit)$coef
 
-p_coeffs <- tidy(fit) %>% 
+p_right <- tidy(fit) %>% 
     filter(grepl("team", term)) %>%
     ggplot(
         aes(
@@ -196,6 +189,7 @@ p_coeffs <- tidy(fit) %>%
             xmax = estimate + 2 * std.error
         )
     ) +
+    geom_vline(aes(linetype = "Men alone (M)", xintercept = 0), color = "red") +
     scale_y_discrete(labels = term_labels) +
     geom_errorbar(width = 0.1) +
     geom_point() +
@@ -204,9 +198,11 @@ p_coeffs <- tidy(fit) %>%
         y = NULL
     )
 
-p_coeffs
+p_combined <- (p_left + p_right) + plot_annotation(tag_levels = "A")
 
-saveRDS(p_coeffs, file = file.path(results_dir, "glm_women_quasipoisson.rds"))
+out <- ggsave(file.path(results_dir, "fig_robustness_women.pdf"), width = 7, height = 4)
+system(paste("open", out))
+
 
 # ----------------------------------------------------------------------
 #  Conventionality --- Separate regressions by year
@@ -252,15 +248,13 @@ p_coeffs <- coeffs %>%
         x = "Estimated coefficient (95% CIs)", y = NULL
     )
 
-p_coeffs
-
-saveRDS(p_coeffs, file.path(results_dir, "robust_conventional.rds"))
 
 p_left <- p_coeffs
 p_right <- p_coeffs %+% filter(coeffs, grepl("team", term), model == "log")
 p_both <- (p_left + p_right) + plot_annotation(tag_levels = "A")
 
-saveRDS(p_both, file.path(results_dir, "robust_conventional_log.rds"))
+out <- ggsave(file.path(results_dir, "robust_conventional_log.pdf"), width = 7, height = 4)
+system(paste("open", out))
 
 
 # ----------------------------------------------------------------------
@@ -289,7 +283,8 @@ coeffs <- list("pr" = fit, "log" = fit2) %>%
     dplyr::bind_rows(.id = "model")
 
 p_coeffs <- coeffs %>% 
-    filter(transform == "pr") %>%
+    #filter(transform == "pr") %>%
+    filter(model == "pr") |>
     filter(grepl("team", term)) %>%
     ggplot(
         aes(
@@ -308,15 +303,13 @@ p_coeffs <- coeffs %>%
         x = "Estimated coefficient (95% CIs)", y = NULL
     )
 
-p_coeffs
-
-saveRDS(p_coeffs, file.path(results_dir, "robust_atypical.rds"))
-
 p_left <- p_coeffs
 p_right <- p_coeffs %+% filter(coeffs, model == "log", grepl("team", term)) 
 p_both <- (p_left + p_right) + plot_annotation(tag_levels = "A")
 
-saveRDS(p_both, file.path(results_dir, "robust_atypical_log.rds"))
+
+out <- ggsave(file.path(results_dir, "robust_atypical.pdf"), width = 7, height = 4)
+system(paste("open", out))
 
 
 # ----------------------------------------------------------------------
@@ -364,14 +357,10 @@ p_coeffs <- coeffs %>%
         x = "Estimated coefficient (95% CIs)", y = NULL
     )
 
-p_coeffs
-
-saveRDS(p_coeffs, file.path(results_dir, "robust_age_readings.rds"))
-
 
 p_left <- p_coeffs
 p_right <- p_coeffs %+% filter(coeffs, grepl("team", term), model == "log")
 p_both <- (p_left + p_right) + plot_annotation(tag_levels = "A")
 
-saveRDS(p_both, file.path(results_dir, "robust_age_readings_log.rds"))
-
+out <- ggsave(file.path(results_dir, "robust_age_readings_log.pdf"), width = 7, height = 4)
+system(paste("open", out))

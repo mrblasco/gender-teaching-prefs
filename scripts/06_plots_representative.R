@@ -152,10 +152,14 @@ p_all <- plot_data %>%
         hjust = -0.1, vjust = 1.2, size = 3.3, color = "black"
     ) +
     theme(
-        panel.grid.minor = element_blank()
+        plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        panel.grid.minor = element_blank(),
     )
 
-if (interactive())  p_all
+pdf_filename <- file.path(results_dir, "fig_representative_eurostat.pdf")
+out <- ggsave(pdf_filename)
+system(paste("open", out))
 
 # ----------------------------------------------------------------------
 # Field-level comparison
@@ -181,7 +185,6 @@ setdiff(
     count(gender_ratio_os, field)$field,
     count(phd_us, field)$field
 )
-
 
 gender_ratio <- gender_ratio_os %>% 
     inner_join(
@@ -250,10 +253,14 @@ p_field <- plot_data %>%
         hjust = -0.1, vjust = 1.2, size = 3.3, color = "black"
     ) +
     theme(
+        plot.title = element_blank(),
+        plot.subtitle = element_blank(),
         panel.grid.minor = element_blank()
     )
 
-if (interactive()) p_field
+pdf_filename <- file.path(results_dir, "fig_representative_field.pdf")
+out <- ggsave(pdf_filename)
+system(paste("open", out))
 
 
 # ----------------------------------------------------------------------

@@ -17,6 +17,7 @@ library(dplyr)
 library(tidyr)
 library(kableExtra)
 library(ggplot2)
+library(patchwork)
 
 source("../R/tables.R")
 source("../R/theme.R")
@@ -200,10 +201,6 @@ One potential concern for our analysis is the representativeness of the data. Ou
 
 As illustrated in Figure \@ref(fig:country-coverage), our analysis of overall trends reveals a very high correlation for English-speaking countries (U.S. = .98, U.K. = .90), and greater heterogeneity for non-English-speaking countries, where representativeness is expected to be weaker given our focus on English-language syllabi. The analysis based on Ph.D. graduates similarly shows strong field-level correlations in many fields (Figure \@ref(fig:field-coverage-us)), such as in Natural Sciences (rho = .91), Social sciences and journalism (rho = .90), Education (rho = .77). However, there are fields with considerably lower correlation, such as in Health and welfare (rho = .14) or IT (rho = .29). This heterogeneity may stem from differences across disciplines in the proportion of Ph.D. graduates who remain in academia (e.g., biology has a comparatively high share of graduates who pursue careers outside academia). Nevertheless, these patterns suggest that, at least for English-speaking countries and in many academic fields, our data are reasonably representative.
 
-```{r, include = FALSE}
-figs <- readRDS(file.path(results_dir, "figs_representative.rds"))
-```
-
 ```{r country-coverage, fig.cap = cap, fig.width = 7, fig.asp = 1}
 cap <- paste(
     "Women-men ratio of instructors in OpenSyllabus (OS)",
@@ -211,7 +208,7 @@ cap <- paste(
     "Pearson correlation between OS and Eurostat series shown in each panel.",
     "Source: Eurostat (educ_uoe_perd02)."
 )
-figs$all + labs(title = NULL, subtitle = NULL)
+knitr::include_graphics(file.path(results_dir, "fig_representative_eurostat.pdf"))
 ```
 
 ```{r field-coverage-us, fig.cap = cap, fig.width = 7, fig.asp = 1}
@@ -221,7 +218,7 @@ cap <- paste(
     "Pearson correlation between OS and representative series shown in each panel.",
     "Source: NCES (Survey of Earned Doctorates)."
 )
-figs$by_field + labs(title = NULL, subtitle = NULL)
+knitr::include_graphics(file.path(results_dir, "fig_representative_field.pdf"))
 ```
 
 ## Pre-/Post- Covid-19 Patterns
@@ -237,6 +234,16 @@ p_covid_trend <- readRDS(file.path(results_dir, "plot_covid_trends.rds"))
 p_covid_trend + labs(x = "Year")
 ```
 
+
+## Leading instructor's gender differences
+
+Figure \@ref(fig:leading-gender) illustrates, for all selected dependent variables, the differences in estimated regression coefficients between mixed-gender teams lead by a female instructor (FM) versus those lead by a male instructor (MF), as identfied by the order in the syllabus. Overall, there are no systematic differences across outcomes, except for the ratio of female authors cited. Specifically, mixed-gender teams lead by a female instructor tend to cite a higher share of femal authors than those lead by a male instructor. Despite this, this analysis is consistent with previous models that ignores the order of instructors in the syllabus. 
+
+```{r leading-gender, fig.cap = "Differences in estimated regression coefficients for all selected dependent variables between mixed-gender teams led by a female instructor (FM) versus those led by a male instructor (MF), as determined by instructor order in the syllabus."}
+
+knitr::include_graphics(file.path(results_dir, "fig_coeff_diff_order.pdf"))
+```
+
 ## Heterogeneity: US vs non-US
 
 Figure \@ref(fig:hetero-us-plots) illustrates heterogeneity in the associations between teams and outcomes within US courses and the other countries. 
@@ -247,7 +254,6 @@ cap <- paste(
 )
 plots_us # see results section
 ```
-
 
 ## Robustness Analysis 
 
@@ -260,50 +266,55 @@ Finally, we further explored differences in team formation that distinguish betw
 
 <!-- We further tested alternative model specifications, such as considering the number of instructors as a numeric variable interacted with the proportion of female instructors to explore a linear association with the dependent variables. While we observe similar results, the linear association could be misleading when extrapolated beyond two instructors. So, we preferred to keep team configurations as fixed effects, as reported here.  -->
 
-
-
-```{r robust-interdisc, fig.cap = cap, fig.asp = .5, fig.width = 5}
+```{r robust-interdisc, fig.cap = cap, out.width="50%", position="center"}
 cap <- paste(
-  "**Robustness analysis for interdisciplinarity.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank per year of interdisciplinarity score. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+  "**Robustness analysis for interdisciplinarity.** Estimates and 95\\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank per year of interdisciplinarity score. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
 )
-readRDS(file.path(results_dir, "robust_interdisc.rds")) + aes(color = NULL)
+filename <- file.path(results_dir, "robust_interdisc.pdf")
+if (file.exists(filename)) knitr::include_graphics(filename)
 ```
 
 ```{r robust-women, fig.cap = cap, fig.asp = .5, fig.width = 7}
 cap <- paste(
-  "**Robustness analysis for female-authored readings.** Estimates and 95% confidence intervals from (A) a multiple linear regression (B) quasi-poisson regression on the full sample. Dependent variable = fraction of female-authored readings to toal readings. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
+  "**Robustness analysis for female-authored readings.** Estimates and 95\\% confidence intervals from (A) a multiple linear regression (B) quasi-poisson regression on the full sample. Dependent variable = fraction of female-authored readings to toal readings. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
 )
-p_left <- readRDS(file.path(results_dir, "robust_women.rds"))
-p_right <- readRDS(file.path(results_dir, "glm_women_quasipoisson.rds"))
-(p_left + p_right) + plot_annotation(tag_levels = "A")
+
+knitr::include_graphics(file.path(results_dir, "fig_robustness_women.pdf"))
 ```
 
 ```{r robust-age-readings, fig.cap = cap, fig.asp = .5, fig.width = 7}
 cap <- paste(
   "**Robustness analysis for age of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank of the age of publication of a syllabus' readings as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
 )
-readRDS(file.path(results_dir, "robust_age_readings_log.rds"))
+#readRDS(file.path(results_dir, "robust_age_readings_log.rds"))
+filename <- file.path(results_dir, "robust_age_readings_log.pdf")
+if (file.exists(filename)) knitr::include_graphics(filename)
 ```
 
 ```{r robust-conventional, fig.cap = cap, fig.asp = .5, fig.width = 7}
 cap <- paste(
   "**Robustness analysis for conventionality of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable =  median citations of a syllabus' readings as from references in previous syllabi as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
 )
-readRDS(file.path(results_dir, "robust_conventional_log.rds"))
+
+filename <- file.path(results_dir, "robust_conventional_log.pdf")
+if (file.exists(filename)) knitr::include_graphics(filename)
 ```
 
 
-```{r robust-atypical, fig.cap = cap, fig.asp = .5, fig.width = 7}
+```{r robust-atypical, fig.cap = cap}
 cap <- paste(
   "**Robustness analysis for atypicality of readings.** Estimates and 95% confidence intervals from a multiple linear regression on the full sample. Dependent variable = median Uzzi et al's atypicality of a syllabus' readings as precomputed by SciSciNet v2 as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings." # nolint
 )
-readRDS(file.path(results_dir, "robust_atypical_log.rds"))
+#readRDS(file.path(results_dir, "robust_atypical_log.rds"))
+filename <- file.path(results_dir, "robust_atypical.pdf")
+if (file.exists(filename)) knitr::include_graphics(filename)
 ```
-
 
 ```{r order-instructors, fig.cap = cap, fig.asp = 0.5, fig.width = 7}
 cap <- paste(
     "**Robustness in the order of listed instructors**. Comparing the gap between simulated and actual mixed-gender teams when the first listed instructor is a woman versus when the first listed instructor is a man." # nolint
 )
-readRDS(file.path(results_dir, "plot_order_instructors.rds"))
+#readRDS(file.path(results_dir, "plot_order_instructors.rds"))
+filename <- file.path(results_dir, "plot_ordered_teams.pdf")
+if (file.exists(filename)) knitr::include_graphics(filename)
 ```

@@ -93,7 +93,7 @@ To assess whether gender imbalances in co-teaching teams persist after accountin
 
 The results reveal that actual data systematically deviate from simulated expectations: same-gender teams, such as female-female (FF) and male-male (MM) courses, occur *more* frequently in actual data than in simulations by 66% and 20%, respectively, in 2019. By contrast, mixed-gender collaborations (MF/FM) are consistently *underrepresented* in the actual data (3%) compared to simulations (6%). These findings suggest that significant social or institutional dynamics---beyond chance---reinforce same-gender pairings, especially among women. Such dynamics may include gender-based homophily, mentoring networks, or within-department barriers or assignment practices.
 
-```{r montecarlo-by-field, fig.cap = cap, out.width = "100%", fig.align = "center"}
+```{r montecarlo-by-field, fig.width = 9, fig.height = 9, fig.cap = cap, out.width = "100%", fig.align = "center"}
 cap <- "This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender (MF/FM) courses by academic field. The shaded bar indicates a 95% confidence level of the proportion." # nolint
 
 readRDS(file.path(results_dir, "fig_montecarlo_by_field.rds"))
@@ -302,6 +302,8 @@ plots_us <- plots[[1]] / plots[[2]] / plots[[3]] / plots[[4]] / plots[[5]] +
     plot_annotation(tag_levels = "A") +
     plot_layout(guides = "collect")
 ```
+
+Finally, we have assessed the role of seniority of the instructors within mixed-gender teams, as identified by the listing order of instructors in the syllabi. Specifically, we allowed the mixed-gender team coefficients to vary by whether the first instructor listed was a male ("male leading") or a female ("female leading"). The analysis revealed no signficant differences in the size or direction of the coefficients for all the selected variables, except for the share of female authors cited.  Mixed-gender teams with a female leading instructor tend to cite a higher share of female authors than mixed-gender teams with male leading ones (Figure \@ref(fig:gender-leading), SI). Therefore,  allowing the associations to vary by instructor seniority does not change substantially the results.
 
 ## Robustness
 
