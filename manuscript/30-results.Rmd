@@ -261,8 +261,7 @@ plots[[1]] / plots[[2]] / plots[[3]] / plots[[4]] / plots[[5]] +
     plot_layout(guides = "collect")
 ```
 
-We have also explored heterogeneity across countries by fitting separate models for the US and comparing the results against the estimates from the full sample. The analysis revealed no signficant differences for the US-based regressions (Figure \@ref(fig:hetero-us-plots), SI). Therefore, our study provides no evidence of cross-country differences in the observed associations. 
-<!-- However, since our dataset is mostly drawn from US syllabi and is primarily in English, additional data from other countries and in other languages would be needed to fully explore potential cross-country differences. -->
+We have also explored heterogeneity across countries by fitting separate models for the US and comparing the results against the estimates from the full sample. The analysis revealed no signficant differences for the US-based regressions (Figure \@ref(fig:hetero-us-plots), SI). Therefore, our study provides no evidence of cross-country differences in the observed associations.
 
 ```{r hetero-us, fig.asp = 1, fig.width = 9, include = FALSE}
 library(patchwork)
