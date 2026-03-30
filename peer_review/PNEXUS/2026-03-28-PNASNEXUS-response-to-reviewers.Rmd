@@ -1,0 +1,145 @@
+
+---
+title : |
+    Responses to Reviewers: 
+    "Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections"
+
+subtitle: |
+    Manuscript ID: PNASNEXUS-2025-00959-TR
+
+authors: 
+    - Andrea Blasco
+    - Elisa Orlandi
+
+mainfont: Arial
+fontsize: 11pt
+linestretch: 1
+geometry: "margin=0.5in"
+bibliography: [refs.bib]
+--- 
+
+**Dear Dr. Yortsos and Editor,**
+
+We thank you and the reviewers for the careful reading of our manuscript and for the constructive feedback. We are pleased that Reviewer #2 finds that all prior concerns have been addressed. We have revised the manuscript to address the remaining concerns raised by Reviewer #3.
+
+Below, we provide a detailed, point-by-point response. Reviewer comments are reproduced in **bold italics**, followed by our responses in plain text. All changes are reflected in the revised manuscript and highlighted in the marked version.
+
+
+# Response to Reviewer #2
+
+> **The authors have taken into account my previous reviewer comments in their revised manuscript. They have considered temporal changes more carefully, added additional data beyond the start of the Covid pandemic, and reorganized the literature review into a more concise and useful format. They also added analyses comparing STEM and other fields in the supplemental appendix. In short, the revisions successfully address all of my comments.**
+
+We appreciate the reviewer’s feedback and are glad the revisions were satisfactory.
+
+---
+
+# Response to Reviewer #3
+
+We thank the reviewer for the thoughtful and constructive comments. We address each concern below.
+
+---
+
+> **My main concern is that the central correlations (teaching team gender composition and measures of content) may be spurious and specifically driven by the mechanisms used by universities to assign faculty to courses and by men and women sorting into different subfields within fields. In most universities, teaching teams are not freely formed by instructors; courses are typically assigned by chairs or administrators based on expertise and field specialization. Men and women sort into different topics within fields (see for example Chari and Goldsmith-Pinkham 2017 for economics). Suppose that a course is more multidisciplinary by design. Given that men and women sort across subfields, that course is going to be more likely to have a gender-diverse team. This does not imply that the gender diversity of the teaching team drives interdisciplinarity. Since the Monte Carlo and regression analyses operate at relatively coarse field level, this concern remains. The paper should engage more directly with this alternative explanation and clarify that the results are descriptive correlations.**
+
+- We agree that sorting and institutional assignment mechanisms are important considerations. We have revised the manuscript to **explicitly frame our findings as descriptive correlations rather than causal effects** (see Introduction, Discussion).
+
+- We added a new subsection discussing:
+
+* Faculty **sorting into subfields**
+* Administrative **course assignment processes**
+* We clarify that **gender composition may be jointly determined with course characteristics**, including interdisciplinarity.
+* We explicitly caution against interpreting mixed-gender teams as a causal “lever.”
+
+**Manuscript changes:**
+
+* Page X, paragraphs Y–Z (Introduction)
+* Page X, new subsection “Interpretation and Sorting Mechanisms”
+* Discussion section revised to temper causal language
+
+---
+
+> **Given the size of the dataset, the empirical specification could be much richer. For example, including country × field × course level × year fixed effects would absorb more institutional and curricular heterogeneity and help address some of the sorting concerns above.**
+
+We appreciate this suggestion. We have carefully considered implementing a full four-way interaction fixed effect regression, as suggested. However, in our context, this would involve estimating about 17,000 parameters on top of team composition parameters, which is computatinoally challenging. Moreover, because syllabi are not uniformly distributed across fields or countries, such an approach would likely require droppoing many dummies for lack of obserations, or considerably lower estimation precisison, resulting in noisier estimates. 
+
+Nonetheless, we agree that a rich specification is important to control for sorting concerns. Our initial specification included Year * (Country + Course level + Field). To further enrich the analysis, we have expanded it to include: 
+
+- Year * (Country x Course Level + Field)
+- Year * (Country + Course Level x Field).
+
+Importantly, the main results are nearly identical, demonstrating that our findings are robust to a wide range of specifications.  
+
+**Manuscript changes:**
+
+* Methods section (Page X)
+* Table X (new robustness table)
+* Appendix Table X (full specifications)
+
+---
+
+> **In addition, more discussion is needed on how course levels are harmonized across countries. The coding rule is validated for the U.S., but it is unclear how comparable course levels are across European contexts.**
+
+We acknowledge that harmonising course levels across countries is a limitation. However, nearly XX% of our syllaib are from the US, where the coding is validated; and adding this control does not alter the results. So, we don't expect this issue to affect substnatilly the results in other countries. Furhermore, the specification where we interacted couse level for country does not show substantive differences. We have now highlighted this limitation in he discussion section to ensure transparency. 
+
+---
+
+> **The finding that women assign more recent readings may reflect cohort effects rather than gender per se. Female representation has increased over time, so women in the sample may be younger on average. Younger instructors may be more likely to assign recent material regardless of gender. The paper should attempt to address this possibility, for example by proxying for seniority (e.g., first appearance in the data) or by exploring whether the gender gap in recency changes over time.**
+
+We thank the reviewer for this insightful suggestion. We have expanded our analysis of “first appearance” in the syllabi to all outcomes, including age of readings, cited women, scientific novelty, allowing us to assess heterogeneity with respect to this variable, which can be interpreted as a proxy for seniority. A new section in the Supporting Information presents these results.
+
+Our heterogeneity analysis shows no significant variation across most outcomes, suggesting that cohort effects do not drive the main findings. The only exception is for citations of women's work: female-led teams are more likely to cite women than male-led teams. This indicates that gender itself plays an important role, and that controlling for first appearance may even amplify the observed gender effects. These results complement the analysis of first appearance which we incorporated into the Monte Carlo simulations.
+
+Manuscript changes: 
+
+- TBA
+
+---
+
+> **I also have concerns about the adjustment to the female-author ratio (adding one to the numerator and two to the denominator) that resemble the concern people have had about using log(1+x) to address the possibility that x can be zero. This can materially distort ratios in small reading lists. For example, consider a course with only one female author and no male authors: the true ratio is 1, but the adjusted ratio becomes 2/3. If a second female author is added (and no male authors), the true ratio remains 1, but the adjusted ratio increases to 3/4. The distortion is largest for courses with fewer authors and varies mechanically with the number of readings, which may itself be related to course and team characteristics. It would be preferable to show results using the unadjusted ratio (with appropriate safeguards for small denominators) or to use a count-based measure while flexibly controlling for total readings.**
+
+We thank the reviewer for this important point. Estimating proportions with small samples can indeed be challenging, and we agree that adjustments can introduce distortions in extreme cases. That said, in our context, the substantive results do not depend on this adjustment, which is designed to improve statistical precision and reliability.
+
+Our approach follows a simple and well-established correction proposed by @agresti2000simple, which adds pseudo-observations to stabilize inference. This adjustment is motivated by its improved finite-sample properties. @agresti2000simple show that with small samples (e.g., around 10 observations per group), nominal 95% confidence intervals for differences in proportions can have substantially undercoverage using standard methods (falling below 93% in 88% of cases), whereas the adjusted method reduces this problem dramatically (to about 1%), bringing actual coverage much closer to the nominal level. In our context, using the unadjusted ratio would lead to lower coverage and greater variability in estimates for courses with few readings. The adjustment therefore improves statistical reliability, even if it slightly alters point values in edge cases.
+
+The approach also has a Bayesian interpretation: adding one to the numerator and two to the denominator is equivalent to using a Beta prior (specifically, a uniform prior) and working with the posterior mean of the proportion. In this sense, the adjustment can be viewed as introducing weak prior information that shrinks extreme estimates toward the interior, which is known to improve interval coverage and stability in small samples [@agresti2000simple].
+
+Note that the rationale for this adjustment is not related to avoiding zero denominators or transformations such as log(1+x), but rather to improving finite-sample inference for proportions.
+
+Finally, we agree that count-based approaches are a useful alternative. Reassuringly, our robustness checks show that results are unchanged when using count models with flexible controls for the total number of readings. We present the proportion-based specification in the main text for ease of interpretation, while reporting the count-based results in the appendix for completeness.
+
+**Manuscript changes:**
+
+* Methods section (Page X)
+* Results section (Page X)
+* Tables X–Y updated
+* Appendix robustness checks expanded
+
+---
+
+
+> **Overall, the paper documents interesting patterns, but some of the interpretation—especially around mixed-gender teams as a “lever” for interdisciplinarity or innovation—goes beyond what the design can support. A more cautious discussion of mechanisms and policy implications would strengthen the contribution.**
+
+We agree.
+
+**Response:**
+
+* We have revised the Discussion to:
+
+  * Remove or soften **causal and policy claims**
+  * Emphasize **descriptive contributions**
+  * Clearly distinguish **correlation vs. mechanism**
+
+**Manuscript changes:**
+
+* Discussion section (Page X)
+
+---- 
+
+**We thank the editor and reviewers again for their constructive feedback and hope that the revised manuscript is now suitable for publication in *PNAS Nexus*.**
+
+Sincerely,  
+Andrea Blasco  
+(on behalf of all authors)
+
+
+# References

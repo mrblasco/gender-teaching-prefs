@@ -1,15 +1,15 @@
 .DS_Store
 .lintr
-bibliography/
-assets/
-archive/
-output/
-figures/
-*cache/
+
+*_cache/
+*_files/
 
 data/
 docs/
 
+*.aux
+*.out
 *.log
 *.fff 
 *.ttt
+*.pdf
