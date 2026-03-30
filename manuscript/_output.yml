@@ -1,7 +1,7 @@
 bookdown::html_document2:
     toc: false
     number_sections: false
-    bibliography: [bibliography/refs.bib]
+    bibliography: [refs.bib]
 
 distill::distill_article:
     toc: true
@@ -12,8 +12,7 @@ bookdown::pdf_document2:
     latex_engine: xelatex
     keep_tex: true
 
-
 bookdown::word_document2:
     toc: false
     number_sections: true
-    bibliography: [bibliography/refs.bib]
+    bibliography: [refs.bib]
