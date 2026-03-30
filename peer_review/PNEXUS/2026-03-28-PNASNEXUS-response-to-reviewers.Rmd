@@ -18,7 +18,6 @@ geometry: "margin=0.5in"
 bibliography: [refs.bib]
 --- 
 
-
 **Dear Dr. Yortsos and Editor,**
 
 We thank you and the reviewers for the careful reading of our manuscript and for the constructive feedback. We are pleased that Reviewer #2 finds that all prior concerns have been addressed. We have revised the manuscript to address the remaining concerns raised by Reviewer #3.
@@ -59,25 +58,16 @@ We thank the reviewer for the thoughtful and constructive comments. We address e
 
 ---
 
-> **Given the size of the dataset, the empirical specification could be much richer. For example, including country × field × course level × year fixed effects would absorb more institutional and curricular heterogeneity and help address some of the sorting concerns above. In addition, more discussion is needed on how course levels are harmonized across countries. The coding rule is validated for the U.S., but it is unclear how comparable course levels are across European contexts.**
+> **Given the size of the dataset, the empirical specification could be much richer. For example, including country × field × course level × year fixed effects would absorb more institutional and curricular heterogeneity and help address some of the sorting concerns above.**
 
-We appreciate this suggestion. Our current specification includes two main specifications one with and one without interactions 
+We appreciate this suggestion. We have carefully considered implementing a full four-way interaction fixed effect regression, as suggested. However, in our context, this would involve estimating about 17,000 parameters on top of team composition parameters, which is computatinoally challenging. Moreover, because syllabi are not uniformly distributed across fields or countries, such an approach would likely require droppoing many dummies for lack of obserations, or considerably lower estimation precisison, resulting in noisier estimates. 
 
-- (Year + Country + Course Level + field) 
-- Year * (Country + Course Level + field) 
-
-(fitted with separate regression per year subsamples).
-
-We have expanded the specification to consider: 
+Nonetheless, we agree that a rich specification is important to control for sorting concerns. Our initial specification included Year * (Country + Course level + Field). To further enrich the analysis, we have expanded it to include: 
 
 - Year * (Country x Course Level + Field)
-- Year * (Country + Course Level x Field). 
+- Year * (Country + Course Level x Field).
 
-Results are nearly identical, showing this interaction. 
-
-A full interaction Year x Country X Course Level X Field would introduce about 18,000 parameters to estimate, which is simplify unfeasible both computationally and because the sample even if large does not have a uniform distribution across all these cells and we would have very sparse --- increasing noisy of the results. 
-
-* The main results remain **qualitatively unchanged**.
+Importantly, the main results are nearly identical, demonstrating that our findings are robust to a wide range of specifications.  
 
 **Manuscript changes:**
 
@@ -87,20 +77,27 @@ A full interaction Year x Country X Course Level X Field would introduce about 1
 
 ---
 
-> **The finding that women assign more recent readings may reflect cohort effects rather than gender per se. Female representation has increased over time, so women in the sample may be younger on average. Younger instructors may be more likely to assign recent material regardless of gender. The paper should attempt to address this possibility, for example by proxying for seniority (e.g., first appearance in the data) or by exploring whether the gender gap in recency changes over time.**
+> **In addition, more discussion is needed on how course levels are harmonized across countries. The coding rule is validated for the U.S., but it is unclear how comparable course levels are across European contexts.**
 
-We agree that this requires clarification. [...]
-
-We have included a new section in the Supporting that shows this resulst. We have expanded the heterogeentiy to consider this moe explicity. We do consider it for the montecarlo simulations. Results show that [...]
-
+We acknowledge that harmonising course levels across countries is a limitation. However, nearly XX% of our syllaib are from the US, where the coding is validated; and adding this control does not alter the results. So, we don't expect this issue to affect substnatilly the results in other countries. Furhermore, the specification where we interacted couse level for country does not show substantive differences. We have now highlighted this limitation in he discussion section to ensure transparency. 
 
 ---
 
-### 5. Female-Author Ratio Adjustment
+> **The finding that women assign more recent readings may reflect cohort effects rather than gender per se. Female representation has increased over time, so women in the sample may be younger on average. Younger instructors may be more likely to assign recent material regardless of gender. The paper should attempt to address this possibility, for example by proxying for seniority (e.g., first appearance in the data) or by exploring whether the gender gap in recency changes over time.**
+
+We thank the reviewer for this insightful suggestion. We have expanded our analysis of “first appearance” in the syllabi to all outcomes, including age of readings, cited women, scientific novelty, allowing us to assess heterogeneity with respect to this variable, which can be interpreted as a proxy for seniority. A new section in the Supporting Information presents these results.
+
+Our heterogeneity analysis shows no significant variation across most outcomes, suggesting that cohort effects do not drive the main findings. The only exception is for citations of women's work: female-led teams are more likely to cite women than male-led teams. This indicates that gender itself plays an important role, and that controlling for first appearance may even amplify the observed gender effects. These results complement the analysis of first appearance which we incorporated into the Monte Carlo simulations.
+
+Manuscript changes: 
+
+- TBA
+
+---
 
 > **I also have concerns about the adjustment to the female-author ratio (adding one to the numerator and two to the denominator) that resemble the concern people have had about using log(1+x) to address the possibility that x can be zero. This can materially distort ratios in small reading lists. For example, consider a course with only one female author and no male authors: the true ratio is 1, but the adjusted ratio becomes 2/3. If a second female author is added (and no male authors), the true ratio remains 1, but the adjusted ratio increases to 3/4. The distortion is largest for courses with fewer authors and varies mechanically with the number of readings, which may itself be related to course and team characteristics. It would be preferable to show results using the unadjusted ratio (with appropriate safeguards for small denominators) or to use a count-based measure while flexibly controlling for total readings.**
 
-We appreciate this point. Estimating proportions with small observations is indeed challenging, and we agree that adjustments can introduce distortions in very small samples. That said, in our setting the substantive results do not depend on this adjustment, which aims to improve statistical precision and reliability.
+We thank the reviewer for this important point. Estimating proportions with small samples can indeed be challenging, and we agree that adjustments can introduce distortions in extreme cases. That said, in our context, the substantive results do not depend on this adjustment, which is designed to improve statistical precision and reliability.
 
 Our approach follows a simple and well-established correction proposed by @agresti2000simple, which adds pseudo-observations to stabilize inference. This adjustment is motivated by its improved finite-sample properties. @agresti2000simple show that with small samples (e.g., around 10 observations per group), nominal 95% confidence intervals for differences in proportions can have substantially undercoverage using standard methods (falling below 93% in 88% of cases), whereas the adjusted method reduces this problem dramatically (to about 1%), bringing actual coverage much closer to the nominal level. In our context, using the unadjusted ratio would lead to lower coverage and greater variability in estimates for courses with few readings. The adjustment therefore improves statistical reliability, even if it slightly alters point values in edge cases.
 
@@ -117,7 +114,8 @@ Finally, we agree that count-based approaches are a useful alternative. Reassuri
 * Tables X–Y updated
 * Appendix robustness checks expanded
 
-### 6. Interpretation and Policy Implications
+---
+
 
 > **Overall, the paper documents interesting patterns, but some of the interpretation—especially around mixed-gender teams as a “lever” for interdisciplinarity or innovation—goes beyond what the design can support. A more cautious discussion of mechanisms and policy implications would strengthen the contribution.**
 
@@ -139,6 +137,9 @@ We agree.
 
 **We thank the editor and reviewers again for their constructive feedback and hope that the revised manuscript is now suitable for publication in *PNAS Nexus*.**
 
-Sincerely,
-Andrea Blasco
+Sincerely,  
+Andrea Blasco  
 (on behalf of all authors)
+
+
+# References

@@ -2,12 +2,14 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
-%
 \documentclass[
+  british,
   11pt,
 ]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
-\usepackage{setspace}
+\setcounter{secnumdepth}{5}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -21,7 +23,7 @@
 \usepackage{lmodern}
 \ifPDFTeX\else
   % xetex/luatex font selection
-    \setmainfont[]{Arial}
+  \setmainfont[]{Arial}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -29,6 +31,7 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -39,9 +42,8 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\usepackage[margin=1in]{geometry}
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -66,10 +68,6 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -104,21 +102,20 @@
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \ifLuaTeX
-\usepackage[bidi=basic]{babel}
+\usepackage[bidi=basic,shorthands=off]{babel}
 \else
-\usepackage[bidi=default]{babel}
+\usepackage[bidi=default,shorthands=off]{babel}
 \fi
-\babelprovide[main,import]{british}
 \ifPDFTeX
 \else
 \babelfont{rm}[]{Arial}
 \fi
-% get rid of language-specific shorthands (see #6817):
-\let\LanguageShortHands\languageshorthands
-\def\languageshorthands#1{}
 \ifLuaTeX
-  \usepackage[english]{selnolig} % disable illegal ligatures
+  \usepackage{selnolig} % disable illegal ligatures
 \fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \usepackage{colortbl}
 \usepackage[footnotesize,bf,singlelinecheck=false]{caption}
 \usepackage[nomarkers,nolists]{endfloat} % nomarkers, nolists
@@ -143,7 +140,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections},
+  pdftitle={Gender in Teaching: Insights from Five Million Syllabi on Collaboration{,} Interdisciplinarity{,} and Reading Selections},
   pdfauthor={Andrea Blasco; Elisa Orlandi},
   pdflang={en-UK},
   colorlinks=true,
@@ -325,7 +322,7 @@ Building on previous research showing that gender-diverse teams are underreprese
 
 \subsection{Regression analysis}\label{regression-analysis}
 
-To evaluate the association between gender composition, team size, and course content, we define four teaching team configurations, \(j\in \{F, M, MM, MF/FM, FF\}\), where F and M denote female and male instructors teaching alone, respectively. MM represents two male instructors; FM/MF indicates mixed-gender pairs; and FF corresponds to two female instructors. We then employ regression analysis to study the association between these team configurations and course outcomes across academic years, \(t = 2000, \cdots, 2019\). As discussed before, the outcomes of interest include (1) interdisciplinarity, (2) the average age of readings, and (3) the proportion of cited female authors. To estimate these effects, we employ the following linear mixed-effects model:
+To evaluate the association between gender composition, team size, and course content, we define four teaching team configurations, \(j\in \{F, M, MM, MF/FM, FF\}\), where F and M denote female and male instructors teaching alone, respectively. MM represents two male instructors; FM/MF indicates mixed-gender pairs; and FF corresponds to two female instructors. We then employ regression analysis to study the association between these team configurations and course outcomes across academic years, \(t = 2000, \cdots, 2019\).\footnote{For this analysis, we dropped all syllabi with missing course description.} As discussed before, the outcomes of interest include (1) interdisciplinarity, (2) the average age of readings, and (3) the proportion of cited female authors. To estimate these effects, we employ the following linear mixed-effects model:
 \[
 Y_{j, t} = 
  \alpha_t + 
@@ -333,6 +330,7 @@ Y_{j, t} =
  \text{STEM}_t + \eta_{f,t} +  % fields
  \text{Country}_{t} + 
  \text{CourseLevel}_{l,t} + 
+ \text{Controls}_{j,t} + 
  \delta_{t} + 
  \epsilon_{j, t}.
 \]
@@ -354,6 +352,8 @@ Where:
 \item
   \(\text{CourseLevel}_{l, t}\) is an effect for the level of the course (\(l\) = basic, advanced, graduate, unknown) at year \(t\),
 \item
+  \(\text{Controls}_{j,t}\) includes syllabus-level controls (predicted probability of the document being a syllabus and logged number of readings detected),
+\item
   \(\delta_{s, t}\) is a random intercept for each of approximately 4000 unique institutions,
 \item
   \(\epsilon_{j,t}\) is the residual error term.
@@ -365,7 +365,7 @@ Together, the model allows us to examine the association between teaching team c
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{_main_files/figure-latex/team-trends-1} 
+{\centering \includegraphics[width=1\linewidth]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/team-trends-1} 
 
 }
 
@@ -376,7 +376,7 @@ Figure \ref{fig:team-trends} illustrates gender composition and team size trends
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{_main_files/figure-latex/montecarlo-1} 
+{\centering \includegraphics[width=1\linewidth]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/montecarlo-1} 
 
 }
 
@@ -389,7 +389,7 @@ The results reveal that actual data systematically deviate from simulated expect
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{_main_files/figure-latex/montecarlo-by-field-1} 
+{\centering \includegraphics[width=1\linewidth]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/montecarlo-by-field-1} 
 
 }
 
@@ -400,7 +400,7 @@ Figure \ref{fig:montecarlo-by-field} disaggregates the comparison between actual
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/montecarlo-by-cntry-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:montecarlo-by-cntry}This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender courses (MF/FM) by country. Simulated mixed-gender teams consistently exceed observed proportions in all countries. EU countries are Austria, Denmark, France, Germany, Ireland, Italy, Netherlands, Poland, Portugal, Spain and Sweden.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/montecarlo-by-cntry-1.pdf}}
 \caption{\label{fig:montecarlo-by-cntry}This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender courses (MF/FM) by country. Simulated mixed-gender teams consistently exceed observed proportions in all countries. EU countries are Austria, Denmark, France, Germany, Ireland, Italy, Netherlands, Poland, Portugal, Spain and Sweden.}
 \end{figure}
 
@@ -412,7 +412,7 @@ Using a recent dataset of 2.2 million European syllabi from 2017--2022, we exami
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/covid-coeffs-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:covid-coeffs}Team composition post-Covid-19 change. Coefficients and 95\% confidence intervals for post-covid period obtained from the following Binomial regressions: (a) probability of single teams being taught by a woman vs man; (b) probability of teams being composed by one instructor vs multiple (teaching collaboration); (c) probability of teaching teams being mixed-gender vs.~same-gender collaborations. All regressions are based on 2.2M syllabi from institutions in thirty-three European countries (excluding teams with three or more collaborations, and authors of unknown gender).}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/covid-coeffs-1.pdf}}
 \caption{\label{fig:covid-coeffs}\textbf{Team composition post-Covid-19 change}. Coefficients and 95\% confidence intervals for post-covid period obtained from the following Binomial regressions: (a) probability of single teams being taught by a woman vs man; (b) probability of teams being composed by one instructor vs multiple (teaching collaboration); (c) probability of teaching teams being mixed-gender vs.~same-gender collaborations. All regressions are based on 2.2M syllabi from institutions in thirty-three European countries (excluding teams with three or more collaborations, and authors of unknown gender).}
 \end{figure}
 
@@ -420,7 +420,7 @@ Figure \ref{fig:covid-simulations} shows the results of our Montecarlo simulatio
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/covid-simulations-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:covid-simulations}Post-Pandemic Team Formation. Simulated gender-neutral vs observed teaching teams for 2.2M syllabi from institutions in thirty-three European countries. Covid-19 period highlighted (2020-2021). This shows that the gap between mixed-gender and same-gender collaborations widens after Covid.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/covid-simulations-1.pdf}}
 \caption{\label{fig:covid-simulations}\textbf{Post-Pandemic Team Formation}. Simulated gender-neutral vs observed teaching teams for 2.2M syllabi from institutions in thirty-three European countries. Covid-19 period highlighted (2020-2021). This shows that the gap between mixed-gender and same-gender collaborations widens after Covid.}
 \end{figure}
 
@@ -432,7 +432,7 @@ To examine how teaching team size and gender composition are associated with imp
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/interdisciplinarity-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:interdisciplinarity}Interdisciplinarity. Estimates and 95\% confidence intervals for differences in Interdisciplinarity between courses taught by men alone (reference) and courses taught by other instructor teams. Interdisciplinarity is the percentile rank, within a given year, of a syllabus' interdisciplinarity score based on its textual description relative to other syllabi. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/interdisciplinarity-1.pdf}}
 \caption{\label{fig:interdisciplinarity}\textbf{Interdisciplinarity}. Estimates and 95\% confidence intervals for differences in Interdisciplinarity between courses taught by men alone (reference) and courses taught by other instructor teams. Interdisciplinarity is the percentile rank, within a given year, of a syllabus' interdisciplinarity score based on its textual description relative to other syllabi. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}
 \end{figure}
 
@@ -442,7 +442,7 @@ Figure \ref{fig:interdisciplinarity} illustrates the evolving variation in inter
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/female-authors-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:female-authors}Female-Authored Radings Ratio. Estimates and 95\% confidence intervals for differences in Female-authored radings ratio between courses taught by men alone (reference) and courses taught by other instructor teams. This variable is the proportion of female authors cited in the course readings. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/female-authors-1.pdf}}
 \caption{\label{fig:female-authors}\textbf{Female-Authored Radings Ratio}. Estimates and 95\% confidence intervals for differences in Female-authored radings ratio between courses taught by men alone (reference) and courses taught by other instructor teams. This variable is the proportion of female authors cited in the course readings. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}
 \end{figure}
 
@@ -454,7 +454,7 @@ Figure \ref{fig:age-readings} reveals persistent temporal trends and significant
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/age-readings-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:age-readings}Age of Readings by Team. Estimates and 95\% confidence intervals for differences in Age of Readings between courses taught by men alone (reference) and courses taught by other instructor teams. Age of Readings is the percentile rank, within a given year, of a syllabus' average publication age of the readings. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/age-readings-1.pdf}}
 \caption{\label{fig:age-readings}\textbf{Age of Readings by Team}. Estimates and 95\% confidence intervals for differences in Age of Readings between courses taught by men alone (reference) and courses taught by other instructor teams. Age of Readings is the percentile rank, within a given year, of a syllabus' average publication age of the readings. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}
 \end{figure}
 
@@ -462,7 +462,7 @@ Figure \ref{fig:conventionality} illustrates significant gender differences in t
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/conventionality-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:conventionality}Readings Conventionality by Team. Estimates and 95\% confidence intervals for differences in Teaching Conventionality between courses taught by men alone (reference) and courses taught by other instructor teams. Teaching Conventionality is the percentile rank, within a given year, of a syllabus' median citations of readings, based on references from other syllabi. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/conventionality-1.pdf}}
 \caption{\label{fig:conventionality}\textbf{Readings Conventionality by Team}. Estimates and 95\% confidence intervals for differences in Teaching Conventionality between courses taught by men alone (reference) and courses taught by other instructor teams. Teaching Conventionality is the percentile rank, within a given year, of a syllabus' median citations of readings, based on references from other syllabi. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}
 \end{figure}
 
@@ -471,7 +471,7 @@ Figure \ref{fig:atypicality} presents the results of our analysis of the scienti
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/atypicality-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:atypicality}Scientific Novelty by Team. Estimates and 95\% confidence intervals for differences in Scientific Novelty between courses taught by men alone (reference) and courses taught by other instructor teams. Scientific Novelty is the percentile rank, within a given year, of a syllabus' median Uzzi et al's atypicality of readings, based on the combination of references in the readings. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/atypicality-1.pdf}}
 \caption{\label{fig:atypicality}\textbf{Scientific Novelty by Team}. Estimates and 95\% confidence intervals for differences in Scientific Novelty between courses taught by men alone (reference) and courses taught by other instructor teams. Scientific Novelty is the percentile rank, within a given year, of a syllabus' median Uzzi et al's atypicality of readings, based on the combination of references in the readings. Estimates are from separate mixed-effects regressions for each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}
 \end{figure}
 
@@ -483,11 +483,13 @@ Figure \ref{fig:stem} highlights several key differences between STEM and non-ST
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/stem-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:stem}Heterogeneity within STEM Fields. Estimates and 95\% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for STEM fields vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/stem-1.pdf}}
 \caption{\label{fig:stem}\textbf{Heterogeneity within STEM Fields}. Estimates and 95\% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for STEM fields vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates.}
 \end{figure}
 
 We have also explored heterogeneity across countries by fitting separate models for the US and comparing the results against the estimates from the full sample. The analysis revealed no signficant differences for the US-based regressions (Figure \ref{fig:hetero-us-plots}, SI). Therefore, our study provides no evidence of cross-country differences in the observed associations.
+
+Finally, we have assessed the role of seniority of the instructors within mixed-gender teams, as identified by the listing order of instructors in the syllabi. Specifically, we allowed the mixed-gender team coefficients to vary by whether the first instructor listed was a male (``male leading'') or a female (``female leading''). The analysis revealed no signficant differences in the size or direction of the coefficients for all the selected variables, except for the share of female authors cited. Mixed-gender teams with a female leading instructor tend to cite a higher share of female authors than mixed-gender teams with male leading ones (Figure \ref{fig:gender-leading}, SI). Therefore, allowing the associations to vary by instructor seniority does not change substantially the results.
 
 \subsection{Robustness}\label{robustness}
 
@@ -509,11 +511,13 @@ Our analysis further highlights how different team configurations are associated
 
 First, our findings on team formation extend prior research on academic collaboration, which has traditionally focused on research partnerships (\citeproc{ref-wuchty2007increasing}{12}, \citeproc{ref-boschini2007team}{17}, \citeproc{ref-yang2022gender}{32}, \citeproc{ref-guimera2005team}{53}, \citeproc{ref-maddi2021gender}{54}), to the domain of teaching. The significant gender patterns and underrepresentation of mixed-gender co-teaching teams echo the literature on homophily and bias in team formation within research collaborations (e.g., \citeproc{ref-kwiek2021gender}{18}) and underscore the critical role of gender dynamics in shaping not only scientific production but also pedagogical practices. Moreover, by combining analysis of a massive syllabi dataset with Monte Carlo simulations of gender-neutral team formation, our findings show that these patterns cannot be explained solely by country-level, institutional, and field-specific factors, such as cultural barriers or gender imbalance in specific fields. This evidence highlights the need to investigate these gender dynamics further, focusing on the underlying causal mechanisms that limit gender-diverse collaborations in teaching, a critical direction for future research.
 
-Secondly, building on prior research that measures interdisciplinary curricula (\citeproc{ref-evans2016measuring}{51}) and examines their effects on student outcomes (\citeproc{ref-han2023interdisciplinary}{3}), our study shifts the focus to the drivers of interdisciplinarity, linking it to the size and gender composition of teaching teams. While we find only minor and inconsistent gender differences in solo-taught teams, interdisciplinarity significantly increases in mixed-gender teaching teams. This effect is associated with the presence of women collaborators, who tend to be more interdisciplinary when working in teams. These findings extend the literature that compares interdisciplinarity between men and women in academic research (\citeproc{ref-pinheiro2022women}{30}) to the teaching domain, establishing a novel connection between gender diversity and interdisciplinary teaching practices. This connection highlights a potential lever for universities and academic institutions seeking to foster interdisciplinarity in their curricula.
+Secondly, building on prior research that measures interdisciplinary curricula (\citeproc{ref-evans2016measuring}{51}) and examines their effects on student outcomes (\citeproc{ref-han2023interdisciplinary}{3}), our study shifts the focus to interdisciplinarity, linking it to the size and gender composition of teaching teams. While we find only minor and inconsistent gender differences in solo-taught teams, interdisciplinarity significantly increases in mixed-gender teaching teams. This pattern is associated with the presence of women collaborators, who tend to be more interdisciplinary when working in teams. These findings extend the literature that compares interdisciplinarity between men and women in academic research (\citeproc{ref-pinheiro2022women}{30}) to the teaching domain, establishing a novel connection between gender diversity and interdisciplinary teaching practices. This connection highlights a potential lever for universities and academic institutions seeking to foster interdisciplinarity in their curricula.
 
-Thirdly, our study advances our understanding of the determinants of gender disparities in academic recognition by extending the focus beyond scholarly citations to teaching materials. While prior research has predominantly focused on gender citation gaps in academic publications (e.g., \citeproc{ref-dion2018gendered}{21}), our study demonstrates the critical role of gender dynamics in the content presented in class and assigned readings. More specifically, our findings align with prior research on gendered citation patterns in the academic literature (e.g., \citeproc{ref-dion2018gendered}{21}), which shows that female scholars are more likely to cite work by other women. Interestingly, Dion et al. (\citeproc{ref-dion2018gendered}{21}) finds that mixed-gender research teams do not cite more women than male-only teams, highlighting a divergence from our course-level results. This finding indicates that instructor gender shapes reading lists in ways that may differ from research citation patterns and that mixed-gender teaching teams could foster greater gender diversity in assigned readings. Together, these findings suggest new potential drivers of gender stereotypes in academia (\citeproc{ref-chatterjee2021gender}{49}), underscoring the need to broaden research on the causal mechanisms underlying gender disparities in citation practices to include teaching contexts, thereby moving beyond the current emphasis on scholarly citations alone.
+Thirdly, our study advances our understanding of gender disparities in academic recognition by extending the focus beyond scholarly citations to teaching materials. While prior research has predominantly focused on gender citation gaps in academic publications (e.g., \citeproc{ref-dion2018gendered}{21}), our study demonstrates the critical role of gender dynamics in the content presented in class and assigned readings. More specifically, our findings align with prior research on gendered citation patterns in the academic literature (e.g., \citeproc{ref-dion2018gendered}{21}), which shows that female scholars are more likely to cite work by other women. Interestingly, Dion et al. (\citeproc{ref-dion2018gendered}{21}) finds that mixed-gender research teams do not cite more women than male-only teams, highlighting a divergence from our course-level results. This finding indicates that instructor gender is associated with reading lists in ways that may differ from research citation patterns and that mixed-gender teaching teams could foster greater gender diversity in assigned readings. Together, these findings suggest new potential drivers of gender stereotypes in academia (\citeproc{ref-chatterjee2021gender}{49}), underscoring the need to broaden research on the causal mechanisms underlying gender disparities in citation practices to include teaching contexts, thereby moving beyond the current emphasis on scholarly citations alone.
 
-Finally, our findings reveal a persistent gender-based pattern in the assignment of novel materials, with female instructors tending to include more recent content in their syllabi than male instructors. In contrast, mixed-gender teams---or teams in general---tend to assign more conventional readings and cite scientific articles with lower atypicality. This evidence points to a complex relationship between team composition and teaching innovation that warrants further investigation. One possible explanation is that female instructors may assign more recent readings because they enter the profession more recently, which could account for a weakening association between instructor gender and recency over time. Similarly, mixed-gender teams may rely on less atypical or more conventional readings because instructors from different fields must establish a shared foundation rooted in classic works. Taken together with our previous finding that interdisciplinary content is more common in mixed-gender teams, these results suggest that interdisciplinary courses may inherently require more conventional readings to bridge disciplinary differences.
+Finally, our findings reveal a persistent gender-based pattern in the assignment of novel materials, with female instructors tending to include more recent content in their syllabi than male instructors. In contrast, mixed-gender teams---or teams in general---tend to assign more conventional readings and cite scientific articles with lower atypicality. This evidence points to a complex relationship between team composition and teaching innovation that warrants further investigation.
+
+There are many possible explantions for these patterns. Female instructors may assign more recent readings because they enter the profession more recently, which could account for a weakening association between instructor gender and recency over time. Similarly, mixed-gender teams may rely on less atypical or more conventional readings because instructors from different fields must establish a shared foundation rooted in classic works. Taken together with our previous finding that interdisciplinary content is more common in mixed-gender teams, these results suggest that interdisciplinary courses may inherently require more conventional readings to bridge disciplinary differences. Nevertheless, our data do not allow to fully account for cohort effects or other potential confounders, as discuss below.
 
 Overall, unveiling these associations contributes to understanding the observed gender-innovation gap in tertiary education (e.g., \citeproc{ref-biasi2022education}{10}). However, while our results suggest a strong gender association, they remain inconclusive regarding its underlying drivers, whether the pattern reflects gender per se or is confounded by age or career stage (e.g., younger vs.~female instructors). Notably, this trend coincides with the growing presence of women entering academia during the study period, suggesting that newer instructors may play a key role in pushing curricular boundaries. Nonetheless, further research is needed to disentangle the influence of gender from other intersecting factors, such as cohort effects, field-specific norms, and institutional context.
 
@@ -552,7 +556,7 @@ All the scripts and code used in the analyses is available at {[}GitHub link or 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
-\phantomsection\label{refs}
+\protect\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-bakkenes2010teacher}
 \CSLLeftMargin{1. }%
@@ -704,7 +708,7 @@ All the scripts and code used in the analyses is available at {[}GitHub link or 
 
 \bibitem[\citeproctext]{ref-viglione2020women}
 \CSLLeftMargin{38. }%
-\CSLRightInline{G. Viglione, \emph{et al.}, Are women publishing less during the pandemic? Here's what the data say. \emph{Nature} \textbf{581}, 365--366 (2020).}
+\CSLRightInline{{G. Viglione, \emph{et al.}}, Are women publishing less during the pandemic? Here's what the data say. \emph{Nature} \textbf{581}, 365--366 (2020).}
 
 \bibitem[\citeproctext]{ref-gao2021potentially}
 \CSLLeftMargin{39. }%
@@ -957,13 +961,17 @@ One potential concern for our analysis is the representativeness of the data. Ou
 
 As illustrated in Figure \ref{fig:country-coverage}, our analysis of overall trends reveals a very high correlation for English-speaking countries (U.S. = .98, U.K. = .90), and greater heterogeneity for non-English-speaking countries, where representativeness is expected to be weaker given our focus on English-language syllabi. The analysis based on Ph.D.~graduates similarly shows strong field-level correlations in many fields (Figure \ref{fig:field-coverage-us}), such as in Natural Sciences (rho = .91), Social sciences and journalism (rho = .90), Education (rho = .77). However, there are fields with considerably lower correlation, such as in Health and welfare (rho = .14) or IT (rho = .29). This heterogeneity may stem from differences across disciplines in the proportion of Ph.D.~graduates who remain in academia (e.g., biology has a comparatively high share of graduates who pursue careers outside academia). Nevertheless, these patterns suggest that, at least for English-speaking countries and in many academic fields, our data are reasonably representative.
 
-\begin{verbatim}
-## NULL
-\end{verbatim}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:country-coverage}Women-men ratio of instructors in OpenSyllabus (OS) vs academic staff in tertiary education (ISCED 5-8) per country and year. Pearson correlation between OS and Eurostat series shown in each panel. Source: Eurostat (educ\_uoe\_perd02).}]{../data/results/fig_representative_eurostat.pdf}}
+\caption{\label{fig:country-coverage}Women-men ratio of instructors in OpenSyllabus (OS) vs academic staff in tertiary education (ISCED 5-8) per country and year. Pearson correlation between OS and Eurostat series shown in each panel. Source: Eurostat (educ\_uoe\_perd02).}
+\end{figure}
 
-\begin{verbatim}
-## NULL
-\end{verbatim}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:field-coverage-us}Women-men ratio of instructors in OpenSyllabus (OS) vs PhD graduates in the US by academic field per year. Pearson correlation between OS and representative series shown in each panel. Source: NCES (Survey of Earned Doctorates).}]{../data/results/fig_representative_field.pdf}}
+\caption{\label{fig:field-coverage-us}Women-men ratio of instructors in OpenSyllabus (OS) vs PhD graduates in the US by academic field per year. Pearson correlation between OS and representative series shown in each panel. Source: NCES (Survey of Earned Doctorates).}
+\end{figure}
 
 \subsection{Pre-/Post- Covid-19 Patterns}\label{pre-post--covid-19-patterns}
 
@@ -971,8 +979,18 @@ Figure \ref{fig:covid-trend} illustrates pre-/post-pandemic patterns in the team
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/covid-trend-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:covid-trend}Pre-/Post-Covid Courses. Number of courses per CIP field (gray) in thirty-three European countries before and after Covid-19. Data from Open Syllabus (2017-2022). Smooth trend curves show the average pattern per broad field definition (ISCED-F). Most fields exhibit a significant drop in courses during the pandemic, especially Health and Welfare, Arts and Humanities, and Social Sciences and Journalism.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/covid-trend-1.pdf}}
 \caption{\label{fig:covid-trend}\textbf{Pre-/Post-Covid Courses}. Number of courses per CIP field (gray) in thirty-three European countries before and after Covid-19. Data from Open Syllabus (2017-2022). Smooth trend curves show the average pattern per broad field definition (ISCED-F). Most fields exhibit a significant drop in courses during the pandemic, especially Health and Welfare, Arts and Humanities, and Social Sciences and Journalism.}
+\end{figure}
+
+\subsection{Leading instructor's gender differences}\label{leading-instructors-gender-differences}
+
+Figure \ref{fig:leading-gender} illustrates, for all selected dependent variables, the differences in estimated regression coefficients between mixed-gender teams lead by a female instructor (FM) versus those lead by a male instructor (MF), as identfied by the order in the syllabus. Overall, there are no systematic differences across outcomes, except for the ratio of female authors cited. Specifically, mixed-gender teams lead by a female instructor tend to cite a higher share of femal authors than those lead by a male instructor. Despite this, this analysis is consistent with previous models that ignores the order of instructors in the syllabus.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:leading-gender}Differences in estimated regression coefficients for all selected dependent variables between mixed-gender teams led by a female instructor (FM) versus those led by a male instructor (MF), as determined by instructor order in the syllabus.}]{../data/results/fig_coeff_diff_order.pdf}}
+\caption{\label{fig:leading-gender}Differences in estimated regression coefficients for all selected dependent variables between mixed-gender teams led by a female instructor (FM) versus those led by a male instructor (MF), as determined by instructor order in the syllabus.}
 \end{figure}
 
 \subsection{Heterogeneity: US vs non-US}\label{heterogeneity-us-vs-non-us}
@@ -981,7 +999,7 @@ Figure \ref{fig:hetero-us-plots} illustrates heterogeneity in the associations b
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio]{_main_files/figure-latex/hetero-us-plots-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:hetero-us-plots}Heterogeneity within US courses. Estimates and 95\% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for courses from the US vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates. The comparison reveals no noticeable differences.}]{/Users/mrb/Research/gender-teaching-prefs/manuscript/build/manuscript_2026-03-30_files/figure-latex/hetero-us-plots-1.pdf}}
 \caption{\label{fig:hetero-us-plots}\textbf{Heterogeneity within US courses}. Estimates and 95\% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for courses from the US vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates. The comparison reveals no noticeable differences.}
 \end{figure}
 
@@ -993,241 +1011,38 @@ While we report differences in percentile rank per year to address skewness in t
 
 Finally, we further explored differences in team formation that distinguish between male-led and female-led courses, using the gender of the first listed instructor as a proxy for seniority. Overall, team formation trends appear robust to these additional analyses (Figure \ref{fig:order-instructors}).
 
-\begin{verbatim}
-## NULL
-\end{verbatim}
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{../data/results/robust_interdisc} \caption{**Robustness analysis for interdisciplinarity.** Estimates and 95\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank per year of interdisciplinarity score. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}\label{fig:robust-interdisc}
+\end{figure}
 
-\begin{verbatim}
-## Error in `(p_left + p_right) + plot_annotation(tag_levels = "A")`:
-## ! non-numeric argument to binary operator
-\end{verbatim}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:robust-women}Robustness analysis for female-authored readings. Estimates and 95\% confidence intervals from (A) a multiple linear regression (B) quasi-poisson regression on the full sample. Dependent variable = fraction of female-authored readings to toal readings. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}]{../data/results/fig_robustness_women.pdf}}
+\caption{\label{fig:robust-women}\textbf{Robustness analysis for female-authored readings.} Estimates and 95\% confidence intervals from (A) a multiple linear regression (B) quasi-poisson regression on the full sample. Dependent variable = fraction of female-authored readings to toal readings. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}
+\end{figure}
 
-\begin{verbatim}
-## Error in `UseMethod()`:
-## ! no applicable method for 'plot_table' applied to an object of class "NULL"
-\end{verbatim}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:robust-age-readings}Robustness analysis for age of readings. Estimates and 95\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank of the age of publication of a syllabus' readings as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}]{../data/results/robust_age_readings_log.pdf}}
+\caption{\label{fig:robust-age-readings}\textbf{Robustness analysis for age of readings.} Estimates and 95\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = percentile rank of the age of publication of a syllabus' readings as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}
+\end{figure}
 
-\begin{verbatim}
-## Error in `UseMethod()`:
-## ! no applicable method for 'plot_table' applied to an object of class "NULL"
-\end{verbatim}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:robust-conventional}Robustness analysis for conventionality of readings. Estimates and 95\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = median citations of a syllabus' readings as from references in previous syllabi as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}]{../data/results/robust_conventional_log.pdf}}
+\caption{\label{fig:robust-conventional}\textbf{Robustness analysis for conventionality of readings.} Estimates and 95\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = median citations of a syllabus' readings as from references in previous syllabi as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}
+\end{figure}
 
-\begin{verbatim}
-## Error in `UseMethod()`:
-## ! no applicable method for 'plot_table' applied to an object of class "NULL"
-\end{verbatim}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:robust-atypical}Robustness analysis for atypicality of readings. Estimates and 95\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = median Uzzi et al's atypicality of a syllabus' readings as precomputed by SciSciNet v2 as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}]{../data/results/robust_atypical.pdf}}
+\caption{\label{fig:robust-atypical}\textbf{Robustness analysis for atypicality of readings.} Estimates and 95\% confidence intervals from a multiple linear regression on the full sample. Dependent variable = median Uzzi et al's atypicality of a syllabus' readings as precomputed by SciSciNet v2 as (A) percentile rank per year (B) logarithm. Controls include the country, year, the probability of the document being a proper syllabus, field of study, institution, course levels, and (logarithm of) the number of matched readings.}
+\end{figure}
 
-\begin{verbatim}
-## $data
-## # A tibble: 40 x 6
-##     year composition                        diff diff_se conf.low conf.high
-##    <int> <chr>                             <dbl>   <dbl>    <dbl>     <dbl>
-##  1  2000 Female first, Male second (FM) -0.00818 0.00990  -0.0276  0.0112  
-##  2  2001 Female first, Male second (FM) -0.00727 0.00849  -0.0239  0.00936 
-##  3  2002 Female first, Male second (FM) -0.0104  0.00699  -0.0241  0.00334 
-##  4  2003 Female first, Male second (FM) -0.00986 0.00597  -0.0216  0.00183 
-##  5  2004 Female first, Male second (FM) -0.00994 0.00516  -0.0200  0.000162
-##  6  2005 Female first, Male second (FM) -0.0120  0.00504  -0.0218 -0.00208 
-##  7  2006 Female first, Male second (FM) -0.0156  0.00452  -0.0244 -0.00672 
-##  8  2007 Female first, Male second (FM) -0.0209  0.00440  -0.0295 -0.0122  
-##  9  2008 Female first, Male second (FM) -0.0236  0.00397  -0.0314 -0.0158  
-## 10  2009 Female first, Male second (FM) -0.0200  0.00357  -0.0270 -0.0130  
-## # i 30 more rows
-## 
-## $layers
-## $layers[[1]]
-## mapping: label = ~ifelse(year == 2019, sprintf("%2.1f%%", diff * 100), "") 
-## geom_text_repel: parse = FALSE, na.rm = FALSE, box.padding = 0.25, point.padding = 1e-06, min.segment.length = 0.5, arrow = NULL, force = 1, force_pull = 1, max.time = 0.5, max.iter = 10000, max.overlaps = 10, nudge_x = 0, nudge_y = 0, xlim = c(NA, NA), ylim = c(NA, NA), direction = both, seed = NA, verbose = FALSE
-## stat_identity: na.rm = FALSE
-## position_identity 
-## 
-## $layers[[2]]
-## mapping: yintercept = ~yintercept 
-## geom_hline: na.rm = FALSE
-## stat_identity: na.rm = FALSE
-## position_identity 
-## 
-## $layers[[3]]
-## geom_line: na.rm = FALSE, orientation = NA
-## stat_identity: na.rm = FALSE
-## position_identity 
-## 
-## $layers[[4]]
-## geom_ribbon: na.rm = FALSE, orientation = NA, outline.type = both
-## stat_identity: na.rm = FALSE
-## position_identity 
-## 
-## 
-## $scales
-## <ggproto object: Class ScalesList, gg>
-##     add: function
-##     add_defaults: function
-##     add_missing: function
-##     backtransform_df: function
-##     clone: function
-##     find: function
-##     get_scales: function
-##     has_scale: function
-##     input: function
-##     map_df: function
-##     n: function
-##     non_position_scales: function
-##     scales: list
-##     set_palettes: function
-##     train_df: function
-##     transform_df: function
-##     super:  <ggproto object: Class ScalesList, gg>
-## 
-## $guides
-## <Guides[0] ggproto object>
-## 
-## <empty>
-## 
-## $mapping
-## $x
-## <quosure>
-## expr: ^year
-## env:  0x154675c18
-## 
-## $y
-## <quosure>
-## expr: ^diff
-## env:  0x154675c18
-## 
-## $colour
-## <quosure>
-## expr: ^composition
-## env:  0x154675c18
-## 
-## $fill
-## <quosure>
-## expr: ^composition
-## env:  0x154675c18
-## 
-## $ymin
-## <quosure>
-## expr: ^conf.low
-## env:  0x154675c18
-## 
-## $ymax
-## <quosure>
-## expr: ^conf.high
-## env:  0x154675c18
-## 
-## attr(,"class")
-## [1] "uneval"
-## 
-## $theme
-## list()
-## 
-## $coordinates
-## <ggproto object: Class CoordCartesian, Coord, gg>
-##     aspect: function
-##     backtransform_range: function
-##     clip: off
-##     default: FALSE
-##     distance: function
-##     draw_panel: function
-##     expand: TRUE
-##     is_free: function
-##     is_linear: function
-##     labels: function
-##     limits: list
-##     modify_scales: function
-##     range: function
-##     render_axis_h: function
-##     render_axis_v: function
-##     render_bg: function
-##     render_fg: function
-##     reverse: none
-##     setup_data: function
-##     setup_layout: function
-##     setup_panel_guides: function
-##     setup_panel_params: function
-##     setup_params: function
-##     train_panel_guides: function
-##     transform: function
-##     super:  <ggproto object: Class CoordCartesian, Coord, gg>
-## 
-## $facet
-## <ggproto object: Class FacetNull, Facet, gg>
-##     attach_axes: function
-##     attach_strips: function
-##     compute_layout: function
-##     draw_back: function
-##     draw_front: function
-##     draw_labels: function
-##     draw_panel_content: function
-##     draw_panels: function
-##     finish_data: function
-##     format_strip_labels: function
-##     init_gtable: function
-##     init_scales: function
-##     map_data: function
-##     params: list
-##     set_panel_size: function
-##     setup_data: function
-##     setup_panel_params: function
-##     setup_params: function
-##     shrink: TRUE
-##     train_scales: function
-##     vars: function
-##     super:  <ggproto object: Class FacetNull, Facet, gg>
-## 
-## $plot_env
-## <environment: 0x154675c18>
-## 
-## $layout
-## <ggproto object: Class Layout, gg>
-##     coord: NULL
-##     coord_params: list
-##     facet: NULL
-##     facet_params: list
-##     finish_data: function
-##     get_scales: function
-##     layout: NULL
-##     map_position: function
-##     panel_params: NULL
-##     panel_scales_x: NULL
-##     panel_scales_y: NULL
-##     render: function
-##     render_labels: function
-##     reset_scales: function
-##     resolve_label: function
-##     setup: function
-##     setup_panel_guides: function
-##     setup_panel_params: function
-##     train_position: function
-##     super:  <ggproto object: Class Layout, gg>
-## 
-## $labels
-## $labels$x
-## [1] "Academic year"
-## 
-## $labels$y
-## [1] "Actual - Simulated (% difference)"
-## 
-## $labels$colour
-## [1] "composition"
-## 
-## $labels$fill
-## [1] "composition"
-## 
-## $labels$ymin
-## [1] "conf.low"
-## 
-## $labels$ymax
-## [1] "conf.high"
-## 
-## $labels$label
-## [1] "ifelse(year == 2019, sprintf(\"%2.1f%%\", diff * 100), \"\")"
-## 
-## $labels$yintercept
-## [1] "yintercept"
-## 
-## 
-## attr(,"class")
-## [1] "gg"     "ggplot"
-\end{verbatim}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:order-instructors}Robustness in the order of listed instructors. Comparing the gap between simulated and actual mixed-gender teams when the first listed instructor is a woman versus when the first listed instructor is a man.}]{../data/results/plot_ordered_teams.pdf}}
+\caption{\label{fig:order-instructors}\textbf{Robustness in the order of listed instructors}. Comparing the gap between simulated and actual mixed-gender teams when the first listed instructor is a woman versus when the first listed instructor is a man.}
+\end{figure}
 
 \end{document}
