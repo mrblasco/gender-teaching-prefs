@@ -9,8 +9,8 @@ branch <- gsub("/", "-", branch)
 out <- render(
   input_file,
   output_format = "bookdown::pdf_document2",
-  output_file = "gender_teaching_syllabi.pdf",
   output_dir = file.path("submission", branch)
 )
 
-message("Rendered ", out)
+message("Rendered to ", out)
+system(paste("open", out))

@@ -53,7 +53,11 @@ OpenSyllabus uses a Python implementation of Genderize.io to estimate the probab
 
 ### Course Level
 
-To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were assigned an *unknown* level. This approach enabled consistent categorisation across heterogeneous code formats. Furthermore, on a subset of 56,000 U.S. syllabi, prior work [@biasi2022education] showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. For EU countries, no comparable benchmark currently exists. 
+To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were assigned an *unknown* level. This approach enabled consistent categorisation across heterogeneous code formats. 
+
+Furthermore, on a subset of 56,000 U.S. syllabi, prior work [@biasi2022education] showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. 
+
+For non-US countries, no comparable benchmark currently exists or explicit harmonisation was conducted. In the UK and Australia, however, course numbering follows a similar structure, so no additional harmonisation is required. For other countries, we apply a simple rule: when course codes follow a comparable numeric format (as described above), we use the same U.S.-based classification; otherwise, the course level is coded as unknown.
 
 ### Interdiscipline Similarity {#si-interdisciplinarity}
 
@@ -237,9 +241,9 @@ p_covid_trend + labs(x = "Year")
 
 ## Leading instructor's gender differences
 
-Figure \@ref(fig:leading-gender) illustrates, for all selected dependent variables, the differences in estimated regression coefficients between mixed-gender teams lead by a female instructor (FM) versus those lead by a male instructor (MF), as identfied by the order in the syllabus. Overall, there are no systematic differences across outcomes, except for the ratio of female authors cited. Specifically, mixed-gender teams lead by a female instructor tend to cite a higher share of femal authors than those lead by a male instructor. Despite this, this analysis is consistent with previous models that ignores the order of instructors in the syllabus. 
+Figure \@ref(fig:leading) illustrates, for all selected dependent variables, the differences in estimated regression coefficients between mixed-gender teams lead by a female instructor (FM) versus those lead by a male instructor (MF), as identfied by the order in the syllabus. Overall, there are no systematic differences across outcomes, except for the ratio of female authors cited. Specifically, mixed-gender teams lead by a female instructor tend to cite a higher share of femal authors than those lead by a male instructor. Despite this, this analysis is consistent with previous models that ignores the order of instructors in the syllabus. 
 
-```{r leading-gender, fig.cap = "Differences in estimated regression coefficients for all selected dependent variables between mixed-gender teams led by a female instructor (FM) versus those led by a male instructor (MF), as determined by instructor order in the syllabus."}
+```{r leading, fig.cap = "Differences in estimated regression coefficients for all selected dependent variables between mixed-gender teams led by a female instructor (FM) versus those led by a male instructor (MF), as determined by instructor order in the syllabus."}
 
 knitr::include_graphics(file.path(results_dir, "fig_coeff_diff_order.pdf"))
 ```
