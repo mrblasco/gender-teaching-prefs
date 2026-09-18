@@ -1,0 +1,6 @@
+
+- [] Update Manuscript files in PDF, Word, WordPerfect, EPS, Text, Postscript, or RTF format. NOTE - if your paper is accepted for publication, the publisher will NOT be able to use a PDF text file. You will need to send it in another format. PDF is acceptable for the initial submission and review process.
+
+- [] Updated Figures/Images, if applicable, as separate files in TIFF, PPT, JPG, PDF, CDR, XLS, PSD, Postscript, or EPS format. Figures/Images should NOT be embedded in the article file.
+
+- [] A document detailing your response to the original reviewer comments.
