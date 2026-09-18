@@ -34,7 +34,7 @@ rank_percentile <- function(x) {
 
 
 convert_gender_label <- function(original_labels) {
-    dplyr::case_match(
+    dplyr::recode_values(
         original_labels,
         "f"  ~ "Female only (F)",
         "ff" ~ "Female-Female (FF)",
@@ -42,7 +42,7 @@ convert_gender_label <- function(original_labels) {
         "fm" ~ "Mixed Gender (MF/FM)",
         "mm" ~ "Male-Male (MM)",
         "m"  ~ "Male only (M)",
-        .default = "Unknown"
+        default = "Unknown"
     )
 }
 
