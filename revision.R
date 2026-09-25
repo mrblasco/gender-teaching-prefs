@@ -24,7 +24,7 @@ data_path <- file.path("data", "processed", "os_final.rds")
 novel_path <- file.path("data", "processed", "novel_v2.rds")
 
 outdir <- file.path("data", "results")
-dir.create(outdir)
+dir.create(outdir, recursive = TRUE)
 
 source("R/theme.R")
 theme_set(theme_custom())

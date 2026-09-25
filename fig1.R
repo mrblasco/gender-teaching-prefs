@@ -10,9 +10,14 @@ source("config.R")
 
 config <- yaml.load_file("config.yml")
 data_dir <- config$data_dir
-fig_dir <- file.path(getwd(), config$fig_dir) # full path
 
-dir.create(fig_dir, showWarnings = FALSE)
+fig_dir <- here::here("data", "results", "figures")
+results_dir <- here::here("data", "results")
+#fig_dir <- file.path(getwd(), config$fig_dir) # full path
+#results_dir <- file.path(data_dir, "results")
+
+dir.create(fig_dir, showWarnings = FALSE, recursive = TRUE)
+dir.create(results_dir, recursive = TRUE)
 
 knitr::opts_chunk$set(
     echo = FALSE,
@@ -51,8 +56,8 @@ scale_fill_discrete <- function(...) {
 theme_set(theme_custom())
 
 # ---- Load data, cache = TRUE ----------------------------
-
 filename_data <- file.path(data_dir, "rds/final.rds")
+logger::log_info("Loading {filename_data}")
 
 ds <- readRDS(filename_data) %>%
     filter(nchar(team) < 10) %>%
@@ -136,6 +141,7 @@ plot_country <- tbl_country %>%
     )
 
 # ----- fields ----------------------------
+logger::log_info("Table academic fields")
 
 tbl_fields <- ds %>%
     filter(formation == "team") %>% 
@@ -183,6 +189,7 @@ plot_fields <- ds %>%
     )
 
 # ----- years ----------------------------
+logger::log_info("Table academic years")
 
 tbl_years <- ds %>%
     filter(formation == "team") %>%
@@ -216,6 +223,7 @@ plot_year <- ds %>%
     )
 
 # ----- composition ----------------------------
+logger::log_info("Table composition")
 
 tbl_team_composition <- ds %>%
     filter(formation == "team") %>%
@@ -242,9 +250,11 @@ kbl_team_composition <- tbl_team_composition %>%
 # ====================================
 # Figures
 # ====================================
+logger::log_info("Figures")
 
 # ----- evolution, fig.cap = cap ------------
 cap <- "Evolution of Courses by Teaching Configuration. (A) proportions of courses per year with one instructor by gender (B) proportions of courses per year with two instructors by gender configuration." # nolint
+logger::log_info("Figure: {cap}")
 
 ds_count <- ds %>%
     filter(formation == "team") %>%
@@ -302,6 +312,7 @@ p + facet_wrap(~ team_size, scales = "free")
 
 # ----- montecarlo, fig.cap = cap -------
 cap <- "Montecarlo simulations."
+logger::log_info("Figure: {cap}")
 
 ds_count_unordered <- ds %>%
   filter(team_size < 3) %>% 
@@ -351,16 +362,18 @@ print(p)
 # ----- sim-by-cntry,  fig.cap = cap -------
 
 cap <- "Montecarlo simulations by country."
+logger::log_info("Figure: {cap}")
 
-ds %>%
-  filter(team_size < 3, year > 2019) %>%
+
+plot_data <- ds %>%
+  filter(team_size < 3, year > 1998) %>%
   mutate(
     composition = composition %>%
       strsplit(split = "") %>%
       sapply(paste_sort)
   ) %>%
   mutate(
-    region = case_when(
+    region = dplyr::case_when(
       country %in% c("DK", "DE", "AT", "BE", 
                      "FR", "IT", "NL", "ES", "PT",
                      "PL", "ES", "IE") ~ "European Union",
@@ -371,14 +384,20 @@ ds %>%
     )
   ) %>% 
   count(region, formation, composition, year, wt = n) %>%
-  mutate(pc = (n + 1) / (sum(n) + 2), .by = c(year, formation, region)) %>%
-  filter(composition == "fm") %>%
+  mutate(
+    pc = (n + 1) / (sum(n) + 2), 
+    .by = c(year, formation, region)
+  ) %>%
   mutate(
     color = case_when(
       formation == "team" ~ "Actual",
       formation == "team_rand" ~ "Simulated (gender-neutral)",
     ),
   ) %>%
+  filter(composition == "fm")
+
+
+plot_data %>%
   ggplot(aes(year, pc, color = color, linetype = color)) +
   geom_line() +
   ggrepel::geom_text_repel(
@@ -400,6 +419,8 @@ ds %>%
   )
 
 # ----- montecarlo-order, fig.width = 5, fig.height = 3.5 -----
+cap <- "Montecarlo by order"
+logger::log_info("Figure: {cap}")
 
 p <- ds %>%
   count(composition, formation, year, wt = n) %>%
@@ -452,6 +473,8 @@ print(p)
 saveRDS(p, file.path(results_dir, "plot_order_instructors.rds"))
 
 # ----- montecarlo-by-field, fig.width = 7, fig.height = 9 ------
+cap <- "Montecarlo by academic field"
+logger::log_info("Figure: {cap}")
 
 ds_by_field <- ds %>%
   count(formation, composition, field, wt = n) %>%
@@ -524,9 +547,8 @@ p2 <- p %+% filter(ds_filtered, !grepl(regex, isced))
 
 
 # --------- gender-imbalance -------------------------
-
-head(ds_by_field_unord)
-
+cap <- "gender imbalance"
+logger::log_info("Figure: {cap}")
 
 
 ds_gender_imbalance <- ds_by_field_unord %>% 
