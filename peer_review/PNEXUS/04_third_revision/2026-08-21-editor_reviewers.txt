@@ -1,0 +1,198 @@
+August 21, 2026
+
+Title: "Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections"
+Tracking #: PNASNEXUS-2025-00959-TRR
+Authors: Blasco and Orlandi
+
+Dear Dr. Blasco,
+
+Thank you for submitting your manuscript, titled "Gender in Teaching: Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections," for consideration at PNAS Nexus. We apologize for the delay in rendering a decision on your manuscript.
+
+The expert who is serving as editor for your manuscript [MS# PNASNEXUS-2025-00959-TRR] has obtained 3 reviews, which are included below. The reviews include some minor concerns, which we ask you to address in a revised manuscript by September 20, 2026.
+
+To ensure that revisions are made in a timely fashion, PNAS Nexus allows up to 30 days to revise for a minor revision. If you require additional time, please contact our Editorial Office at pnasnexus.editorialoffice@oup.com.
+
+As you revise your materials, please ensure that your files adhere to our editorial requirements as shared with you at the end of this email. Along with your revised manuscript, please include a point-by-point response to the reviewers' comments and a marked manuscript file to highlight the changes made. The revision cover letter should contain a list of the files that have been revised, along with a brief description of the changes made to each file.
+
+You may submit the revised manuscript here: https://pnasnexus.msubmit.net/cgi-bin/main.plex?el=A6QV3EpNZ3C4KnGo1I4A9ftdOGkuqy0o7UBCNgXbPfYzQZ.
+
+Please note that removing or reordering your coauthor list requires approval from all coauthors. If you wish to add an additional corresponding author, please note the addition in the "Comments for Editorial Staff" box when completing your revision.
+
+Multiple revisions are rarely granted, and there is no guarantee that the revised paper will be accepted.
+
+PNAS Nexus is a fully open access journal, and all content published in the journal is made available to readers online under an open access license. Please note that there are charges associated with open access publication which you can find in the https://academic.oup.com/pnasnexus/pages/general-instructions#Open%20Access>information for authors.
+
+We look forward to receiving your revision. Thank you for submitting your paper to PNAS Nexus.
+
+Sincerely,
+
+Yannis C. Yortsos
+PNAS Nexus Editor-in-Chief
+
+
+*********************
+Editor comments:
+
+Thank you for your efforts in addressing the review team's comments. Two reviewers were satisfied but one was not. Please address the remaining issues before I can accept your paper. Thank you.
+
+Reviewer comments:
+
+Reviewer #2:
+
+Overall Quality:
+Yes
+
+Justified Conclusions:
+Yes
+
+Diverse Audience of Scientists:
+Yes
+
+Repeatable Procedures:
+Yes
+
+Supplemental Material:
+Yes
+
+Significance Statement:
+Yes
+
+Sufficient data/samples?:
+Yes
+
+Comments for the Author:
+I already supported publication in the previous round and continue to do so.
+
+
+Reviewer #3:
+
+Overall Quality:
+No
+
+Justified Conclusions:
+No
+
+Diverse Audience of Scientists:
+Yes
+
+Repeatable Procedures:
+Yes
+
+Specialty Review Comments:
+I remain unconvinced about the adjusted proportion methodology. My comment still applies. I also worry about 20% of the sample used having a course-level variable that no one knows how it is created.
+
+Supplemental Material:
+Yes
+
+Significance Statement:
+Yes
+
+Sufficient data/samples?:
+No
+
+Comments for the Author:
+I remain unconvinced about the adjusted proportion methodology. Agresti and Caffo do not make an economic or substantive-measurement argument for adjusted proportions, but a mere statistical inference argument. Adjusted proportions can reduce small-sample pathologies, avoid estimates at exactly 0 or 1, and improve confidence-interval coverage. However, they do not necessarily make for a better economic measure. Unless the added “1” has a substantive interpretation, such as a Bayesian prior, shrinkage target, regularization choice, the adjusted proportion is no longer the original empirical object. The authors mention "adding one to the numerator and two to the denominator is equivalent to using a Beta prior (specifically, a uniform prior) and working with the posterior mean of the proportion." This seems like an ex-post justification and it is poorly justified. My comment still applies.
+
+I also worry about 20% of the sample used having a course-level variable whose definition cannot be ascertained. Simply acknowledging this as a limitation seems not enough. Perhaps these observations should be dropped.
+
+
+
+Reviewer #4:
+
+Overall Quality:
+Yes
+
+Justified Conclusions:
+No
+
+Diverse Audience of Scientists:
+Yes
+
+Repeatable Procedures:
+Yes
+
+Supplemental Material:
+Yes
+
+Significance Statement:
+Yes
+
+Sufficient data/samples?:
+Yes
+
+Comments for the Author:
+The paper aims to investigate the effect of teaching team diversity on teaching: on the interdisciplinarity of the courses, on the conventionality, recency, research novelty of the used material and whether the used material is at the research front, and whether it recognizes men and women equally (gender balance in the referred material).
+
+The paper combines several interesting datasets and is an interesting example of the use of big data in the social sciences. But what is missing in the paper – and that cannot be compensated by big data - is a description of academic teaching practice. Of course, one cannot provide a universal description of academic teaching in many countries, as there are of course differences. But, in my view one cannot interpret the findings without some general story, as the data analysis should lead to the identification or confirmation of the causal processes at hand.
+
+Reading the findings of the paper, I got increasingly the feeling that it is not so much a gender issue as well as an age issue. The authors mention in their discussion that age may be a possible important variable, and I feel it is, and should be included. As I argue below, that may radically alter the conclusions from the analysis. The findings are not necessarily related to gender diversity or gender bias. It could simply be an effect of the (changing) demography of the scientific work force.
+
+I present here an example of what I mean with a story, not based on comparative research of academic teaching practices but on my own long teaching experience in a few universities in my home country. I observed the following main characteristics, and feel that it may be relevant for many countries:
+
+1. The scientific workforce used to be predominantly male and that is changing over time. But for the time being, men are still (somewhat) overrepresented in the older and more senior parts of the academic staff, whereas women are up to now overrepresented in the younger and more junior part of the academic staff.
+
+2. Courses tend to be divided over staff members using two criteria: (i) the expertise of the staff members and (ii) the experience of the staff members.
+
+3. This results in the following pattern: the broad introductory courses are often taught by senior staff, as they have the most experience and – a characteristic of senior staff – on average they can be expected to have a broader overview over the relevant field(s) than younger staff members.
+
+4. On the other hand, younger staff members such as predocs and postdocs teach more focused courses related to their research specialty.
+
+5. Mostly courses have one teacher, but big courses (often the introductory ones) may more often have two or three teachers than the advanced courses for a small group of students.
+
+6. Older staff members have a more diverse set of tasks (teaching research, supervision of PhD students, management, services like editorship and reviewing for journals and funding agencies) and therefore may be more inclined to reuse teaching material to save time.
+
+7. In academic collaboration, the homophily mechanism plays a role: men are inclined to collaborate with men, and women with women. The authors claim that the difference between the de facto share of mixed-gender teams and the simulated share points to a structural feature and is field independent. I would agree with that, but the nature of the structural difference may be simple a question of preferences: women may overall prefer to work with other women, and men may prefer to work with other men. The question is then whether this has negative effects on the teaching and/or on the position of (female) teachers.
+
+If this brief description of the organization of teaching makes sense, then one can derive several expectations about teaching material:
+
+- Men are over-represented in the more introductory courses where often textbooks are used. And these are often written by experienced scientists: men. On the other hand, younger staff members tend to teach about the research front they are active in, and the relevant academic papers they include in the syllabus more often (than textbooks) also female coauthors. Together this adds to a pattern where men tend to cite more often men, whereas women tend to more often use research papers which have more female (co-)authors than textbooks have. This is in line with the findings in the paper, and implies that what is discussed as gendered reputation bias may be an age effect.
+
+- Consequently, one would also expect that men use older material that gives an overview of the received and stable knowledge of a field (textbooks), and less often recent material reflecting research fronts. Also this is in line with the findings in the paper.
+
+- Research fronts are in the search phase of the research process, and therefore one would expect that the references are coming from a wider range than in basic courses based on codified knowledge. Given the hypothesized age-related distribution of courses taught by men and women, one would expect that based on references, women tend to be more diverse (multidisciplinary).
+
+- The same argument can be developed when focusing on text: in the searching phase one expects word use that differs more from the codified language of the discipline than is used in the introductory courses (this is the used definition of interdisciplinarity in the paper). Women would be more in the specialist courses and therefore should score higher on interdisciplinarity. And as the M-F age difference tends to become smaller, the effect is expected to become smaller too. This is in line with the findings in the paper: FF teams and MF teams score higher on interdisciplinarity.
+
+- Also the finding that women use more recent literature can be explained in terms of age differences, as can be done for the findings about conventionality of the literature. This is not the case for the findings about novelty. It seems that men use more often novel papers from the past, which now are part of the received knowledge of a field.
+
+- As women get increasingly longer careers in science, one would expect that the effects found in the paper decrease over time, which also seems to be the case.
+
+One does of course not need to agree with the ‘story’ above, but the paper should have some story about why and how (gender diversity in) team composition would influence the dependent variables, and in my view this is the main weakness of the paper.
+
+
+Some additional comments:
+
+- With respect to team configuration, diversity is defined in terms of gender composition, but the large majority of courses is taught by a single man or a single woman. What askes for further clarification is the development over time, as the graphs show quite some fluctuation in the amount of mixed sex teams, and above that there is (a not explained) a high peak around 2008 (especially in the EC and US). Is this indicating some problem in the basic data or in the data handling?
+
+- The paper talks about gender and gender heterogeneity, and gender identity is considered fluid, so more than two genders exist. Isn’t it more a paper about two sexes and sex-heterogeneity?
+
+- Interdisciplinarity is measured by comparing an individual’s word use with the word use in the different disciplines. This approach to interdisciplinarity is not critically discussed in the paper, although many alternatives exist. My main problem is that interdisciplinarity is generally seen as integration of different fields leading to a new paradigm (see e.g. Van den Besselaar, Circling around interdisciplinarity, Scientometrics 2025). That cannot be measured at the individual level. At best, the approach selected can say something about a multidisciplinary orientation of the authors.
+
+- Novelty is measured using the Uzzi et al. approach (A-typical combinations and scientific impact, Science 2013), and also here I wonder whether that is adequate. What can be concluded at most is that the analysis suggests that men include more novel work in their syllabi. Why this is the case remains unclear, but this finding poses the question about the relation between recent and new.
+
+
+
+*********************
+
+Editorial Requirements:
+• All manuscripts must comply with the journal’s page limit requirements. Please be sure your revised Research Report does not exceed 12 pages (excluding References, Title page, and Acknowledgements). Due to space constraints, we are unable to grant exceptions to the page limit policy.
+
+• As a condition of publication, all data (including unique materials, documentation, and code used in analysis) underlying any published paper must be publicly released. A data availability statement must be included within the methods section of your manuscript detailing your data-sharing plans. Statements such as "data not shown" and "personal communication" cannot be used to support claims in the work. For more information regarding our materials and data availability policy, please view our editorial policies.
+
+• We encourage you to submit individual publication-ready files, including high-resolution figure files when submitting your revised manuscript. Please review our manuscript preparation guidelines to ensure each file adheres to our editorial requirements.
+
+• Per PNAS Nexus policy for image integrity, no specific feature within an image may be enhanced, obscured, moved, removed, or introduced. The grouping or consolidation of images from multiple sources must be made explicit by the arrangement of the figure and in the figure legend. Adjustments of brightness, contrast, or color balance are acceptable if they are applied to the whole image and if they do not obscure, eliminate, or misrepresent any information present in the original, including backgrounds.
+
+• If you have not already done so, when submitting your revised manuscript, please include a short alternative-text description under the figure legend for each figure. Alt-text is required to ensure the accessibility of our publication. Guidance is available on our manuscript preparation guidelines (see "Figure accessibility and alt text").
+
+• PNAS Nexus does not publish graphical abstracts. If a graphical abstract has been included with your submission, we ask that you please remove this file when returning your revision.
+
+CONFIDENTIALITY NOTICE: This email and any attachments are for the exclusive and confidential use of the individual or individuals named above on behalf of the National Academy of Sciences. The information herein is privileged to the Academy. If you are not the intended recipient, any dissemination, retention, or copying of this communication and its attachments is prohibited.
+
+Please do not feel obliged to reply to this email outside your standard working hours.
+
+Stay connected to the PNAS Journals:
+Follow PNAS Nexus and PNAS on X/Twitter
+Join PNAS Nexus and PNAS on Bluesky
+Find PNAS Nexus and PNAS on Facebook
+Connect with PNAS Nexus and PNAS on LinkedIn

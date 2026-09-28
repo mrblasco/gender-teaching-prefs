@@ -1,7 +1,8 @@
+FILES := \
+	PNEXUS/04_third_revision/response.pdf
 
-all: docs/2026-03-28-PNASNEXUS-response-to-reviewers.pdf
+all: $(FILES)
 	open -a Skim $<
 
-docs/%.pdf : PNEXUS/%.Rmd
-	Rscript -e "rmarkdown::render('$<', output_file = '../$@')"
-
+PNEXUS/04_third_revision/response.pdf : PNEXUS/04_third_revision/response.Rmd
+	Rscript -e 'rmarkdown::render("$<")'
