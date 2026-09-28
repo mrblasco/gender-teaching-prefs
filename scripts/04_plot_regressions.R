@@ -71,8 +71,6 @@ syllabi_merged <- syllabi %>%
         team = relevel(factor(as.character(team)), ref = "m")
     )
 
-#summary(syllabi_merged)
-
 stopifnot(nrow(syllabi_merged) == nrow(syllabi))
 
 # ----------------------------------------------------------------------
@@ -90,6 +88,7 @@ calc_stats <- function(x) {
         q3 = quantile(x, 0.75), 
         min = min(x), 
         max = max(x),
+        obs = length(x),
         row.names = NULL
     )
 }
@@ -99,7 +98,7 @@ tbl_desc <- syllabi_merged %>%
     lapply(calc_stats) %>% 
     bind_rows(.id = "variable")
 
-tbl_desc
+knitr::kable(tbl_desc, caption = "Descriptives", digits = 1)
 
 # ----------------------------------------------------------------------
 # Plot descriptives
@@ -198,6 +197,178 @@ fit_models_by_year <- function(df, formula, start = 2000, end = 2019, ...) {
 }
 
 # ----------------------------------------------------------------------
+#  Interdisciplinarity --- revision
+# ----------------------------------------------------------------------
+library(purrr)
+library(tidyr)
+
+# Dep var
+depvar <- "mean_intdisc"
+
+## Regressors 
+covars <- c("team", "country", "course_level", "prob", "stem", "tot_count")
+
+# Random effects
+re <- c("(1|field)", "(1|institution)")
+
+## Model with random effects
+model_re <- reformulate(c(covars, re), depvar)
+
+all_vars <- c(depvar, covars, "field", "institution", "year")
+
+ds_model <- syllabi_merged |>
+    dplyr::select(all_vars) |>
+    tidyr::drop_na() |>
+    dplyr::filter(course_level != "unknown")
+
+# Fit model by year
+fits <- ds_model |>
+    split(ds_model$year) |>
+    map(\(df) lme4::lmer(rank(mean_intdisc) ~ team + course_level + country + stem + prob + (1|field) + (1|institution), data = df))
+
+# Extract coefficients
+coeffs <- fits |>
+    map(broom::tidy, conf.int = TRUE) |>
+    bind_rows(.id = "year") |>
+    mutate(year = as.numeric(year))
+
+
+term_labels <- c(
+    teamf = "Female alone",
+    teamff = "Female + female",
+    teammm = "Male + male",
+    teamfm = "Mixed"
+)
+
+p_intdisc <- coeffs |>
+    filter(grepl("team", term)) |>
+    ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
+    scale_color_discrete() +
+    scale_shape_manual(values = c(1, 16)) + 
+    scale_y_continuous(labels = \(x) 100 * x) + 
+    facet_grid(~term, labeller = labeller(term = term_labels)) +
+    geom_hline(yintercept = 0) +
+    geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2)) + 
+    labs(
+        x = "Academic year",
+        y = "Interdisciplinarity diff. vs male alone" |>
+            stringr::str_wrap(25)
+    ) +
+    theme(legend.position = "none")
+
+out <- ggsave(
+    here::here("results", "figures", "04_intdisc.pdf"),
+    device = cairo_pdf,
+    width = 7.5,
+    height = 2.5,
+    units = "in"
+)
+if (interactive()) system(paste("open", out))
+
+# ----------------------------------------------------------------------
+#  Women authors
+# ----------------------------------------------------------------------
+ds_women <- syllabi_merged %>%
+    mutate(
+        total_authors = female_authors + male_authors,
+        female_ratio = (female_authors ) / (male_authors + female_authors),
+        .by = c(year)
+    ) |>
+    filter(total_authors > 0)
+
+fit_women <- ds_women |>
+    split(ds_women$year) |>
+    map(
+        lme4::lmer, 
+        formula = female_ratio ~ team + course_level + country + stem + prob + tot_count + 
+            (1|field) + (1|institution)
+    )
+
+# Extract coefficients
+coeffs <- fit_women |>
+    map(broom::tidy, conf.int = TRUE) |>
+    bind_rows(.id = "year") |>
+    mutate(year = as.numeric(year))
+
+p_women <- coeffs |>
+    filter(grepl("team", term)) |>
+    ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
+    scale_color_discrete() +
+    scale_shape_manual(values = c(1, 16)) + 
+    scale_y_continuous(labels = \(x) 100 * x) + 
+    facet_grid(~term, labeller = labeller(term = term_labels)) +
+    geom_hline(yintercept = 0) +
+    geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2)) + 
+    labs(
+        x = "Academic year",
+        y = "Cited female ratio difference vs male alone" |>
+            stringr::str_wrap(28)
+    ) +
+    theme(legend.position = "none")
+
+out <- ggsave(
+    here::here("results", "figures", "05_women.pdf"),
+    device = cairo_pdf,
+    width = 7.5,
+    height = 2.5,
+    units = "in"
+)
+if (interactive()) system(paste("open", out))
+
+
+# ----------------------------------------------------------------------
+#  Conventionality
+# ----------------------------------------------------------------------
+ds <- syllabi_merged |>
+    filter(!is.na(novel_med))
+
+fits <- ds |>
+    split(ds$year) |>
+    map(
+        lme4::lmer, 
+        formula = rank_percentile(novel_med) ~ team + course_level + country + stem + prob + tot_count + 
+            (1|field) + (1|institution)
+    )
+
+# Extract coefficients
+coeffs <- fits |>
+    map(broom::tidy, conf.int = TRUE) |>
+    bind_rows(.id = "year") |>
+    mutate(year = as.numeric(year))
+
+p_conventional <- coeffs |>
+    filter(grepl("team", term)) |>
+    ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
+    scale_color_discrete() +
+    scale_shape_manual(values = c(1, 16)) + 
+    scale_y_continuous(labels = \(x) 100 * x) + 
+    facet_grid(~term, labeller = labeller(term = term_labels)) +
+    geom_hline(yintercept = 0) +
+    geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2)) + 
+    labs(
+        x = "Academic year",
+        y = "Conventionality difference vs male alone" |>
+            stringr::str_wrap(28)
+    ) +
+    theme(legend.position = "none")
+
+out <- ggsave(
+    here::here("results", "figures", "06_conventional.pdf"),
+    device = cairo_pdf,
+    width = 7.5,
+    height = 2.5,
+    units = "in"
+)
+if (interactive()) system(paste("open", out))
+
+
+
+# OLD 
+
+# ----------------------------------------------------------------------
 #  Interdisciplinarity --- Separate regressions by year
 # ----------------------------------------------------------------------
 interdisc <- syllabi_merged %>%
@@ -206,6 +377,7 @@ interdisc <- syllabi_merged %>%
         interdisc = rank_percentile(mean_intdisc),
         .by = c(year)
     )
+
 model <- interdisc ~ team + country + course_level + scale(prob) + stem +
     (1 | field) + (1 | institution) + scale(log(tot_count))
 
