@@ -3,10 +3,12 @@ library(dplyr)
 library(ggplot2)
 library(ggrepel)
 library(knitr)
+library(here)
+library(yaml)
 
-knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(error = TRUE, echo = FALSE)
 
-source("../R/theme.R")
+source(here::here("R", "theme.R"))
 theme_set(theme_custom())
 
 term_labels <- c(
@@ -51,52 +53,44 @@ plot_coeffs <- function(df) {
 ```
 
 ```{r, include = FALSE}
-results_dir <- file.path("..", "data", "results")
-coeffs <- readRDS(file.path(results_dir, "coeffs.rds"))
-```
-
-```{r result-setup, include = FALSE}
-library(yaml)
-config <- yaml.load_file("config.yml")
-fig_dir <- file.path(getwd(), config$fig_dir)
-
-knitr::opts_chunk$set(echo = FALSE)
-
-add_figure <- function(path) {
-    if (file.exists(path))
-        return(knitr::include_graphics(path, auto_pdf = TRUE, rel_path = FALSE))
-    warning("File not found: ", path)
-    plot(1, main = path)
-}
+results_dir <- here::here("data", "results")
+coeffs <- readRDS(
+    file.path(results_dir, "coeffs.rds")
+)
 ```
 
 # Results
 
-```{r team-trends, fig.cap = cap, out.width = "100%", fig.align = "center"}
+```{r team-trends, fig.cap = cap, fig.align = "center"}
+cap <- "Trends in the gender composition of university courses, 2000-2019. Left, percentage of solo-taught courses by instructor gender. Right, percentage of two-instructor courses by gender composition. The proportion of mixed-gender teams remains relatively stable. N = 5.1 million courses." # nolint
 
-cap <- "Evolution of Teaching Teams by Gender Composition and Size. Trends in course gender composition from 2000 to 2019 reveal a steady increase in women's participation (both in solo-taught and two-instructor courses), while the proportion of mixed-gender teams has remained relatively stable over time. (A) Percentage of solo-taught courses by instructor gender over time. (B) Percentage of two-instructor courses by gender composition over time. N = 5.1 million courses. The shaded area represents 95\\% confidence interval of the proportion per academic year." # nolint
-
-readRDS(file.path(results_dir, "fig_evolution.rds"))
+knitr::include_graphics(
+    here::here("data", "results", "montecarlo", "01_annual_trends.pdf")
+)
 ```
 
-Figure \@ref(fig:team-trends) illustrates gender composition and team size trends in university courses for single- and two-instructor courses (2000-2019). Panel A shows a decline in male-only single-instructor courses, from approximately 60% in 2000 to 46% in 2019, alongside an increase in female-only single-instructor courses, from roughly 25% to 36%.[^women-academia] Panel B shows male-only two-instructor courses also decreased, from about 8% in the early 2000s to 6% in 2020, while female-only and mixed-gender two-instructor courses remained relatively stable, each accounting for approximately 4% and 3%, respectively. These patterns indicate a consistent shift toward greater gender diversity in course instruction over time, with mixed-gender teaching teams (3%) consistently less common than same-gender teams (10%).
+Figure \@ref(fig:team-trends) illustrates changes in the gender composition of university courses taught by one or two instructors between 2000 and 2019. In single-instructor courses (left panel), the share of male-only courses declined from approximately 70% in 2000 to 55% in 2019.[^women-academia] Among two-instructor courses (right panel), the share of male-only courses also decreased from about 60% in the early 2000s to approximately 45% in 2020, whereas female-only teams increased from 20% in 2000 to approximately 35% in 2019. By contrast, mixed-gender courses remained relatively stable at 20%. These patterns indicate a consistent shift toward greater gender diversity in course instruction over time, with mixed-gender teaching teams consistently less common than same-gender teams.
 
 [^women-academia]: This overall trend aligns with the increase in women holding academic positions worldwide. In 2000, women comprised approximately 35% of the global academic staff. By 2022, this figure had risen to about 44%, according to data from the World Bank. The data are available at: https://data.worldbank.org/indicator/SE.TER.TCHR.FE.ZS
 
 ```{r montecarlo, fig.cap = cap, out.width = "100%", fig.align = "center", echo = FALSE}
 cap <- "Comparison of gender composition between actual courses and courses simulated with Monte Carlo. Simulations ensure gender neutrality while keeping constant institutional constraints (i.e., number of teams by size, institution, academic year, and 69 academic fields). Simulated mixed-gender teams consistently exceed observed proportions, highlighting persistent barriers to forming gender-diverse teaching teams." # nolint
 
-readRDS(file.path(results_dir, "fig_montecarlo.rds"))
+#readRDS(file.path(results_dir, "fig_montecarlo.rds"))
+knitr::include_graphics(
+    here::here("data", "results", "montecarlo", "02_obs_vs_simul.pdf")
+)
 ```
 
-To assess whether gender imbalances in co-teaching teams persist after accounting for institutional constraints across fields and institutions, Figure \@ref(fig:montecarlo) compares observed teaching team compositions (2000–2019) with those generated by a gender-neutral Monte Carlo simulation. This model randomly shuffles instructors while preserving the overall distribution of course loads per year by institution and academic field but ignoring gender-based preferences or constraints (see Section \@ref(sec:methods)).
+Figure \@ref(fig:montecarlo) compares the observed trends in mixed teams with those generated by a gender-neutral Monte Carlo simulation, showing that the gap persists after accounting for matching constraints across fields and institutions. This approach randomly shuffles instructors while preserving the overall distribution of course loads per year by institution and academic field (see Section \@ref(sec:methods)). Specifically, mixed-gender collaborations, either Male + female or Female + male, are consistently *underrepresented* in the actual data compared to simulations, while same-gender teams are consistently *over-represented*. These dynamics are consistent with preference-based mechanisms, such as gender homophily, as well as structural factors, including within-department barriers or course-assignment practices that may discourage mixed-gender collaboration.
 
-The results reveal that actual data systematically deviate from simulated expectations: same-gender teams, such as female-female (FF) and male-male (MM) courses, occur *more* frequently in actual data than in simulations by 66% and 20%, respectively, in 2019. By contrast, mixed-gender collaborations (MF/FM) are consistently *underrepresented* in the actual data (3%) compared to simulations (6%). These findings suggest that significant social or institutional dynamics---beyond chance---reinforce same-gender pairings, especially among women. Such dynamics may include gender-based homophily, mentoring networks, or within-department barriers or assignment practices.
-
-```{r montecarlo-by-field, fig.width = 9, fig.height = 9, fig.cap = cap, out.width = "100%", fig.align = "center"}
+```{r montecarlo-by-field, fig.cap = cap, out.width = "100%", fig.align = "center"}
 cap <- "This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender (MF/FM) courses by academic field. The shaded bar indicates a 95% confidence level of the proportion." # nolint
 
-readRDS(file.path(results_dir, "fig_montecarlo_by_field.rds"))
+#readRDS(file.path(results_dir, "fig_montecarlo_by_field.rds"))
+knitr::include_graphics(
+    here::here("data", "results", "montecarlo", "03_by_field.pdf")
+)
 ```
 
 Figure \@ref(fig:montecarlo-by-field) disaggregates the comparison between actual and simulated mixed-gender (MF/FM) courses by academic field. Nearly all fields exhibit a stark underrepresentation of mixed-gender teams (relative to expectations) by a factor of two to four times. For instance, in Medicine (Health and Welfare), the actual share of mixed-gender collaborations is 4.8% compared to an expected 9.1%, indicating a significant imbalance. Similar gaps are evident in Law (3.8% actual vs. 6.4% simulated) and Linguistics (4.3% vs. 6.7%), underscoring the pervasiveness of barriers to mixed-gender teams across various academic fields. Remarkably, we observe no differences in these patterns between male-dominated and female-dominated fields (e.g., Engineering or Accounting vs. Nursing or Chemistry), suggesting that the underrepresentation of mixed-gender teams may be a structural feature rather than one driven by field-specific gender imbalances.
@@ -104,7 +98,10 @@ Figure \@ref(fig:montecarlo-by-field) disaggregates the comparison between actua
 ```{r montecarlo-by-cntry, fig.cap = cap}
 cap <- "This figure disaggregates the comparison of proportions between actual (green) and simulated (orange) mixed-gender courses (MF/FM) by country.  Simulated mixed-gender teams consistently exceed observed proportions in all countries. EU countries are Austria, Denmark, France, Germany, Ireland, Italy, Netherlands, Poland, Portugal, Spain and Sweden." # nolint
 
-readRDS(file.path(results_dir, "fig_montecarlo_by_country.rds"))
+#readRDS(file.path(results_dir, "fig_montecarlo_by_country.rds"))
+knitr::include_graphics(
+    here::here("data", "results", "montecarlo", "04_by_country.pdf")
+)
 ```
 
 Figure \@ref(fig:montecarlo-by-cntry) illustrates that the proportion of mixed-gender teams in the simulations consistently exceeds the observed proportions across various geographic regions, despite notable variations in the magnitude of these differences. In 2019, for example, mixed-gender teams are relatively rare in Great Britain (1%) compared to Canada (4%). However, in the simulations, the proportion of mixed-gender teams in both countries increases substantially, 1% to 3% and 4% to 5%, respectively. In 2019, the most considerable discrepancy between simulated and observed proportions is in EU countries, where it ranges from 5% to 12%. Overall, these patterns underscore the robustness of the findings across diverse geographic contexts.
@@ -131,7 +128,8 @@ Figure \@ref(fig:covid-simulations) shows the results of our Montecarlo simulati
 cap <- paste(
     "**Post-Pandemic Team Formation**. Simulated gender-neutral vs observed teaching teams for 2.2M syllabi from institutions in thirty-three European countries. Covid-19 period highlighted (2020-2021). This shows that the gap between mixed-gender and same-gender collaborations widens after Covid." # nolint
 )
-fig_covid$simulations + labs(title = NULL, subtitle = NULL)
+fig_covid$simulations + 
+    labs(title = NULL, subtitle = NULL)
 ```
 
 ## Associations Between Teams and Course Content

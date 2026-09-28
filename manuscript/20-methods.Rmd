@@ -21,11 +21,11 @@ Because course level (e.g., undergraduate or graduate) was not explicitly report
   According to @biasi2022education, this classification procedure is approximately 85% accurate for a sample of U.S. courses that could be matched to catalogues with verifiable information. Such validation result is not available for non-US courses that use a different coding system.
 ]
 
-### Instructor genders
+### Instructor sexes
 
-Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically determines the instructors’ gender based on their names. This gender disambiguation process employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], which are detailed in the Supplementary Information (Section \@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories. (Table \@ref(tab:SI-composition) illustrates the gender composition of the teaching teams). After excluding syllabi with unknown gender, the distribution was 58% male and 42% female instructors.
+Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically classifies instructors into binary sex categories (female/male) based on their names. This process does not directly measure gender identity, but we use "gender" here and elsewhere where it follows the terminology of the cited literature. The classification employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], which are detailed in the Supplementary Information (Section \@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories (Table \@ref(tab:SI-composition)). After excluding syllabi with unknown categories, the distribution was 58% male and 42% female instructors.
 
-These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. Although official statistics to assess the representativeness of this gender population are not available, a detailed comparison with official statistics (Supporting Info, Section \@ref(representativeness-of-the-gender-distribution)) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields (used as a proxy for the number of instructors). This analysis indicates a reasonable representativeness of our data.
+These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. A detailed comparison with official statistics (Supporting Info, Section \@ref(representativeness-of-the-gender-distribution)) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields, a proxy for the number of instructors. This analysis indicates a reasonable representativeness of our data.
 
 ### Linking syllabi to bibliometric data
 
@@ -78,15 +78,17 @@ kableExtra::kbl(
 
 ### Interdisciplinarity
 
-We measured interdisciplinarity by analysing course descriptions from syllabi, following Evans et al. [@evans2016measuring; @han2023interdisciplinary]. This approach converts course descriptions into "bags of words", where word frequencies are normalised by the inverse ratio of term frequency to document frequency (TF-IDF). We then computed a correlation matrix of word usage across academic fields to quantify the conceptual distances between them. The interdisciplinarity score for each syllabus was calculated as a weighted average of pairwise correlations with other syllabi, with weights reflecting field distance (see Section \@ref(si-interdisciplinarity)). This method ensures that syllabi associated with distant fields, either academically or conceptually, are considered more interdisciplinary.^[
+We measured interdisciplinarity by analysing course descriptions, following Evans et al. [@evans2016measuring; @han2023interdisciplinary]. This approach operationalises interdisciplinarity as the semantic distance of a document's language from that used in other academic fields. Thus, we converted course descriptions into "bags of words", with word frequencies normalised by the inverse ratio of term frequency to document frequency (TF-IDF). We then computed a correlation matrix of word usage across academic fields to quantify the conceptual distances between them. The interdisciplinarity score for each syllabus was calculated as a weighted average of pairwise correlations with other syllabi, with weights reflecting field distance (see Section \@ref(si-interdisciplinarity)). This method ensures that syllabi associated with distant fields, either academically or conceptually, are considered more interdisciplinary.^[
   To scale to millions of documents, we used random subsampling of academic fields over years and averaged results across subsamples for robustness, as outlined in Section \@ref(si-interdisciplinarity).
 ]
 
-We expressed interdisciplinarity for each syllabus $i$ as the percentile rank within each academic year of the interdisciplinarity score:
+For each syllabus $i$, we expressed interdisciplinarity as the percentile rank within each academic year of the interdisciplinarity score:
 $$
-  \text{Interdisciplinarity}_i = \text{PR}_{yr} (\text{Interdisciplinarity Score}_i),
+  \text{Interdisciplinarity}_i = 
+  \text{PR}_{yr} (\text{Interdisciplinarity Score}_i),
 $$
 Where $\text{PR}_{yr}$ represents the percentile rank function applied to all syllabi within a given year $yr$. This normalisation controls for skewed score distributions and allows comparison across years.
+Yet, this measure has several limitations, including that it does not explicitly capture the integration of different fields leading to a new paradigm [@van2025circling]. Thus, our measure captures a multidisciplinary orientation rather than integrative interdisciplinarity. For a critical discussion of the operationalisation and validity of this measure, we refer to @evans2016measuring; and @han2023interdisciplinary.
 
 ### Recency, Conventionality, and Atypicality of the Readings
 
@@ -94,7 +96,8 @@ To characterise the novelty of the assigned readings, we used three key dimensio
 
 First, we define the total number of references, $N_i$, as the sum of articles, books, and chapters listed in a syllabus $i$. This variable serves as a broad measure of a course's "breadth," as more assigned readings may indicate a more extensive or comprehensive curriculum. Then, we define the _Age of Readings_ variable as the difference between the syllabus year ($\text{Year}_i$) and the average publication year of the assigned readings $k=1,\cdots,K$:  
 $$
-  \text{Age of Readings}_i = \text{PR}_{yr}\left(\text{Year}_i - \sum_{k=1}^{N_i} \text{Publication Year}_k / N_i\right),
+  \text{Age of Readings}_i =
+  \text{PR}_{yr}\left(\text{Year}_i - \sum_{k=1}^{N_i} \text{Publication Year}_k / N_i\right),
 $$
 Where $\text{PR}_{yr}$ represents the percentile rank function applied to all syllabi within a given year $yr$. This variable provides a proxy of how recent, or "novel," the readings are. 
 
@@ -112,11 +115,12 @@ Together, these three measures, recency of publications, the conventionality of 
 
 Finally, we define the _Ratio of Female Authors_ as the proportion of female authors among all authors in the assigned readings: 
 $$
-  \text{Ratio of Female Authors}_i = \frac{\text{Female Authors}_i + 1} {\text{Female Authors}_i + \text{Male Authors}_i + 2}.
+  \text{Ratio of Female Authors}_i =
+  \frac{\text{Female Authors}_i} {\text{Female Authors}_i + \text{Male Authors}_i}.
 $$
-Here, we add two pseudo-observations (one for each gender) to stabilise the ratio, preventing extreme values in cases with very few authors [@agresti2000simple]. This metric enables us to examine whether gender and collaboration are associated with the representation of female-authored work in teaching.^[
+<!-- Here, we add two pseudo-observations (one for each gender) to stabilise the ratio, preventing extreme values in cases with very few authors [@agresti2000simple]. This metric enables us to examine whether gender and collaboration are associated with the representation of female-authored work in teaching.^[
   Following @agresti2000simple, the adjustment improves inference in small samples (10 or less observations per group), where standard (Wald) 95% CIs may underperform, and can be interpreted as a weak uniform prior that shrinks extreme estimates toward the interior.
-]
+] -->
 
 ## Simulating Teaching Collaborations
 

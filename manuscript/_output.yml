@@ -11,6 +11,8 @@ bookdown::pdf_document2:
     number_sections: true
     latex_engine: xelatex
     keep_tex: true
+    includes:
+        in_header: latex/preamble.tex
 
 bookdown::word_document2:
     toc: false
