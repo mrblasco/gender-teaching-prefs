@@ -10,17 +10,11 @@ authors:
     - Andrea Blasco
     - Elisa Orlandi
 
-mainfont: Arial
-fontsize: 11pt
-linestretch: 1
-geometry: margin=0.7in
-bibliography: [../../refs.bib]
-header-includes: |
-    ```{=latex}
-    \usepackage{tcolorbox}
-    \newtcolorbox{myquote}{colback=red!5!white, colframe=red!75!black}
-    \renewenvironment{quote}{\begin{myquote}}{\end{myquote}}
-    ```
+mainfont: Times New Roman
+fontsize: 12pt
+linestretch: 1.5
+geometry: margin=1in
+bibliography: [refs.bib]
 --- 
 
 **Dear Dr. Yortsos and Editor,**
@@ -127,11 +121,15 @@ Elisa Orlandi
 
 > - The paper talks about gender and gender heterogeneity, and gender identity is considered fluid, so more than two genders exist. Isn’t it more a paper about two sexes and sex-heterogeneity?
 
-**Response**
+### Response
 
-We have clarified this point in the main text: 
+We agree that the distinction between sex and gender is important here. While we recognise that an algorithm based on first names cannot directly identify either a person’s biological sex or their gender identity, we believe that “gender” is the more appropriate term in the context of our analysis.
 
-> Throughout the paper, we use “gender” where this follows the terminology of the cited literature. Our empirical classification, however, is based on individuals’ names and is intended as a proxy for binary sex categories (female/male), rather than a direct measure of gender identity. We therefore use “sex” or “sex category” where greater precision about the underlying classification is warranted.
+Specifically, when an algorithm takes a first name and assigns a label such as “male” or “female,” it is not directly measuring biological sex. Rather, it uses a culturally and socially associated signal (the person’s name) to infer a gender category. A given name may correlate with biological sex, gender identity, or both, and the algorithm generally cannot establish which of these underlying characteristics it is capturing.
+
+We have therefore retained the term “gender” to describe the algorithmically assigned categories, while clarifying in the manuscript that these categories should not be interpreted as direct measures of either biological sex or gender identity. See footnote XXXX. 
+
+> ADD FOONOTE TEXT. 
 
 ## Interdisciplinarity
 

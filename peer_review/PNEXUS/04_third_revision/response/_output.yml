@@ -1,7 +1,11 @@
 bookdown::html_document2:
   toc: true
+  toc_depth: 2
+  number_sections: false
 
 bookdown::pdf_document2:
   toc: false
   number_sections: false
   latex_engine: xelatex
+  includes:
+    - in_header: preamble.tex

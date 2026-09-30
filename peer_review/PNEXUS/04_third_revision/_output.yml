@@ -1,7 +1,0 @@
-bookdown::html_document2:
-  toc: true
-
-bookdown::pdf_document2:
-  toc: false
-  number_sections: false
-  latex_engine: xelatex
