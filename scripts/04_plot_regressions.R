@@ -21,8 +21,11 @@ theme_set(theme_custom())
 # Paths
 # ----------------------------------------------------------------------
 
-data_dir <- file.path("data", "processed")
-out_dir <- file.path("output", "regressions")
+args <- commandArgs(trailingOnly = TRUE)
+
+data_dir    <- file.path("data", "processed")
+out_dir <- if (length(args) >= 1) args[1] else file.path("output", "montecarlo")
+dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
 syllabi_path <- file.path(data_dir, "os_final.rds")
 novel_path <- file.path(data_dir, "novel_v2.rds")
@@ -39,17 +42,25 @@ center <- function(x) {
 }
 
 rank_percentile <- function(x) {
-    stopifnot(all(!is.na(x)))
+    stopifnot(all(!is.na(x)), length(x) > 1)
     100 * (rank(x) - 1) / (length(x) - 1)
 }
 
+# term_labels <- c(
+#     "teamf"     = "Woman (F)",
+#     "teamff"    = "Two women (FF)",
+#     "teamm"     = "Man (M)",
+#     "teammm"    = "Two men (MM)",
+#     "teamfm"    = "Mixed-gender (F/M)"
+# )
+
 term_labels <- c(
-    "teamf" = "Woman (F)",
-    "teamff" = "Two women (FF)",
-    "teamm" = "Man (M)",
-    "teammm" = "Two men (MM)",
-    "teamfm" = "Mixed-gender (F/M)"
+    teamf = "Female alone",
+    teamff = "Female + female",
+    teammm = "Male + male",
+    teamfm = "Mixed"
 )
+
 
 # ----------------------------------------------------------------------
 # Load data
@@ -71,9 +82,11 @@ syllabi_merged <- syllabi %>%
     mutate(
         recency = year - novelty,
         team = relevel(factor(as.character(team)), ref = "m")
-    )
+    ) |>
+    filter(course_level != "unknown")
 
-stopifnot(nrow(syllabi_merged) == nrow(syllabi))
+log_msg("Merged syllabi: %d rows, %d cols", nrow(syllabi_merged), ncol(syllabi_merged))
+
 
 # ----------------------------------------------------------------------
 # Descriptive statistics
@@ -182,6 +195,28 @@ ggsave(
 #  Function to fit model by year
 # ----------------------------------------------------------------------
 
+covars <- c("team", "country", "course_level", "prob", "stem", "tot_count")
+
+re <- c("(1|field)", "(1|institution)")
+
+list_models <- list(
+    interdisc = reformulate(c(covars, re), "rank_percentile(mean_intdisc)"),
+    women = reformulate(c(covars, re), "female_ratio"),
+    conventionality = reformulate(c(covars, re), "rank_percentile(novel_med)"),
+    atypicality = reformulate(c(covars, re), "rank_percentile(atyp_med)"),
+    age_readings = reformulate(c(covars, re), "rank_percentile(recency)")
+)
+
+
+fit_by <- function(data, formula, column, fn, ...) {
+    data |>
+        dplyr::group_by({{ column }}) |>
+        dplyr::group_split() |>
+        purrr::map(.f = fn, formula = formula, ...)
+}
+
+
+
 fit_models_by_year <- function(df, formula, start = 2000, end = 2019, ...) {
     depvar <- all.vars(formula)[1]
     fits <- lapply(start:end, function(j) {
@@ -208,45 +243,19 @@ fit_models_by_year <- function(df, formula, start = 2000, end = 2019, ...) {
 # ----------------------------------------------------------------------
 log_msg("Interdisciplinarity...")
 
-# Dep var
-depvar <- "mean_intdisc"
+fit_intdisc <- syllabi_merged |>
+    filter(!is.na(mean_intdisc)) |>
+    fit_by(list_models$interdisc, year, lme4::lmer)
 
-## Regressors
-covars <- c("team", "country", "course_level", "prob", "stem", "tot_count")
+# lst six 
+tail(fit_intdisc) |>
+    stargazer::stargazer(type = "text", keep = "team", keep.stat = "n", digits = 2)
 
-# Random effects
-re <- c("(1|field)", "(1|institution)")
-
-## Model with random effects
-model_re <- reformulate(c(covars, re), depvar)
-
-all_vars <- c(depvar, covars, "field", "institution", "year")
-
-ds_model <- syllabi_merged |>
-    dplyr::select(all_of(all_vars)) |>
-    tidyr::drop_na() |>
-    dplyr::filter(course_level != "unknown")
-
-# Fit model by year
-fits <- ds_model |>
-    split(ds_model$year) |>
-    map(
-        lme4::lmer,
-        formula = rank(mean_intdisc) ~ team + course_level + country + stem + prob + (1|field) + (1|institution)
-    )
-
-# Extract coefficients
-coeffs <- fits |>
+coeffs <- fit_intdisc |>
     map(broom::tidy, conf.int = TRUE) |>
     bind_rows(.id = "year") |>
     mutate(year = as.numeric(year))
 
-term_labels <- c(
-    teamf = "Female alone",
-    teamff = "Female + female",
-    teammm = "Male + male",
-    teamfm = "Mixed"
-)
 
 p_intdisc <- coeffs |>
     filter(grepl("team", term)) |>
@@ -260,8 +269,7 @@ p_intdisc <- coeffs |>
     geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
-        y = "Interdisciplinarity diff. vs male alone" |>
-            stringr::str_wrap(25)
+        y = "Interdisciplinarity"
     ) +
     theme(legend.position = "none")
 
@@ -279,23 +287,17 @@ ggsave(
 # ----------------------------------------------------------------------
 log_msg("Women authors...")
 
-ds_women <- syllabi_merged %>%
+fit_women <- syllabi_merged |>
     mutate(
         total_authors = female_authors + male_authors,
         female_ratio = (female_authors ) / (male_authors + female_authors),
         .by = c(year)
     ) |>
-    filter(total_authors > 0)
+    filter(total_authors > 0) |>
+    group_by(year) |>
+    group_split() |>
+    map(lme4::lmer,  formula = list_models$women)
 
-fit_women <- ds_women |>
-    split(ds_women$year) |>
-    map(
-        lme4::lmer, 
-        formula = female_ratio ~ team + course_level + country + stem + prob + tot_count + 
-            (1|field) + (1|institution)
-    )
-
-# Extract coefficients
 coeffs <- fit_women |>
     map(broom::tidy, conf.int = TRUE) |>
     bind_rows(.id = "year") |>
@@ -313,8 +315,7 @@ p_women <- coeffs |>
     geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
-        y = "Cited female ratio difference vs male alone" |>
-            stringr::str_wrap(28)
+        y = "Cited female ratio"
     ) +
     theme(legend.position = "none")
 
@@ -331,19 +332,13 @@ ggsave(
 # ----------------------------------------------------------------------
 log_msg("Conventionality ...")
 
-ds <- syllabi_merged |> 
-    filter(!is.na(novel_med))
+fits_conventionality <- syllabi_merged |>
+    filter(!is.na(novel_med)) |>
+    group_by(year) |>
+    group_split() |>
+    map(lme4::lmer, formula = list_models$conventionality)
 
-fits <- ds |>
-    split(ds$year) |>
-    map(
-        lme4::lmer,
-        formula = rank_percentile(novel_med) ~ team + course_level + country + stem + prob + tot_count + 
-            (1|field) + (1|institution)
-    )
-
-# Extract coefficients
-coeffs <- fits |>
+coeffs <- fits_conventionality |>
     map(broom::tidy, conf.int = TRUE) |>
     bind_rows(.id = "year") |>
     mutate(year = as.numeric(year))
@@ -360,7 +355,7 @@ p_conventional <- coeffs |>
     geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
-        y = "Conventionality difference vs male alone" |>
+        y = "Conventionality" |>
             stringr::str_wrap(28)
     ) +
     theme(legend.position = "none")
@@ -378,19 +373,17 @@ ggsave(
 # ----------------------------------------------------------------------
 log_msg("Atypicality ...")
 
-ds <- syllabi_merged |> 
-    filter(!is.na(atyp_med))
-
-fits <- ds |>
-    split(ds$year) |>
+    
+fits_atypicality <- syllabi_merged |>
+    filter(!is.na(atyp_med)) |>
+    group_by(year) |>
+    group_split() |>
     map(
         lme4::lmer,
-        formula = rank_percentile(atyp_med) ~ team + course_level + country + stem + prob + tot_count + 
-            (1|field) + (1|institution)
+        formula = list_models$atypicality
     )
 
-# Extract coefficients
-coeffs <- fits |>
+coeffs <- fits_atypicality |>
     map(broom::tidy, conf.int = TRUE) |>
     bind_rows(.id = "year") |>
     mutate(year = as.numeric(year))
@@ -407,7 +400,7 @@ p_atypical <- coeffs |>
     geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
-        y = "Atypicality difference vs male alone" |>
+        y = "Atypicality" |>
             stringr::str_wrap(28)
     ) +
     theme(legend.position = "none")
@@ -426,19 +419,16 @@ ggsave(
 # ----------------------------------------------------------------------
 log_msg("Age of readings...")
 
-ds <- syllabi_merged |> 
-    filter(!is.na(recency))
-
-fits <- ds |>
-    split(ds$year) |>
+fits_recency <- syllabi_merged |>
+    filter(!is.na(recency)) |>
+    group_by(year) |>
+    group_split() |>
     map(
         lme4::lmer,
-        formula = rank_percentile(recency) ~ team + course_level + country + stem + prob + tot_count + 
-            (1|field) + (1|institution)
+        formula = list_models$age_readings
     )
 
-# Extract coefficients
-coeffs <- fits |>
+coeffs <- fits_recency |>
     map(broom::tidy, conf.int = TRUE) |>
     bind_rows(.id = "year") |>
     mutate(year = as.numeric(year))
@@ -455,7 +445,7 @@ p_recency <- coeffs |>
     geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
-        y = "Age of readings difference vs male alone" |>
+        y = "Age of readings" |>
             stringr::str_wrap(28)
     ) +
     theme(legend.position = "none")
@@ -473,7 +463,7 @@ ggsave(
 # ----------------------------------------------------------------------
 
 p_combined <- p_conventional + p_intdisc + p_women + p_atypical + p_recency +
-    plot_layout(ncol = 1) +
+    plot_layout(ncol = 1, axes = "collect", axis_titles = "collect")) +
     plot_annotation(tag_levels = "A")
 
 ggsave(

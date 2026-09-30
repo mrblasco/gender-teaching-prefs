@@ -1,39 +1,43 @@
----
-bibliography: refs.bib
----
-
 # Materials and Methods {#sec:methods}
 
 ## Data sources
 
 ### Open Syllabus corpus
 
-The core dataset consists of a corpus of more than six million university syllabi compiled by Open Syllabus (New York, US) through web extractions from university websites. These extractions identify syllabi with a median confidence level of 99.8%. A tagging algorithm extracts key course details, such as the title, description, academic year, language, a list of anonymised instructors, and the assigned readings.^[Documentation available at: https://docs.opensyllabus.org] OpenSyllabus also assigns each syllabus to one of 69 top-level disciplinary fields, derived from the U.S. Department of Education's CIP classification system.^[
-  The CIP classification is available at: 
+The core dataset consists of a corpus of more than six million university syllabi compiled through web extractions from university websites by Open Syllabus (OS). These extractions identify syllabi with a median confidence level of 99.8%. A tagging algorithm extracts key course details, such as the title, description, academic year, language, a list of anonymised instructors, and the assigned readings.^[
+  Documentation available at: https://docs.opensyllabus.org
+]
+Each syllabus is assigned to one of 69 disciplinary fields derived from the CIP classification system.^[
+  The U.S. Department of Education's Classification of Instructional Programs (CIP) is available at: 
   https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55
-] 
+]
+While the original dataset includes syllabi in 49 languages, most documents (96%) are in English.
 
-While the original dataset includes syllabi in 49 languages, most documents (96%) are in English. For simplicity, we focused exclusively on English-language syllabi.^[
+ For simplicity, our analysis focused exclusively on English-language syllabi.^[
   Our focus on English-language courses means that, while we have comprehensive data for English-speaking countries such as Canada, Ireland, the United States, and Great Britain, the sample in non-English-speaking countries tends to be more representative of internationally oriented universities. These are typically institutions offering programs in English or advanced-level courses, such as postgraduate programs or disciplines where English is the primary medium of instruction within traditional universities.
-] This choice resulted in a total of 5.4 million syllabi (1990-2019) from approximately 4,000 higher education institutions across fifteen countries (Table \@ref(tab:SI-country)).
+]
+This choice resulted in a total of 5.4 million syllabi (1990-2019) from approximately 4,000 higher education institutions across fifteen countries (Table \@ref(tab:SI-country)).
 
-Because course level (e.g., undergraduate or graduate) was not explicitly reported in the data, we inferred it from course codes. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into four levels: basic, advanced, graduate, or unknown (see Section \@ref(course-level) for the details).^[
+The course level was inferred from course codes, following Biasi et al. @biasi2022education. For example, “Psychology 101” typically denotes an introductory course, whereas “Psychology 401” indicates a more advanced offering. Using this heuristic, we categorized syllabi into *three* levels: basic, advanced, graduate (see Section \@ref(course-level) for the details).^[
   According to @biasi2022education, this classification procedure is approximately 85% accurate for a sample of U.S. courses that could be matched to catalogues with verifiable information. Such validation result is not available for non-US courses that use a different coding system.
 ]
 
-### Instructor sexes
+### Instructor genders
 
-Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors. For each syllabus, OpenSyllabus automatically classifies instructors into binary sex categories (female/male) based on their names. This process does not directly measure gender identity, but we use "gender" here and elsewhere where it follows the terminology of the cited literature. The classification employs state-of-the-art methods that have been shown to achieve high accuracy on other datasets [e.g., @dion2018gendered], which are detailed in the Supplementary Information (Section \@ref(gender-disambiguation)). In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories (Table \@ref(tab:SI-composition)). After excluding syllabi with unknown categories, the distribution was 58% male and 42% female instructors.
+<!-- Each syllabus lists one or more instructors, with 76% listing a single instructor, 16% listing two, 4% listing three, and 4% listing more than three instructors.  -->
 
-These figures broadly align with the 45% of female academic staff reported in OECD countries [@oecd2022]. A detailed comparison with official statistics (Supporting Info, Section \@ref(representativeness-of-the-gender-distribution)) shows that the observed trends in the proportions of women and men are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields, a proxy for the number of instructors. This analysis indicates a reasonable representativeness of our data.
+For each syllabus, instructors were classfied into binary gender categories (female, male) based on their names by OS. This process does not directly measure gender identity, but we use "gender" here and elsewhere where it follows the terminology of the cited literature.^[
+  The gender classification used here is inferred from first names and should not be interpreted as a direct measure of either biological sex or gender identity. The binary categories (“female” and “male”) consequently do not capture the full range of gender identities, including non-binary and gender-fluid identities. We use “gender” to describe these inferred categories because the classification is based on socially and culturally associated gender signals (first names used in syllabi) and follows the terminology of the cited literature.
+] The classification employs state-of-the-art methods (SI, Section \@ref(gender-disambiguation)) that have been shown to achieve high accuracy on other datasets [@dion2018gendered]. In our dataset, this classification resulted in 52% male, 37% female, and 11% unknown categories (Table \@ref(tab:SI-composition)). 
+
+After excluding syllabi with unknown categories, the distribution was 58% male and 42% female instructors, which broadly aligns with the 45% of female academic staff reported in OECD countries [@oecd2022].
+A detailed comparison with official statistics (SI, Section \@ref(representativeness-of-the-gender-distribution)) shows that the observed trends are highly correlated with representative statistics on academic staff across countries and with the distribution of graduates across fields, a proxy for the number of instructors. indicating a reasonable representativeness of our data.
 
 ### Linking syllabi to bibliometric data
 
-About 2.9 million syllabi (53% of the total) list readings matched with bibliographic sources, providing additional metadata on authorship, journal of publication, and publication year. Institutions are matched to a list of more than 22,000 entities from the Research Organisation Registry (ROR), providing further metadata on institutional characteristics, including country and enrollment figures. Overall, the institutions in our sample account for over 35 million enrolled students today.^[
-  For more details on how OpenSyllabus classify and match the data, the related documentation is available online at https://docs.opensyllabus.org.
-]. Overall, our dataset captures roughly 50% of the educational institutions listed in ROR, underscoring its broad coverage.^[
-  The same methods used to identify the gender of the instructors were used for the gender of the authors listed in the readings, resulting in 32% female and 56% male authors, with 12% of the authors having an unknown gender.
-]
+About 2.9 million syllabi (53% of the total) list readings matched with bibliographic sources, providing additional metadata on authorship, journal of publication, and publication year. The gender of the authors listed in the readings was idenitifed automatically as for the instructors, resulting in 32% female and 56% male authors, with 12% of unknown gender.
+
+Institutions were matched to a list of more than 22,000 entities from the Research Organisation Registry (ROR), providing further metadata on institutional characteristics, including country and enrollment figures. Overall, the institutions in our sample account for over 35 million enrolled students today and roughly 50% of the educational institutions listed in ROR, underscoring its broad coverage.
 
 To assess the scientific novelty of the readings assigned in each syllabus, we further linked the data to SciSciNet (v2) [@lin2023sciscinet], a large-scale database of scientific publications that includes pre-computed indicators of novelty, such as the atypicality measure introduced by Uzzi et al. [@uzzi2013atypical]. Matches were performed using article DOIs. Unfortunately, most syllabi include textbooks that do not have a DOI and a corresponding atypicality measure. Even so, the process resulted in a match  with 80% of all readings with at least an available DOI in the readings. These matched publications appear in roughly 400,000 syllabi, representing about 14% of the 2.9 million syllabi containing reading lists.
 

@@ -114,13 +114,19 @@ Using a recent dataset of 2.2 million European syllabi from 2017–2022, we exam
 fig_covid <- readRDS(file.path(results_dir, "fig_covid.rds"))
 ```
 
-```{r covid-coeffs, fig.cap = cap, fig.width = 5, fig.asp = .33}
+```{r covid, fig.cap = cap}
 cap <- paste(
     "**Team composition post-Covid-19 change**. Coefficients and 95% confidence intervals for post-covid period obtained from the following Binomial regressions: (a) probability of single teams being taught by a woman vs man; (b) probability of teams being composed by one instructor vs multiple (teaching collaboration); (c) probability of teaching teams being mixed-gender vs. same-gender collaborations. All regressions are based on 2.2M syllabi from institutions in thirty-three European countries (excluding teams with three or more collaborations, and authors of unknown gender)." # nolint
 )
-fig_covid$coeffs + 
-    labs(y = NULL, x = "Post-covid Difference")
+
+knitr::include_graphics(
+    here::here(
+        "output", "02_plot_covid_analysis", 
+        "01_covid_coeffs.pdf"
+    )
+)
 ```
+
 
 Figure \@ref(fig:covid-simulations) shows the results of our Montecarlo simulations for this dataset. As highlighted in the previous analysis, there are disproportionately fewer mixed-gender teams than one would expect under gender-neutral matching. However, post-Covid, the gap appears to widen substantially in 2022. This pattern indicates that the pandemic, particularly the lockdown measures implemented across Europe, may have significantly hindered the formation of mixed-gender teaching teams.
 

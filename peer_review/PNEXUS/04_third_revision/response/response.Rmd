@@ -123,13 +123,16 @@ Elisa Orlandi
 
 ### Response
 
-We agree that the distinction between sex and gender is important here. While we recognise that an algorithm based on first names cannot directly identify either a person’s biological sex or their gender identity, we believe that “gender” is the more appropriate term in the context of our analysis.
+We agree that the distinction between sex and gender is important here. We also recognise that gender identity is not necessarily binary and may include non-binary, gender-fluid, and other identities.  While we recognise that an algorithm based on first names cannot directly identify either a person’s biological sex or their gender identity, we believe that “gender” is the more appropriate term in the context of our analysis.
 
 Specifically, when an algorithm takes a first name and assigns a label such as “male” or “female,” it is not directly measuring biological sex. Rather, it uses a culturally and socially associated signal (the person’s name) to infer a gender category. A given name may correlate with biological sex, gender identity, or both, and the algorithm generally cannot establish which of these underlying characteristics it is capturing.
 
-We have therefore retained the term “gender” to describe the algorithmically assigned categories, while clarifying in the manuscript that these categories should not be interpreted as direct measures of either biological sex or gender identity. See footnote XXXX. 
+We have therefore retained the term “gender” to describe the algorithmically assigned categories, while clarifying in the manuscript that these categories should not be interpreted as direct measures of either biological sex or gender identity. 
 
-> ADD FOONOTE TEXT. 
+In the manuscript's Methods section [p. TBA], we added the following sentence: "This process does not directly measure gender identity, but we use "gender" here and elsewhere where it follows the terminology of the cited literature" with the footnote below: 
+
+> The gender classification used here is inferred from first names and should not be interpreted as a direct measure of either biological sex or gender identity. The binary categories (“female” and “male”) consequently do not capture the full range of gender identities, including non-binary and gender-fluid identities. We use “gender” to describe these inferred categories because the classification is based on socially and culturally associated gender signals (first names used in syllabi) and follows the terminology of the cited literature.
+ 
 
 ## Interdisciplinarity
 

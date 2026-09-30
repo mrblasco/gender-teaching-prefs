@@ -1,11 +1,13 @@
 # Libraries
-library(dplyr, warn.conflicts = FALSE)
-library(tidyr)
-library(lme4)
-library(broom.mixed)
-library(stargazer)
-library(ggplot2)
-library(ggrepel)
+suppressMessages({
+    library(dplyr, warn.conflicts = FALSE)
+    library(tidyr)
+    library(lme4)
+    library(broom.mixed)
+    library(stargazer)
+    library(ggplot2)
+    library(ggrepel)
+})
 
 log_msg <- function(format, x, ...) {
     message(sprintf(format, x, ...))
@@ -15,6 +17,7 @@ source("R/isced.R")
 source("R/theme.R")
 theme_set(theme_custom())
 
+team_size_cutoff <- 3
 covid_start <- 2020
 covid_end   <- 2021
 
@@ -56,34 +59,42 @@ ds <- readRDS(data_path)
 inst <- jsonlite::stream_in(file(inst_path))
 sex <- read.csv(data_sex_path, header = FALSE, col.names = c("id", "inst_id", "year", "field", "team"))
 
-log_msg("Syllabi with gender information = %2.1f M", nrow(sex)/ 1e6)
+say(sprintf("Syllabi with gender information = %2.1f M", nrow(sex)/ 1e6))
 
 # ----------------------------------------------------------------------
 # Process data
 # ----------------------------------------------------------------------
 
-sex <- sex %>% 
-    mutate(field = factor(as.character(field)))
+sex_filtered <- sex %>% 
+    mutate(field = factor(as.character(field))) |>
+    filter(
+        nchar(team) < team_size_cutoff, 
+        !grepl("u", team)
+    )
+say("Sex dataset: {nrow(sex_filtered)} rows")
 
-ds_actual <- dplyr::filter(ds, name == "actual") %>% 
-    dplyr::select(year, team, value)
 
+sex_count <- sex_filtered |>
+    count(inst_id, team, year) |>
+    mutate(
+        time = year - min(year),
+        covid = as.integer(year >= covid_start),
+        time_after_covid = pmax(0, year - covid_start),
+        post_covid = ifelse(year >= covid_start, 1, 0)
+    )
 
-# ----------------------------------------------------------------------
-# Gender patterns
-# ----------------------------------------------------------------------
-
-sex_count <- sex %>%
-    filter(nchar(team) < 3, !grepl("u", team)) %>%
-    count(inst_id, team, year)
 
 sex_count_wide <- sex_count %>%
-    tidyr::pivot_wider(names_from = team, values_from = n, values_fill = 0) %>% 
-    mutate(post_covid = ifelse(year >= covid_start, 1, 0))
+    tidyr::pivot_wider(
+        names_from = team, 
+        values_from = n,
+        values_fill = 0
+    )
 
-sex_count_field <- sex %>%
-    filter(nchar(team) < 3, !grepl("u", team)) %>%
-    count(team, field, year)
+
+sex_count_field <- sex_filtered %>%
+    count(team, field, year) %>% 
+    left_join(isced_lookup, by = "field")
 
 sex_count_field_wide <- sex_count_field %>%
     tidyr::pivot_wider(
@@ -91,25 +102,38 @@ sex_count_field_wide <- sex_count_field %>%
         values_from = n,
         values_fill = 0
     ) %>% 
-    mutate(post_covid = ifelse(year >= covid_start, 1, 0))
+    mutate(
+        post_covid = ifelse(year >= covid_start, 1, 0)
+    )
+
+# ----------------------------------------------------------------------
+# Plot trends 
+# ----------------------------------------------------------------------
+
+p_trend <- ggplot(sex_count, aes(year - covid_start, n, group = as.factor(post_covid))) +
+    scale_y_log10() +
+    facet_grid( ~ team) +
+    geom_smooth(method = "lm", formula = 'y ~ x') +
+    labs(
+        x = "Time before/after COVID",
+        y = "Teams"
+    )
+
+file.path(out_dir, "02_trends.pdf")|>
+    ggsave(device = cairo_pdf, unit = "in", width = 7, height = 2.4)
 
 # ----------------------------------------------------------------------
 # Plot sex count by field
 # ----------------------------------------------------------------------
 
 sex_count_isced <- sex_count_field %>% 
-    left_join(isced_lookup, by = "field") %>% 
-    summarise(
-        n = mean(n), .by = c(team, year, field, isced)
-    ) %>% 
+    group_by(team, year, field, isced) %>% 
+    summarise(n = mean(n)) %>% 
     tidyr::pivot_wider(names_from = team, values_from = n) 
 
 p_covid_trend <- sex_count_isced %>% 
     ggplot(
-        aes(
-            x = year,
-            y = 1 + f + ff + fm + m + mm
-        )
+        aes(x = year, y = 1 + f + ff + fm + m + mm)
     ) + 
     annotate(
         "rect",
@@ -147,15 +171,56 @@ say("Figure saved to {out}.")
 # Binomial Regression
 # ----------------------------------------------------------------------
 
-fit_f <- glm(cbind(f, m) ~ post_covid, sex_count_wide, family = binomial)
-fit_fm <- glm(cbind(fm, mm + ff) ~ post_covid, sex_count_wide, family = binomial)
-fit_size <- glm(cbind(f + m, fm + mm + ff) ~ post_covid, sex_count_wide, family = binomial)
+fit_f <- glm(
+    formula = cbind(f, m) ~ post_covid, 
+    data = sex_count_wide, 
+    family = binomial
+)
+
+fit_fm <- glm(
+    formula = cbind(fm, mm + ff) ~ post_covid, 
+    data = sex_count_wide,
+    family = binomial
+)
+
+fit_size <- glm(
+    formula = cbind(f + m, fm + mm + ff) ~ post_covid, 
+    data = sex_count_wide, 
+    family = binomial
+)
+
+# Interrupted time series
+fit_fm_its <- glm(
+    cbind(fm, ff + mm) ~ time + covid + time_after_covid,
+    data = sex_count_wide,
+    family = binomial
+)
+
+fit_size_its <- glm(
+    cbind(f + m, fm + ff + mm) ~ time + covid + time_after_covid,
+    data = sex_count_wide,
+    family = binomial
+)
+
+fit_fm_its <- glm(
+    cbind(fm, ff + mm) ~ time + covid + time_after_covid,
+    data = sex_count_wide,
+    family = binomial
+)
 
 # ----------------------------------------------------------------------
 # Regression resuts table
 # ----------------------------------------------------------------------
 
-models <- list("Single vs Team" = fit_size, "Women vs Men" = fit_f, "Mixed-gender vs Same-gender" = fit_fm)
+models <- list(
+    "Single vs Team" = fit_size, 
+    "Women vs Men" = fit_f, 
+    "Mixed-gender vs Same-gender" = fit_fm,
+    "ITS (1)" = fit_fm_its,
+    "ITS (2)" = fit_size_its,
+    "ITS (3)" = fit_fm_its
+)
+
 stargazer(models, type = "text", dep.var.labels = names(models))
 
 100 * (exp(coef(fit_size)[2]) - 1) # single teams drop by 27%
@@ -177,10 +242,13 @@ p_coeff <- lapply(models, broom::tidy, conf.int = TRUE) %>%
         )
     ) + 
     geom_vline(xintercept = 0, linetype = "dashed") +
-    facet_wrap(~term) +
     geom_errorbar(width = 0.1) +
     geom_point() + 
-    scale_x_continuous(label = \(x) sprintf("%2.0f%%", 100 * (exp(x) - 1)))
+    scale_x_continuous(label = \(x) sprintf("%2.0f%%", 100 * (exp(x) - 1))) +
+    labs(
+        y = NULL,
+        x = "Post-covid Difference"
+    )
 
 out <- ggsave(
     file.path(out_dir, "01_covid_coeffs.pdf"),
