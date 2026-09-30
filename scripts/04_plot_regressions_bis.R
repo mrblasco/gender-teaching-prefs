@@ -18,9 +18,10 @@ source("R/theme.R")   # theme_custom()
 theme_set(theme_custom())
 
 set.seed(4881)
+args <- commandArgs(trailingOnly = TRUE)
 
 data_dir    <- file.path("data", "processed")
-out_dir     <- file.path("data", "results", "associations")
+out_dir <- if (length(args) >= 1) args[1] else file.path("output", "montecarlo")
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
 say <- logger::log_info 
@@ -163,8 +164,28 @@ team_pooled <- function(fit) {
                   estimate, std.error, conf.low, conf.high)
 }
 
+out <- fit_one("interdisc", interact = TRUE)
 
-out <- fit_one("interdisc", interact = FALSE)
+
+grid <- expand.grid(
+    team = levels(analysis$team),
+    course_level = analysis$course_level[1],
+    year = 2000:2019,
+    prob = mean(analysis$prob),
+    country = analysis$country[1],
+    stem = analysis$stem[1],
+    tot_count = median(analysis$tot_count, na.rm = TRUE)
+)
+dim(grid)
+grid$preds <- predict(out, newdata = grid, re.form = ~ (1|year))
+
+grid |>
+    ggplot(aes(year, preds, linetype = team)) + 
+    geom_point() + 
+    geom_line()
+
+#base_rhs <- "country + scale(prob) + stem + (1 | field) + (1 | institution) + (1 | year) + scale(log(tot_count))"
+
 
 
 say("")

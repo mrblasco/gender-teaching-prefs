@@ -1,7 +1,9 @@
+#!/usr/bin/env Rscript
 #
 # Montecarlo simulations.
 #
 # Update: Sep 27
+
 
 # ---- Setup, include = FALSE ------------------------------
 suppressWarnings({
@@ -19,9 +21,12 @@ theme_set(theme_custom())
 
 set.seed(4881)
 
+args <- commandArgs(trailingOnly = TRUE)
+
 data_dir    <- file.path("data", "processed")
-out_dir     <- file.path("output", "montecarlo")
+out_dir <- if (length(args) >= 1) args[1] else file.path("output", "montecarlo")
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+
 
 say <- logger::log_info
 
@@ -93,7 +98,7 @@ p1 <- ds_annual |>
 out <- ggsave(
     file.path(out_dir, "01_annual_trends.pdf"),
     device = cairo_pdf,
-    width = 3.5,
+    width = 4.2,
     height = 2.5,
     units = "in"
 )

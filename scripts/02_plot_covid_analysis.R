@@ -18,6 +18,14 @@ theme_set(theme_custom())
 covid_start <- 2020
 covid_end   <- 2021
 
+args <- commandArgs(trailingOnly = TRUE)
+
+data_dir    <- file.path("data", "processed")
+out_dir <- if (length(args) >= 1) args[1] else file.path("output", "montecarlo")
+dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+
+say <- logger::log_info
+
 team_labels <- c(
     "f" = "Female-only",
     "ff" = "Female-only",
@@ -34,8 +42,7 @@ type_labels <- c(actual = "Observed", med = "Simulated (gener-neutral)")
 # ----------------------------------------------------------------------
 
 dir_v12 <- file.path("data", "interim", "v12")
-results_dir <- file.path("data", "results")
-dir.create(results_dir, showWarnings = FALSE)
+
 
 data_path <- file.path("data", "processed", "montecarlo.rds")
 inst_path <- file.path(dir_v12, "institutions.json")
@@ -126,7 +133,15 @@ p_covid_trend <- sex_count_isced %>%
         y = "Total courses"
     )
 
-saveRDS(p_covid_trend, file = file.path(results_dir, "plot_covid_trends.rds"))
+saveRDS(p_covid_trend, file = file.path(out_dir, "plot_covid_trends.rds"))
+
+out <- ggsave(
+    file.path(out_dir, "01_covid_trends.pdf"),
+    device = cairo_pdf,
+    units = "in"
+)
+say("Figure saved to {out}.")
+
 
 # ----------------------------------------------------------------------
 # Binomial Regression
@@ -167,7 +182,14 @@ p_coeff <- lapply(models, broom::tidy, conf.int = TRUE) %>%
     geom_point() + 
     scale_x_continuous(label = \(x) sprintf("%2.0f%%", 100 * (exp(x) - 1)))
 
-p_coeff
+out <- ggsave(
+    file.path(out_dir, "01_covid_coeffs.pdf"),
+    device = cairo_pdf,
+    width = 4.2,
+    height = 1.5,
+    units = "in"
+)
+say("Figure saved to {out}.")
 
 # ----------------------------------------------------------------------
 # Plot data montecarlo simulations 
@@ -232,7 +254,15 @@ p_sim <- plot_data %>%
         plot.title = element_text(face = "bold")
     )
 
-p_sim
+out <- ggsave(
+    file.path(out_dir, "01_covid_sims.pdf"),
+    device = cairo_pdf,
+    width = 7,
+    height = 3.4,
+    units = "in"
+)
+say("Figure saved to {out}.")
+
 
 
 # ----------------------------------------------------------------------
@@ -266,13 +296,22 @@ sex_count_field_wide %>%
         x = "Pre-covid", y = "Post-covid"
     )
 
+out <- ggsave(
+    file.path(out_dir, "01_covid_pre_post.pdf"),
+    device = cairo_pdf,
+    units = "in"
+)
+say("Figure saved to {out}.")
+
 
 # ----------------------------------------------------------------------
-# Save 
+# Save all results
 # ----------------------------------------------------------------------
 
 results <- list(
     "coeffs" = p_coeff,
     "simulations" = p_sim
 )
-saveRDS(results, file.path(results_dir, "fig_covid.rds"))
+saveRDS(results, file.path(out_dir, "fig_covid.rds"))
+
+
