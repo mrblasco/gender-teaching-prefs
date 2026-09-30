@@ -1,14 +1,17 @@
 # ----------------------------------------------------------------------
 # Analysis of Novelty
 # ----------------------------------------------------------------------
-
-library(dplyr)
-library(lme4)
-library(broom.mixed)
-library(knitr)
-library(parallel)
-library(patchwork)
-library(ggplot2)
+suppressMessages({
+    library(dplyr)
+    library(purrr)
+    library(tidyr)
+    library(knitr)
+    library(parallel)
+    library(lme4)
+    library(broom.mixed)
+    library(patchwork)
+    library(ggplot2)
+})
 
 source("R/isced.R")
 source("R/theme.R")
@@ -18,8 +21,8 @@ theme_set(theme_custom())
 # Paths
 # ----------------------------------------------------------------------
 
-results_dir <- file.path("data", "results")
 data_dir <- file.path("data", "processed")
+out_dir <- file.path("output", "regressions")
 
 syllabi_path <- file.path(data_dir, "os_final.rds")
 novel_path <- file.path(data_dir, "novel_v2.rds")
@@ -28,7 +31,7 @@ novel_path <- file.path(data_dir, "novel_v2.rds")
 # Utils
 # ----------------------------------------------------------------------
 log_msg <- function(fmt, ...) {
-    message(sprintf(fmt = fmt, ...))
+    logger::log_info(sprintf(fmt = fmt, ...))
 }
 
 center <- function(x) {
@@ -53,11 +56,10 @@ term_labels <- c(
 # ----------------------------------------------------------------------
 syllabi <- readRDS(syllabi_path)
 log_msg("Loaded syllabi: %d rows, %d cols", nrow(syllabi), ncol(syllabi))
-#str(syllabi)
+
 
 novelty <- readRDS(novel_path)
 log_msg("Loaded novelty: %d rows, %d cols", nrow(novelty), ncol(novelty))
-#str(novelty)
 
 # ----------------------------------------------------------------------
 # Merge data
@@ -98,7 +100,7 @@ tbl_desc <- syllabi_merged %>%
     lapply(calc_stats) %>% 
     bind_rows(.id = "variable")
 
-knitr::kable(tbl_desc, caption = "Descriptives", digits = 1)
+write.csv(tbl_desc, file.path(out_dir, "descriptives.csv"))
 
 # ----------------------------------------------------------------------
 # Plot descriptives
@@ -166,10 +168,15 @@ plot_desc_recency <- recency_stats %>%
         y = "Mean Readings Age"
     )
 
-if (interactive()) {
-    p_desc <- plot_desc_novel + plot_desc_atyp + plot_desc_recency
-    p_desc
-}
+p_desc <- plot_desc_novel + plot_desc_atyp + plot_desc_recency
+ggsave(
+    file.path(out_dir, "01_desc.pdf"),
+    device = cairo_pdf,
+    width = 7,
+    height = 3.8,
+    unit = "in"
+)
+
 
 # ----------------------------------------------------------------------
 #  Function to fit model by year
@@ -199,13 +206,12 @@ fit_models_by_year <- function(df, formula, start = 2000, end = 2019, ...) {
 # ----------------------------------------------------------------------
 #  Interdisciplinarity --- revision
 # ----------------------------------------------------------------------
-library(purrr)
-library(tidyr)
+log_msg("Interdisciplinarity...")
 
 # Dep var
 depvar <- "mean_intdisc"
 
-## Regressors 
+## Regressors
 covars <- c("team", "country", "course_level", "prob", "stem", "tot_count")
 
 # Random effects
@@ -217,21 +223,23 @@ model_re <- reformulate(c(covars, re), depvar)
 all_vars <- c(depvar, covars, "field", "institution", "year")
 
 ds_model <- syllabi_merged |>
-    dplyr::select(all_vars) |>
+    dplyr::select(all_of(all_vars)) |>
     tidyr::drop_na() |>
     dplyr::filter(course_level != "unknown")
 
 # Fit model by year
 fits <- ds_model |>
     split(ds_model$year) |>
-    map(\(df) lme4::lmer(rank(mean_intdisc) ~ team + course_level + country + stem + prob + (1|field) + (1|institution), data = df))
+    map(
+        lme4::lmer,
+        formula = rank(mean_intdisc) ~ team + course_level + country + stem + prob + (1|field) + (1|institution)
+    )
 
 # Extract coefficients
 coeffs <- fits |>
     map(broom::tidy, conf.int = TRUE) |>
     bind_rows(.id = "year") |>
     mutate(year = as.numeric(year))
-
 
 term_labels <- c(
     teamf = "Female alone",
@@ -249,7 +257,7 @@ p_intdisc <- coeffs |>
     facet_grid(~term, labeller = labeller(term = term_labels)) +
     geom_hline(yintercept = 0) +
     geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
-    geom_smooth(method = "lm", aes(weight = 1/std.error^2)) + 
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
         y = "Interdisciplinarity diff. vs male alone" |>
@@ -257,18 +265,20 @@ p_intdisc <- coeffs |>
     ) +
     theme(legend.position = "none")
 
-out <- ggsave(
-    here::here("results", "figures", "04_intdisc.pdf"),
+
+ggsave(
+    here::here(out_dir, "04_intdisc.pdf"),
     device = cairo_pdf,
     width = 7.5,
     height = 2.5,
     units = "in"
 )
-if (interactive()) system(paste("open", out))
 
 # ----------------------------------------------------------------------
 #  Women authors
 # ----------------------------------------------------------------------
+log_msg("Women authors...")
+
 ds_women <- syllabi_merged %>%
     mutate(
         total_authors = female_authors + male_authors,
@@ -300,7 +310,7 @@ p_women <- coeffs |>
     facet_grid(~term, labeller = labeller(term = term_labels)) +
     geom_hline(yintercept = 0) +
     geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
-    geom_smooth(method = "lm", aes(weight = 1/std.error^2)) + 
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
         y = "Cited female ratio difference vs male alone" |>
@@ -308,26 +318,26 @@ p_women <- coeffs |>
     ) +
     theme(legend.position = "none")
 
-out <- ggsave(
-    here::here("results", "figures", "05_women.pdf"),
+ggsave(
+    here::here(out_dir, "05_women.pdf"),
     device = cairo_pdf,
     width = 7.5,
     height = 2.5,
     units = "in"
 )
-if (interactive()) system(paste("open", out))
-
 
 # ----------------------------------------------------------------------
 #  Conventionality
 # ----------------------------------------------------------------------
-ds <- syllabi_merged |>
+log_msg("Conventionality ...")
+
+ds <- syllabi_merged |> 
     filter(!is.na(novel_med))
 
 fits <- ds |>
     split(ds$year) |>
     map(
-        lme4::lmer, 
+        lme4::lmer,
         formula = rank_percentile(novel_med) ~ team + course_level + country + stem + prob + tot_count + 
             (1|field) + (1|institution)
     )
@@ -347,7 +357,7 @@ p_conventional <- coeffs |>
     facet_grid(~term, labeller = labeller(term = term_labels)) +
     geom_hline(yintercept = 0) +
     geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
-    geom_smooth(method = "lm", aes(weight = 1/std.error^2)) + 
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
         y = "Conventionality difference vs male alone" |>
@@ -355,16 +365,126 @@ p_conventional <- coeffs |>
     ) +
     theme(legend.position = "none")
 
-out <- ggsave(
-    here::here("results", "figures", "06_conventional.pdf"),
+ggsave(
+    here::here(out_dir, "06_conventional.pdf"),
     device = cairo_pdf,
     width = 7.5,
     height = 2.5,
     units = "in"
 )
-if (interactive()) system(paste("open", out))
+
+# ----------------------------------------------------------------------
+# Atypical
+# ----------------------------------------------------------------------
+log_msg("Atypicality ...")
+
+ds <- syllabi_merged |> 
+    filter(!is.na(atyp_med))
+
+fits <- ds |>
+    split(ds$year) |>
+    map(
+        lme4::lmer,
+        formula = rank_percentile(atyp_med) ~ team + course_level + country + stem + prob + tot_count + 
+            (1|field) + (1|institution)
+    )
+
+# Extract coefficients
+coeffs <- fits |>
+    map(broom::tidy, conf.int = TRUE) |>
+    bind_rows(.id = "year") |>
+    mutate(year = as.numeric(year))
+
+p_atypical <- coeffs |>
+    filter(grepl("team", term)) |>
+    ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
+    scale_color_discrete() +
+    scale_shape_manual(values = c(1, 16)) + 
+    scale_y_continuous(labels = \(x) 100 * x) + 
+    facet_grid(~term, labeller = labeller(term = term_labels)) +
+    geom_hline(yintercept = 0) +
+    geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
+    labs(
+        x = "Academic year",
+        y = "Atypicality difference vs male alone" |>
+            stringr::str_wrap(28)
+    ) +
+    theme(legend.position = "none")
+
+ggsave(
+    here::here(out_dir, "07_atypical.pdf"),
+    device = cairo_pdf,
+    width = 7.5,
+    height = 2.5,
+    units = "in"
+)
 
 
+# ----------------------------------------------------------------------
+# Age of readings
+# ----------------------------------------------------------------------
+log_msg("Age of readings...")
+
+ds <- syllabi_merged |> 
+    filter(!is.na(recency))
+
+fits <- ds |>
+    split(ds$year) |>
+    map(
+        lme4::lmer,
+        formula = rank_percentile(recency) ~ team + course_level + country + stem + prob + tot_count + 
+            (1|field) + (1|institution)
+    )
+
+# Extract coefficients
+coeffs <- fits |>
+    map(broom::tidy, conf.int = TRUE) |>
+    bind_rows(.id = "year") |>
+    mutate(year = as.numeric(year))
+
+p_recency <- coeffs |>
+    filter(grepl("team", term)) |>
+    ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
+    scale_color_discrete() +
+    scale_shape_manual(values = c(1, 16)) + 
+    scale_y_continuous(labels = \(x) 100 * x) + 
+    facet_grid(~term, labeller = labeller(term = term_labels)) +
+    geom_hline(yintercept = 0) +
+    geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
+    geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
+    labs(
+        x = "Academic year",
+        y = "Age of readings difference vs male alone" |>
+            stringr::str_wrap(28)
+    ) +
+    theme(legend.position = "none")
+
+ggsave(
+    here::here(out_dir, "08_age_readings.pdf"),
+    device = cairo_pdf,
+    width = 7.5,
+    height = 2.5,
+    units = "in"
+)
+
+# ----------------------------------------------------------------------
+# Combined
+# ----------------------------------------------------------------------
+
+p_combined <- p_conventional + p_intdisc + p_women + p_atypical + p_recency +
+    plot_layout(ncol = 1) +
+    plot_annotation(tag_levels = "A")
+
+ggsave(
+    here::here(out_dir, "09_combined.pdf"),
+    device = cairo_pdf,
+    width = 7.5,
+    height = 7.5,
+    units = "in"
+)
+
+quit("no")
 
 # OLD 
 

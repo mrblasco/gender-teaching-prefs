@@ -20,11 +20,10 @@ theme_set(theme_custom())
 set.seed(4881)
 
 data_dir    <- file.path("data", "processed")
-out_dir     <- file.path("data", "results", "montecarlo")
+out_dir     <- file.path("output", "montecarlo")
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
-say <- logger::log_info 
-
+say <- logger::log_info
 
 year_cutoff <- 1999
 team_size_cutoff <- 3
@@ -36,7 +35,6 @@ team_labels <- c(
     mm = "Male + male",
     m = "Male"
 )
-
 
 # ----------------------------------------------------------------------
 # Load & prepare data
@@ -62,7 +60,7 @@ ds <- syllabi_merged |>
     )
 
 # ---------------------------------------------
-# Figure 1 -- Anual trends 
+# Figure 1 -- Annual trends
 # ---------------------------------------------
 say("Analysis of syllabi by year, team and team size")
 ds_annual <- ds |>
