@@ -2,6 +2,7 @@ bookdown::html_document2:
     toc: false
     number_sections: false
     bibliography: [refs.bib]
+    style: [assets/style.css]
 
 distill::distill_article:
     toc: true
