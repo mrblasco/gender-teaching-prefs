@@ -255,57 +255,93 @@ ggsave(
 # 2. TEMPORAL STABILITY FIGURE
 # ======================================================================
 
-# Create one plot for each outcome × contrast combination
-plots <- results |>
-  split(results$outcome) |>
-  lapply(function(d) {
-    ggplot(
-      d,
-      aes(
-        x = year,
-        y = estimate_display,
-        ymin = conf_low_display,
-        ymax = conf_high_display
-      )
-    ) +
-      geom_hline(
-        yintercept = 0,
-        linetype = "dashed",
-        linewidth = 0.35
+# Build the temporal-stability figure. One row of panels per outcome,
+# one column per contrast. The outcome name is shown as the row title so
+# the variable being plotted is identifiable from the panel itself (not
+# just from the patchwork tag). `smooth = TRUE` overlays a precision-
+# weighted trend; `smooth = FALSE` shows only the year-specific points.
+build_temporal_stability <- function(results, smooth = TRUE) {
+  plots <- results |>
+    split(results$outcome) |>
+    lapply(function(d) {
+      p <- ggplot(
+        d,
+        aes(
+          x = year,
+          y = estimate_display,
+          ymin = conf_low_display,
+          ymax = conf_high_display
+        )
       ) +
-      geom_ribbon(
-        aes(fill = contrast),
-        alpha = 0.2
-      ) +
-      geom_point(
-        aes(fill = contrast),
-        size = 1.5,
-        shape = 21
-      ) +
-      facet_grid(~contrast) +
-      scale_x_continuous(
-        breaks = scales::pretty_breaks(n = 5)
-      ) +
-      labs(
-        x = "Academic year",
-        y = "Difference vs single-male teams" |>
-          stringr::str_wrap(width = 20)
-      ) +
-      theme(
-        legend.position = "none"
-      )
-  })
+        geom_hline(
+          yintercept = 0,
+          linetype = "dashed",
+          linewidth = 0.35
+        ) +
+        geom_ribbon(
+          aes(fill = contrast),
+          alpha = 0.2
+        ) +
+        geom_point(
+          aes(fill = contrast),
+          size = 1.5,
+          shape = 21
+        )
 
-# Arrange panels
-p_years <- wrap_plots(
-  plots,
-  ncol = 1
-) +
-  plot_annotation(tag_levels = "A")
+      if (smooth) {
+        # Precision-weighted smoothed trend across years, matching the
+        # heterogeneity figures. Weight each year by 1 / SE^2.
+        p <- p +
+          geom_smooth(
+            aes(color = contrast, weight = 1 / std.error^2),
+            method = "gam",
+            formula = y ~ s(x, bs = "cs"),
+            se = FALSE,
+            linewidth = 0.6
+          )
+      }
+
+      p +
+        facet_grid(~contrast) +
+        scale_x_continuous(
+          breaks = scales::pretty_breaks(n = 5)
+        ) +
+        labs(
+          # Row title names the plotted variable (the outcome).
+          title = unique(d$outcome),
+          x = "Academic year",
+          y = "Difference vs single-male teams" |>
+            stringr::str_wrap(width = 20)
+        ) +
+        theme(
+          legend.position = "none",
+          plot.title = element_text(face = "bold", size = rel(0.95))
+        )
+    })
+
+  wrap_plots(plots, ncol = 1) +
+    plot_annotation(tag_levels = "A")
+}
+
+# Version A: with smoothed trends (matches the caption that references
+# smoothed curves).
+p_years_smooth <- build_temporal_stability(results, smooth = TRUE)
 
 ggsave(
   file.path(out_dir, "supp_temporal_stability.pdf"),
-  p_years,
+  p_years_smooth,
+  device = cairo_pdf,
+  width = 7,
+  height = 9,
+  units = "in"
+)
+
+# Version B: without smoothed trends (year-specific estimates only).
+p_years_points <- build_temporal_stability(results, smooth = FALSE)
+
+ggsave(
+  file.path(out_dir, "supp_temporal_stability_nosmooth.pdf"),
+  p_years_points,
   device = cairo_pdf,
   width = 7,
   height = 9,
@@ -486,5 +522,6 @@ saveRDS(
 
 message("Results written to:", out_dir)
 message("Main figure: main_forest_plot.pdf")
-message("Supplementary figure: supp_temporal_stability.pdf")
+message("Supplementary figures: supp_temporal_stability.pdf (smoothed), ",
+        "supp_temporal_stability_nosmooth.pdf (points only)")
 message("Supplementary tables: CSV files")

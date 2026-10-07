@@ -1,3 +1,5 @@
+
 .figure, .caption {
-    display: none;
+    font-size: 8pt;
+    font-weight: bold;
 }

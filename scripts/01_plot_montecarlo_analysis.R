@@ -27,11 +27,7 @@ formats <- c("pdf", "png", "svg")
 args <- commandArgs(trailingOnly = TRUE)
 
 data_dir    <- here::here("data", "processed")
-out_dir <- if (length(args) >= 1) {
-    args[1]
-} else {
-    here::here("output", "montecarlo")
-}
+out_dir <- ifelse(length(args) >= 1, args[1], tempdir())
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
 # ----------------------------------------------------------------------

@@ -1,9 +1,11 @@
 OUTDIR := build
 INPUT := main.Rmd 
 FILES := $(wildcard sections/*.Rmd) refs.bib _output.yml
-OPTS := output_dir = "$(OUTDIR)", output_format = "bookdown::pdf_document2"
 PDF := $(OUTDIR)/main.pdf
 
+OPTS := output_dir = "$(OUTDIR)", output_format = "bookdown::pdf_document2"
+
+# ---- Targets 
 
 pdf :  $(OUTDIR) $(PDF)
 
@@ -11,11 +13,15 @@ $(OUTDIR):
 	@mkdir -p "$@"
 
 $(PDF): $(INPUT) $(FILES)
-	@echo "Rendering $@..."
+	@echo "🚀 Rendering $@..."
 	@Rscript -e 'rmarkdown::render("$<", $(OPTS))'
+	@echo "Done"
 
-view: 
-	open -a Skim $(PDF)
+view:
+	@open -a Skim $(PDF)
+
+
+
 
 
 # ----- Canonical version

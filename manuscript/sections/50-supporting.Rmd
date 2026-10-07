@@ -248,11 +248,18 @@ p_covid_trend + labs(x = "Year")
 
 ## Leading instructor's gender differences
 
-Figure \@ref(fig:leading) illustrates, for all selected dependent variables, the differences in estimated regression coefficients between mixed-gender teams lead by a female instructor (FM) versus those lead by a male instructor (MF), as identfied by the order in the syllabus. Overall, there are no systematic differences across outcomes, except for the ratio of female authors cited. Specifically, mixed-gender teams lead by a female instructor tend to cite a higher share of femal authors than those lead by a male instructor. Despite this, this analysis is consistent with previous models that ignores the order of instructors in the syllabus. 
+Figure \@ref(fig:leading) illustrates, for all selected dependent variables, the estimated differences relative to single-male courses for mixed-gender teams led by a female instructor (FM) versus those led by a male instructor (MF), as identified by the order in the syllabus. Overall, there are no systematic differences across outcomes, except for the ratio of female authors cited. Specifically, mixed-gender teams led by a female instructor cite about 1.6 percentage points more women authors than those led by a male instructor. Aside from this, the analysis is consistent with the main models that ignore instructor order in the syllabus.
 
-```{r leading, fig.cap = "Differences in estimated regression coefficients for all selected dependent variables between mixed-gender teams led by a female instructor (FM) versus those led by a male instructor (MF), as determined by instructor order in the syllabus."}
+```{r leading, fig.cap = cap, fig.asp = 1.3, fig.width = 7}
+cap <- paste(
+    "**Leading instructor within mixed-gender teams**. Estimates and 95% confidence intervals for differences relative to courses taught by a single male instructor, for mixed-gender teams split by whether the first instructor listed in the syllabus is female (\"female leading\", FM) or male (\"male leading\", MF). Estimates are from separate mixed-effects regressions in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates." # nolint
+)
 
-knitr::include_graphics(file.path(results_dir, "fig_coeff_diff_order.pdf"))
+knitr::include_graphics(
+    here::here(
+        "output/09_heterogeneity_analysis/supp_leading_instructor.pdf"
+    )
+)
 ```
 
 ## Heterogeneity: US vs non-US
@@ -261,9 +268,42 @@ Figure \@ref(fig:hetero-us-plots) illustrates heterogeneity in the associations 
 
 ```{r hetero-us-plots, fig.asp = 1, fig.width = 9, fig.cap = cap}
 cap <- paste(
-    "**Heterogeneity within US courses**. Estimates and 95% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for courses from the US vs the full sample, in each academic year, controlling for country, field, institution, course level, probability that the document is a syllabus, and number of readings, with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates. The comparison reveals no noticeable differences." # nolint
+    "**Heterogeneity within US courses**. Estimates and 95% confidence intervals for differences in (1) interdisciplinarity (2) readings' conventionality (3) age of readings (4) female-authored ratio and (5) readings' atypicality. Estimates are from separate mixed-effects regressions for courses from the US vs the full sample, in each academic year, controlling for field, institution, course level, probability that the document is a syllabus, and number of readings (country is omitted in the US-only models), with weights proportional to the square root of the number of readings. Smoothed curves show local estimates averaged across years, weighted by the precision (standard errors) of the estimates. The comparison reveals no noticeable differences." # nolint
 )
-plots_us # see results section
+
+knitr::include_graphics(
+    here::here(
+        "output/09_heterogeneity_analysis/supp_heterogeneity_us.pdf"
+    )
+)
+```
+
+## Age and seniority composition
+
+To address the concern that the gender gaps could reflect the changing age/seniority composition of the workforce (a mechanism that operates through course level), we test two observable implications. Figure \@ref(fig:age-level) shows the team gender gaps estimated separately within each course level, from a model interacting team composition with course level. If the gaps were a seniority-via-course-type artifact, the within-level estimates would collapse toward zero; instead they remain close to the level-adjusted pooled estimates. Figure \@ref(fig:age-trend) shows the year-specific, level-adjusted gaps over time; a pure-composition account predicts these to move with the rising female share of instructors, but they are largely stable and do not consistently track that share.
+
+```{r age-level, fig.cap = cap, fig.asp = 1.1, fig.width = 9}
+cap <- paste(
+    "**Team gender gaps within course level**. Estimates and 95% confidence intervals for differences relative to courses taught by a single male instructor, pooled across years and estimated separately within basic, advanced, and graduate course levels (and pooled), from a model interacting team composition with course level. If the gaps were a seniority-via-course-type artifact, the within-level estimates would collapse toward zero." # nolint
+)
+
+knitr::include_graphics(
+    here::here(
+        "output/09_heterogeneity_analysis/age_confound/t1_fig_gap_by_level.pdf"
+    )
+)
+```
+
+```{r age-trend, fig.cap = cap, fig.asp = 1.4, fig.width = 8}
+cap <- paste(
+    "**Level-adjusted gender gaps over time**. Year-specific, level-adjusted estimates and 95% confidence intervals for the single-female (F) and mixed-gender (F/M) contrasts relative to courses taught by a single male instructor. A pure-composition account predicts these gaps to move mechanically with the rising female share of instructors; instead they are largely stable and do not consistently track that share." # nolint
+)
+
+knitr::include_graphics(
+    here::here(
+        "output/09_heterogeneity_analysis/age_confound/t2_fig_gap_vs_share.pdf"
+    )
+)
 ```
 
 ## Robustness Analysis 

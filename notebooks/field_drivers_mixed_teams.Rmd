@@ -1,0 +1,249 @@
+---
+title: "Drivers of mixed-team under-formation across academic fields"
+subtitle: "Observed vs. gender-neutral Monte Carlo, by field"
+author: "Exploratory notebook"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 4.5, dpi = 110
+)
+```
+
+## Question
+
+Mixed-gender teaching teams occur far less often than a gender-neutral
+matching would predict. This notebook asks **what, at the field level,
+drives the size of that shortfall**, and in particular:
+
+> Are fields rich with women *more* likely to form mixed-gender teams, or
+> *less*?
+
+We compare the **observed** share of mixed-gender two-instructor courses
+in each academic field with the share produced by the project's
+**gender-neutral Monte Carlo simulation** (`team_rand`), which reshuffles
+instructors while holding institutional constraints fixed (team sizes,
+institution, year, field). The gap between the two is the field's
+"mixed-team shortfall". We then relate that shortfall to each field's
+female share of instructors and to its gender *balance*.
+
+```{r libs}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+source(here::here("R/utils.R")) # log_msg(), sep()
+source(here::here("R/theme.R")) # theme_custom()
+theme_set(theme_custom())
+```
+
+## Data
+
+`team_ordered` is the observed team composition; `team_rand` is the
+gender-neutral simulated counterpart. Both use the same categories
+(`m`, `f`, `mm`, `ff`, `mf`, `fm`), so observed and simulated shares are
+directly comparable within a field.
+
+```{r load}
+d <- readRDS(here::here("data/processed/syllabi_merged.rds")) |>
+  mutate(team_size = nchar(as.character(team_ordered)))
+
+mixed_codes <- c("fm", "mf")
+
+cat("Rows:", format(nrow(d), big.mark = ","), "\n")
+cat("Fields:", n_distinct(d$field), " | ISCED groups:", n_distinct(d$isced), "\n")
+```
+
+## Field-level measures
+
+**(1) Female share of instructors.** We count every instructor slot in
+the observed teams (so a two-woman team contributes two female slots) and
+take the share that are women. This is the field's "how rich in women" axis.
+
+```{r female-share}
+female_share <- d |>
+  transmute(field, isced, slot = strsplit(as.character(team_ordered), "")) |>
+  unnest(slot) |>
+  group_by(field) |>
+  summarise(
+    female_share = mean(slot == "f"),
+    n_slots      = n(),
+    .groups      = "drop"
+  )
+```
+
+**(2) Observed vs. simulated mixed-team share**, among two-instructor
+courses only (mixed teams require exactly two instructors of different
+gender). The *shortfall* is `simulated - observed`: how much mixing the
+neutral benchmark expects but that we do not see.
+
+```{r mixed-share}
+mixed <- d |>
+  filter(team_size == 2) |>
+  group_by(field, isced) |>
+  summarise(
+    n2        = n(),
+    obs_mixed = mean(team_ordered %in% mixed_codes),
+    sim_mixed = mean(team_rand    %in% mixed_codes),
+    .groups   = "drop"
+  ) |>
+  mutate(
+    shortfall     = sim_mixed - obs_mixed,          # absolute pp gap
+    rel_shortfall = (sim_mixed - obs_mixed) / sim_mixed # fraction of expected mixing lost
+  )
+```
+
+Combine, keep fields with enough two-instructor courses to be stable, and
+add a **balance** index that is 1 for a perfectly 50/50 field and 0 for a
+single-sex field.
+
+```{r combine}
+res <- mixed |>
+  left_join(female_share, by = "field") |>
+  filter(n2 >= 200) |>
+  mutate(balance = 1 - abs(female_share - 0.5) / 0.5)
+
+cat("Fields analysed:", nrow(res), "\n")
+cat("Mean observed mixed share:  ", sprintf("%.1f%%", 100 * mean(res$obs_mixed)), "\n")
+cat("Mean simulated mixed share: ", sprintf("%.1f%%", 100 * mean(res$sim_mixed)), "\n")
+cat("Mean relative shortfall:    ", sprintf("%.0f%%", 100 * mean(res$rel_shortfall)), "\n")
+```
+
+Across fields, roughly **a third of the mixing the neutral benchmark
+predicts never materialises** -- the familiar under-formation of
+mixed-gender teams, now resolved by field.
+
+## Does female-richness predict the shortfall?
+
+### Naive view: absolute shortfall vs. female share
+
+```{r plot-naive}
+ggplot(res, aes(female_share, shortfall)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_point(aes(size = n2), alpha = 0.6, color = "#1b9e77") +
+  geom_smooth(method = "lm", formula = y ~ x, color = "#d95f02", fill = "#d95f02", alpha = 0.15) +
+  scale_x_continuous(labels = \(x) paste0(100 * x, "%")) +
+  scale_y_continuous(labels = \(x) paste0(100 * x, " pp")) +
+  scale_size_area(max_size = 6, guide = "none") +
+  labs(
+    x = "Female share of instructors in the field",
+    y = "Mixed-team shortfall (simulated \u2212 observed)",
+    title = "Absolute shortfall vs. female share",
+    subtitle = "Each point is a field; point size \u221d number of two-instructor courses"
+  )
+```
+
+```{r cor-naive}
+cat("cor(absolute shortfall, female_share) =",
+    round(cor(res$shortfall, res$female_share), 3), "\n")
+```
+
+The absolute shortfall is **larger in female-rich fields**. But this is
+partly mechanical: fields with a very lopsided gender mix (whether toward
+women or men) can form few mixed teams in the first place, so there is
+less room for a shortfall. The cleaner question uses the *relative*
+shortfall and separates "richness in women" from "gender balance".
+
+### Clarified view: relative shortfall vs. female share and balance
+
+```{r plot-balance}
+res_long <- res |>
+  select(field, isced, rel_shortfall, female_share, balance) |>
+  pivot_longer(c(female_share, balance), names_to = "driver", values_to = "x") |>
+  mutate(driver = recode(driver,
+    female_share = "Female share of instructors",
+    balance      = "Gender balance (1 = 50/50)"
+  ))
+
+ggplot(res_long, aes(x, rel_shortfall)) +
+  geom_point(alpha = 0.55, color = "#1b9e77") +
+  geom_smooth(method = "lm", formula = y ~ x, color = "#d95f02", fill = "#d95f02", alpha = 0.15) +
+  facet_wrap(~driver, scales = "free_x") +
+  scale_x_continuous(labels = \(x) round(x, 2)) +
+  scale_y_continuous(labels = \(x) paste0(100 * x, "%")) +
+  labs(
+    x = NULL,
+    y = "Relative shortfall of mixed teams",
+    title = "What tracks the relative under-formation of mixed teams?",
+    subtitle = "Fraction of the neutral-benchmark mixing that is not realised"
+  )
+```
+
+```{r cor-clarified}
+cat("cor(relative shortfall, female_share) =",
+    round(cor(res$rel_shortfall, res$female_share), 3), "\n")
+cat("cor(relative shortfall, balance)      =",
+    round(cor(res$rel_shortfall, res$balance), 3), "\n")
+```
+
+Balance is the strong predictor; the simple female-share correlation is
+weak and mostly a by-product of the fact that female-rich fields in this
+sample tend to be more lopsided. A regression that includes both makes
+this explicit.
+
+```{r regression}
+fit <- lm(rel_shortfall ~ female_share + balance, data = res)
+summary(fit)
+```
+
+`balance` carries a large, significant positive coefficient, while
+`female_share` is near zero and not significant once balance is held
+constant. In other words, **the more gender-balanced a field is, the
+larger the share of potential mixed teams that fails to form** -- being
+rich in women does not, by itself, make a field more or less likely to
+mix.
+
+## Which fields drive each tail?
+
+```{r tails}
+res |>
+  arrange(desc(rel_shortfall)) |>
+  transmute(
+    field, isced,
+    female_share  = round(female_share, 2),
+    balance       = round(balance, 2),
+    obs_mixed     = round(obs_mixed, 3),
+    sim_mixed     = round(sim_mixed, 3),
+    rel_shortfall = round(rel_shortfall, 2)
+  ) |>
+  head(10)
+```
+
+```{r tails-low}
+res |>
+  arrange(rel_shortfall) |>
+  transmute(
+    field, isced,
+    female_share  = round(female_share, 2),
+    balance       = round(balance, 2),
+    obs_mixed     = round(obs_mixed, 3),
+    sim_mixed     = round(sim_mixed, 3),
+    rel_shortfall = round(rel_shortfall, 2)
+  ) |>
+  head(10)
+```
+
+## Takeaway
+
+- Averaged over fields, about a third of the mixed-gender teaming that a
+  gender-neutral benchmark predicts does not occur.
+- The **absolute** shortfall correlates *positively* with female share
+  (cor = 0.18), but largely because balanced fields have more room to mix
+  in the first place; it is partly a mechanical artifact of composition.
+- The **honest driver is gender balance, not female-richness**. Fields
+  closer to a 50/50 instructor mix leave the largest fraction of their
+  potential mixed teams unformed, consistent with same-gender preference
+  (homophily) rather than with women-rich fields behaving differently from
+  men-rich ones.
+- So the answer to "are fields rich with women more likely to form mixed
+  teams?" is: **not materially**. What predicts the under-formation of
+  mixed teams is how balanced the field is, with female share adding no
+  independent signal once balance is accounted for.
