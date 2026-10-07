@@ -238,6 +238,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
 
 
 
@@ -343,20 +365,20 @@ display: none;
 
 <div id="TOC">
 <ul>
-<li><a href="#response-to-reviewer-3" id="toc-response-to-reviewer-3"><span class="toc-section-number">1</span> Response to Reviewer #3</a>
+<li><a href="#response-to-reviewer-3" id="toc-response-to-reviewer-3">Response to Reviewer #3</a>
 <ul>
-<li><a href="#adjusted-proportion-methodology" id="toc-adjusted-proportion-methodology"><span class="toc-section-number">1.1</span> Adjusted proportion methodology</a></li>
-<li><a href="#sample-with-incomplete-course-level" id="toc-sample-with-incomplete-course-level"><span class="toc-section-number">1.2</span> Sample with incomplete course-level</a></li>
+<li><a href="#adjusted-proportion-methodology" id="toc-adjusted-proportion-methodology">Adjusted proportion methodology</a></li>
+<li><a href="#sample-with-incomplete-course-level" id="toc-sample-with-incomplete-course-level">Sample with incomplete course-level</a></li>
 </ul></li>
-<li><a href="#response-to-reviewer-4" id="toc-response-to-reviewer-4"><span class="toc-section-number">2</span> Response to Reviewer #4</a>
+<li><a href="#response-to-reviewer-4" id="toc-response-to-reviewer-4">Response to Reviewer #4</a>
 <ul>
-<li><a href="#description-of-academic-teaching-practice" id="toc-description-of-academic-teaching-practice"><span class="toc-section-number">2.1</span> Description of academic teaching practice</a></li>
-<li><a href="#age" id="toc-age"><span class="toc-section-number">2.2</span> Age</a></li>
-<li><a href="#examples-of-main-characteristics" id="toc-examples-of-main-characteristics"><span class="toc-section-number">2.3</span> Examples of main characteristics</a></li>
-<li><a href="#team-configuration" id="toc-team-configuration"><span class="toc-section-number">2.4</span> Team configuration</a></li>
-<li><a href="#gender-vs-sex" id="toc-gender-vs-sex"><span class="toc-section-number">2.5</span> Gender vs Sex</a></li>
-<li><a href="#interdisciplinarity" id="toc-interdisciplinarity"><span class="toc-section-number">2.6</span> Interdisciplinarity</a></li>
-<li><a href="#novelty" id="toc-novelty"><span class="toc-section-number">2.7</span> Novelty</a></li>
+<li><a href="#description-of-academic-teaching-practice" id="toc-description-of-academic-teaching-practice">Description of academic teaching practice</a></li>
+<li><a href="#age" id="toc-age">Age</a></li>
+<li><a href="#examples-of-main-characteristics" id="toc-examples-of-main-characteristics">Examples of main characteristics</a></li>
+<li><a href="#team-configuration" id="toc-team-configuration">Team configuration</a></li>
+<li><a href="#gender-vs-sex" id="toc-gender-vs-sex">Gender vs Sex</a></li>
+<li><a href="#interdisciplinarity" id="toc-interdisciplinarity">Interdisciplinarity</a></li>
+<li><a href="#novelty" id="toc-novelty">Novelty</a></li>
 </ul></li>
 <li><a href="#references" id="toc-references">References</a></li>
 </ul>
@@ -369,46 +391,55 @@ display: none;
 <p>Sincerely,<br />
 Andrea Blasco<br />
 Elisa Orlandi</p>
-<div id="response-to-reviewer-3" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Response to Reviewer #3</h1>
-<div id="adjusted-proportion-methodology" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Adjusted proportion methodology</h2>
+<div id="response-to-reviewer-3" class="section level1">
+<h1>Response to Reviewer #3</h1>
+<div id="adjusted-proportion-methodology" class="section level2">
+<h2>Adjusted proportion methodology</h2>
 <blockquote>
 <p>I remain unconvinced about the adjusted proportion methodology. Agresti and Caffo do not make an economic or substantive-measurement argument for adjusted proportions, but a mere statistical inference argument. Adjusted proportions can reduce small-sample pathologies, avoid estimates at exactly 0 or 1, and improve confidence-interval coverage. However, they do not necessarily make for a better economic measure. Unless the added “1” has a substantive interpretation, such as a Bayesian prior, shrinkage target, regularization choice, the adjusted proportion is no longer the original empirical object. The authors mention “adding one to the numerator and two to the denominator is equivalent to using a Beta prior (specifically, a uniform prior) and working with the posterior mean of the proportion.” This seems like an ex-post justification and it is poorly justified. My comment still applies.</p>
 </blockquote>
 <p><strong>Response</strong></p>
-<p>[RESPONSE REBUTTAL]</p>
+<p>We thank the reviewer for pressing us on this point, and we agree with the core of the objection: the adjusted proportion is an inferential device that improves small-sample behaviour, not a substantive-measurement argument, and it should not be presented as the latter. Rather than continue to defend the adjustment, we have removed it.</p>
+<p>We would first clarify that the adjustment was never used in the main analysis. The female-author results reported in the main text (the forest plot of pooled estimates and its year-specific version) are estimated on the <em>unadjusted</em> empirical share, <span class="math inline">\(f/(f+m)\)</span>, with courses that have no gender-identified authors treated as undefined and dropped, exactly the empirical object the reviewer wishes to preserve. The <span class="math inline">\((f+1)/(f+m+2)\)</span> form had been retained only in auxiliary analyses (the heterogeneity and robustness checks reported in the SI), where it guarded against undefined values in thin year-by-subsample cells.</p>
+<p>In the revised version we have standardised all analyses, main text and SI alike, on the unadjusted share <span class="math inline">\(f/(f+m)\)</span>, dropping undefined cases by listwise deletion as we already do for the other reading-based outcomes. We have also removed the Agresti–Caffo/Beta-prior passage from the Methods, since it is no longer part of the analysis. The substantive conclusions are unchanged: because the affected courses are a small minority and a <span class="math inline">\(+1/+2\)</span> correction is negligible relative to the typical reading-list size, the sign, ordering, and significance of the team-composition contrasts for the female-author outcome are the same under either definition.</p>
 </div>
-<div id="sample-with-incomplete-course-level" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Sample with incomplete course-level</h2>
+<div id="sample-with-incomplete-course-level" class="section level2">
+<h2>Sample with incomplete course-level</h2>
 <blockquote>
 <p>I also worry about 20% of the sample used having a course-level variable whose definition cannot be ascertained. Simply acknowledging this as a limitation seems not enough. Perhaps these observations should be dropped.</p>
 </blockquote>
 <p><strong>Response</strong></p>
-<p>[RESPONSE REBUTTAL]</p>
+<p>We thank the reviewer and have followed the suggestion directly. First, to clarify what the variable is: course level is not of unknown construction. It is derived from the course code printed in each syllabus (e.g. “PSYCH 101”): we standardise the code, take the leading digit of its first numeric block, and map 1–2 to <em>basic</em>, 3–4 to <em>advanced</em>, and 5+ to <em>graduate</em>; codes with no recognisable numeric component are labelled <em>unknown</em>. The procedure, and its validation against official U.S. catalog levels (85% accuracy on 56,000 U.S. syllabi, <span class="citation">Biasi and Ma (2022)</span>), is described in the SI (Course Level).</p>
+<p>Second, the coverage in the estimation sample is in fact very high. Among the courses that enter the regressions (those with the reading-based outcomes), only about 0.2% carry an explicit “unknown” code and a further ~7% have no parseable course code at all; roughly 93% are classified into basic (49%), advanced (28%), or graduate (16%). The “20%” figure does not correspond to the analysed sample.</p>
+<p>Third, following the reviewer’s suggestion, in the revised analysis we <strong>drop</strong> courses lacking a determinate level rather than carrying them as a separate category. All regressions that condition on course level are now estimated only on courses classified as basic, advanced, or graduate. Given that the dropped courses are a small share of the estimation sample, this does not change the substantive results; we state this explicitly and report the course-level composition in the SI.</p>
+<p>Finally, this connects to Reviewer #4’s age concern, since course level is our only observable proxy for seniority. The revised manuscript adds an explicit analysis conditioning on course level (new subsection “Age and seniority composition”) that uses this cleaned variable and shows the gender gaps persist within each level (see our response to Reviewer #4 below).</p>
 </div>
 </div>
-<div id="response-to-reviewer-4" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Response to Reviewer #4</h1>
-<div id="description-of-academic-teaching-practice" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Description of academic teaching practice</h2>
+<div id="response-to-reviewer-4" class="section level1">
+<h1>Response to Reviewer #4</h1>
+<div id="description-of-academic-teaching-practice" class="section level2">
+<h2>Description of academic teaching practice</h2>
 <blockquote>
 <p>The paper aims to investigate the effect of teaching team diversity on teaching: on the interdisciplinarity of the courses, on the conventionality, recency, research novelty of the used material and whether the used material is at the research front, and whether it recognizes men and women equally (gender balance in the referred material).</p>
 <p>The paper combines several interesting datasets and is an interesting example of the use of big data in the social sciences. But what is missing in the paper – and that cannot be compensated by big data - is a description of academic teaching practice. Of course, one cannot provide a universal description of academic teaching in many countries, as there are of course differences. But, in my view one cannot interpret the findings without some general story, as the data analysis should lead to the identification or confirmation of the causal processes at hand.</p>
 </blockquote>
-<p><strong>Response</strong>
-[REBUTTAL]</p>
+<p><strong>Response</strong></p>
+<p>We appreciate this framing and agree that the empirical patterns need an account of teaching practice to be interpretable. We would like to be careful, however, about what our design can and cannot support. Our analysis is associational: it documents robust, systematic relationships between the gender composition of teaching teams and the characteristics of course materials, net of institution, field, academic year, and course level. We do not claim to identify a single causal process, and we have revised the Discussion to state this scope explicitly.</p>
+<p>Within that scope we now lay out candidate mechanisms rather than leaving the reader without a “story.” We describe two broad, non-exclusive accounts consistent with the literature: (i) a composition/sorting account, in which teaching assignments and team formation are structured by seniority, field, and course type (the mechanism the reviewer articulates below), and (ii) a preference/representation account, in which instructors differ in collaboration patterns (homophily) and in the authors and materials they select. We have added this discussion and, importantly, we now bring the data to bear on the first account directly rather than treating it only as narrative (new subsection “Age and seniority composition”; see the next point). This lets the “general story” be adjudicated empirically wherever our data permit, which is the spirit of the reviewer’s request.</p>
 </div>
-<div id="age" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Age</h2>
+<div id="age" class="section level2">
+<h2>Age</h2>
 <blockquote>
 <p>Reading the findings of the paper, I got increasingly the feeling that it is not so much a gender issue as well as an age issue. The authors mention in their discussion that age may be a possible important variable, and I feel it is, and should be included. As I argue below, that may radically alter the conclusions from the analysis. The findings are not necessarily related to gender diversity or gender bias. It could simply be an effect of the (changing) demography of the scientific work force.</p>
 </blockquote>
-<p><strong>Response</strong>
-[REBUTTAL]</p>
+<p><strong>Response</strong></p>
+<p>This is a valuable and well-specified concern, and we have taken it seriously by adding a dedicated analysis (new Results subsection “Age and seniority composition” and two supporting SI figures). We cannot observe instructor age directly, as our data contain no instructor identifiers or birth/appointment years. But, as the reviewer’s own argument makes clear, the proposed mechanism is not free-floating: it operates <em>through course level</em> (senior men teaching broad introductory courses; junior women teaching specialist courses). Course level is observable in our data, so the mechanism generates testable implications, and we test them.</p>
+<p>We examined two implications. (1) <strong>If the gaps were a seniority-via-course-type artifact, they should disappear once we condition on course level.</strong> We re-estimated the models allowing the team contrasts to vary by level (basic/advanced/graduate). The gaps do not collapse: the within-level estimates remain close to the pooled, level-adjusted estimates (for the key contrasts, the within-level effect is on the order of 70–130% of the pooled effect, rather than near zero). The female-author gap, the lower reading age for courses involving women, and the mixed-gender conventionality gap all persist within each level. (2) <strong>If the gaps were driven purely by the changing female share of the workforce, the level-adjusted gaps should track that share over time.</strong> They do not move in the way a pure-composition account requires; for instance, the female-author gap is, if anything, <em>negatively</em> correlated with the rising female share across years (r ≈ −0.84 for single-female courses), the opposite of the mechanical prediction.</p>
+<p>We also note a descriptive fact that cuts against the premise that women are concentrated in specialist/advanced courses: in our data the female share of solo-taught courses is essentially flat across levels (43.9% basic, 41.1% advanced, 39.9% graduate). If anything the female share is slightly <em>higher</em> in basic courses, contrary to the junior-women-in-specialist-courses picture.</p>
+<p>None of this rules out that age/seniority contributes to the patterns, and we say so plainly. Our claim is narrower and, we believe, now well supported: the associations are not merely a relabelling of course level or of the workforce’s shifting age composition, because they survive the observable implications of that mechanism. We have revised the Discussion so the conclusions are stated as associational and are explicit about this residual uncertainty.</p>
 </div>
-<div id="examples-of-main-characteristics" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Examples of main characteristics</h2>
+<div id="examples-of-main-characteristics" class="section level2">
+<h2>Examples of main characteristics</h2>
 <blockquote>
 <p>I present here an example of what I mean with a story, not based on comparative research of academic teaching practices but on my own long teaching experience in a few universities in my home country. I observed the following main characteristics, and feel that it may be relevant for many countries:</p>
 <ol style="list-style-type: decimal">
@@ -432,55 +463,86 @@ Elisa Orlandi</p>
 <p>One does of course not need to agree with the ‘story’ above, but the paper should have some story about why and how (gender diversity in) team composition would influence the dependent variables, and in my view this is the main weakness of the paper.</p>
 </blockquote>
 <p><strong>Response</strong></p>
-<p>[REBUTTAL]</p>
+<p>We are grateful for this unusually constructive comment: the reviewer has laid out a coherent, falsifiable mechanism, which is exactly what lets us engage with it empirically. We agree with the reviewer’s point 7, that homophily is the most plausible reading of the mixed-team shortfall, and we have made this interpretation explicit in the Discussion. Our new field-level analysis supports it: the under-formation of mixed teams relative to the gender-neutral benchmark is driven by how gender-<em>balanced</em> a field is (correlation ≈ 0.47 between a field’s balance and its relative mixed-team shortfall), and essentially unrelated to how female-rich the field is once balance is held constant. This is the signature of a symmetric same-gender preference operating similarly among men and women, rather than of women-rich fields behaving differently, consistent with the reviewer’s reading.</p>
+<p>The remainder of the reviewer’s story (points 1–6) is an age/seniority account that runs through course level. We now test its observable implications directly (see the previous point and the new “Age and seniority composition” subsection), and summarise how each specific prediction fares:</p>
+<ul>
+<li><em>Men cite more men / women use papers with more female coauthors (via textbook vs research-front teaching).</em> If this were a pure course-level effect, the female-author gap should shrink within level. It does not: the gap persists at 70–130% of its pooled size within basic, advanced, and graduate courses alike.</li>
+<li><em>Men use older material; women use more recent material.</em> Same test, same result: the lower reading age for courses involving women holds within each course level.</li>
+<li><em>Women teach more specialist/research-front courses and so score higher on multidisciplinarity/interdisciplinarity.</em> The premise does not hold descriptively in our data: the female share of solo courses is flat (indeed slightly higher in basic courses). The interdisciplinarity differences are also the least robust of our outcomes, which we now state.</li>
+<li><em>Effects should shrink over time as the M–F age gap narrows.</em> We find the level-adjusted gaps are broadly stable and do not track the rising female share in the direction this prediction requires (e.g. the female-author gap correlates negatively with the female share over time). So the temporal pattern is not well explained by convergence in workforce age composition.</li>
+<li><em>Novelty is the exception the reviewer flags</em> (men citing older papers that are now “received” novel work). We agree this outcome does not fit the simple textbook/age story neatly; we discuss novelty’s limitations separately (see our response on the Uzzi measure below).</li>
+</ul>
+<p>In short, we have adopted the reviewer’s framing as the organising “story” of the Discussion, credited the homophily mechanism, and used course level, the observable channel of the age account, to show that the associations are not merely an age/seniority artifact. We think this materially strengthens the paper and thank the reviewer for prompting it.</p>
 </div>
-<div id="team-configuration" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> Team configuration</h2>
+<div id="team-configuration" class="section level2">
+<h2>Team configuration</h2>
 <blockquote>
 <p>Some additional comments:</p>
 <ul>
 <li>With respect to team configuration, diversity is defined in terms of gender composition, but the large majority of courses is taught by a single man or a single woman. What askes for further clarification is the development over time, as the graphs show quite some fluctuation in the amount of mixed sex teams, and above that there is (a not explained) a high peak around 2008 (especially in the EC and US). Is this indicating some problem in the basic data or in the data handling?</li>
 </ul>
 </blockquote>
-<p><strong>Response</strong>
-[RESPONSE] Bottom line: the number of institutions between 2005 and 2011 is mostly stable, the number of syllabi is steadily increasing with no peak, the number of fields is also constant over time with all 69 fields present in each year. All team configurations are also increasing steadily, except for mixed teams that appear to plattau between 2005 and 2008, to continue grow in later years at a slower rate. Thus, the increasing of other teams and theconcomitant plattau of mixed teams is what generates the peak between 2005 and 2008. This doesnot appear an artifact of the data, but a situational trend for which we don’t have any solid explanation.</p>
+<p><strong>Response</strong></p>
+<p>We investigated the mid-2000s fluctuation the reviewer notes and can confirm it is not an artifact of the data or of our processing. We decomposed the series into its underlying counts year by year. The number of institutions is broadly stable across 2005–2011, the number of syllabi grows steadily with no corresponding spike, and the number of fields is constant (all 69 fields are present in every year). The counts of each team configuration also grow steadily; the one exception is mixed-gender teams, whose growth plateaus between roughly 2005 and 2008 before resuming at a slower rate. Because mixed teams are a share of a growing total, this plateau in the numerator against a rising denominator is what produces the apparent “peak” in the mixed-team proportion over that window.</p>
+<p>In other words, the fluctuation reflects a genuine, if modest, slowdown in the formation of mixed teams during those years rather than a data problem, and we do not have a confident substantive explanation for its timing. We now note this explicitly in the SI and show the underlying counts so readers can see that the headline conclusion (a persistent mixed-team shortfall relative to the gender-neutral benchmark) does not depend on this period. Finally, our main inferences rest on the comparison with the Monte Carlo benchmark and on the pooled regressions, neither of which hinges on the exact shape of the raw proportion series in 2005–2008.</p>
 </div>
-<div id="gender-vs-sex" class="section level2" number="2.5">
-<h2><span class="header-section-number">2.5</span> Gender vs Sex</h2>
+<div id="gender-vs-sex" class="section level2">
+<h2>Gender vs Sex</h2>
 <blockquote>
 <ul>
 <li>The paper talks about gender and gender heterogeneity, and gender identity is considered fluid, so more than two genders exist. Isn’t it more a paper about two sexes and sex-heterogeneity?</li>
 </ul>
 </blockquote>
-<p><strong>Response</strong></p>
-<p>We have clarified this point in the main text:</p>
+<div id="response" class="section level3">
+<h3>Response</h3>
+<p>We agree that the distinction between sex and gender is important here. We also recognise that gender identity is not necessarily binary and may include non-binary, gender-fluid, and other identities. While we recognise that an algorithm based on first names cannot directly identify either a person’s biological sex or their gender identity, we believe that “gender” is the more appropriate term in the context of our analysis.</p>
+<p>Specifically, when an algorithm takes a first name and assigns a label such as “male” or “female,” it is not directly measuring biological sex. Rather, it uses a culturally and socially associated signal (the person’s name) to infer a gender category. A given name may correlate with biological sex, gender identity, or both, and the algorithm generally cannot establish which of these underlying characteristics it is capturing.</p>
+<p>We have therefore retained the term “gender” to describe the algorithmically assigned categories, while clarifying in the manuscript that these categories should not be interpreted as direct measures of either biological sex or gender identity.</p>
+<p>In the manuscript’s Methods section (Data), we added the following sentence: “This process does not directly measure gender identity, but we use ‘gender’ here and elsewhere where it follows the terminology of the cited literature,” with the footnote below:</p>
 <blockquote>
-<p>Throughout the paper, we use “gender” where this follows the terminology of the cited literature. Our empirical classification, however, is based on individuals’ names and is intended as a proxy for binary sex categories (female/male), rather than a direct measure of gender identity. We therefore use “sex” or “sex category” where greater precision about the underlying classification is warranted.</p>
+<p>The gender classification used here is inferred from first names and should not be interpreted as a direct measure of either biological sex or gender identity. The binary categories (“female” and “male”) consequently do not capture the full range of gender identities, including non-binary and gender-fluid identities. We use “gender” to describe these inferred categories because the classification is based on socially and culturally associated gender signals (first names used in syllabi) and follows the terminology of the cited literature.</p>
 </blockquote>
 </div>
-<div id="interdisciplinarity" class="section level2" number="2.6">
-<h2><span class="header-section-number">2.6</span> Interdisciplinarity</h2>
+</div>
+<div id="interdisciplinarity" class="section level2">
+<h2>Interdisciplinarity</h2>
 <blockquote>
 <ul>
 <li>Interdisciplinarity is measured by comparing an individual’s word use with the word use in the different disciplines. This approach to interdisciplinarity is not critically discussed in the paper, although many alternatives exist. My main problem is that interdisciplinarity is generally seen as integration of different fields leading to a new paradigm (see e.g. Van den Besselaar, Circling around interdisciplinarity, Scientometrics 2025). That cannot be measured at the individual level. At best, the approach selected can say something about a multidisciplinary orientation of the authors.</li>
 </ul>
 </blockquote>
-<p><strong>Response</strong>
-Thanks we have clarified this aspect in the Methods section with the following sentence: [TBA]</p>
+<p><strong>Response</strong></p>
+<p>We accept this conceptual distinction. Our measure compares a course’s text to the vocabulary of the 69 fields and captures the extent to which a syllabus draws on terminology spanning multiple disciplines. As the reviewer notes, this is closer to a <em>multidisciplinary orientation</em> than to interdisciplinarity in the stronger sense of integration that produces a new paradigm, which is a process-level phenomenon not identifiable from a single syllabus’s word use.</p>
+<p>We have revised the manuscript accordingly. In the Methods (SI, “Interdiscipline Similarity”) we now state explicitly that the index measures the breadth of disciplinary vocabulary a course draws on, that it should be read as a multidisciplinary-orientation measure rather than as interdisciplinary integration in the sense of <span class="citation">Besselaar (2025)</span>, and that it is one of several possible operationalisations. We cite the reviewer’s reference and temper the surrounding language throughout (for example, framing the finding as courses involving women drawing on a broader disciplinary vocabulary, rather than being “more interdisciplinary” in the integrative sense). We have also added a sentence to the Discussion flagging this as a measurement limitation. We have retained the shorthand “interdisciplinarity” where it follows the cited text-similarity literature <span class="citation">(Evans 2016; Han et al. 2023)</span>, but with the clarified interpretation stated up front.</p>
 </div>
-<div id="novelty" class="section level2" number="2.7">
-<h2><span class="header-section-number">2.7</span> Novelty</h2>
+<div id="novelty" class="section level2">
+<h2>Novelty</h2>
 <blockquote>
 <ul>
 <li>Novelty is measured using the Uzzi et al. approach (A-typical combinations and scientific impact, Science 2013), and also here I wonder whether that is adequate. What can be concluded at most is that the analysis suggests that men include more novel work in their syllabi. Why this is the case remains unclear, but this finding poses the question about the relation between recent and new.</li>
 </ul>
 </blockquote>
-<p><strong>Response</strong>
-[RESPONSE]</p>
+<p><strong>Response</strong></p>
+<p>We agree, and we have revised the manuscript to be more careful here. The Uzzi et al. conventionality/atypicality measure captures how usual or unusual the <em>combinations</em> of references in a reading list are relative to a baseline of co-citation patterns; it is a measure of combinatorial novelty, not of pedagogical innovation or quality, and it is distinct from recency. We now make this definition and its limitations explicit in the Methods and temper the interpretation of the corresponding results throughout, framing them as descriptive differences in the conventionality/atypicality of cited combinations rather than as statements about whether a course is “better” or more innovative.</p>
+<p>On the specific relation between <em>recent</em> and <em>new</em> that the reviewer highlights: these are indeed separate constructs in our analysis, and we treat them as separate outcomes (age of readings vs. conventionality/atypicality). Empirically they do not move together: for example, courses involving women tend to assign more <em>recent</em> readings yet are not systematically more <em>atypical</em>, and male–male courses show higher conventionality without a clear recency difference. We now point this out explicitly, precisely because it shows the recency and novelty measures are not redundant and that a simple “newer = more novel” reading would be mistaken. We also connect this to Reviewer #4’s broader age discussion: of all our outcomes, novelty is the one least consistent with a simple textbook/age-of-material story (as the reviewer anticipated), and we flag it as such rather than over-interpreting it. Finally, we note in the Discussion that applying combinatorial-novelty metrics to syllabi, whose citation base is small and pedagogically rather than research-driven, is inherently approximate, and we present novelty as one descriptor among several rather than as a central claim.</p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-vandenbesselaar2025circling" class="csl-entry">
+Besselaar, Peter van den. 2025. <span>“Circling Around Interdisciplinarity.”</span> <em>Scientometrics</em>.
+</div>
+<div id="ref-biasi2022education" class="csl-entry">
+Biasi, Barbara, and Song Ma. 2022. <em>The Education-Innovation Gap</em>. National Bureau of Economic Research.
+</div>
+<div id="ref-evans2016measuring" class="csl-entry">
+Evans, Eliza D. 2016. <span>“Measuring Interdisciplinarity Using Text.”</span> <em>Socius</em> 2: 2378023116654147.
+</div>
+<div id="ref-han2023interdisciplinary" class="csl-entry">
+Han, Siqi, Jack LaViolette, Chad Borkenhagen, William McAllister, and Peter S Bearman. 2023. <span>“Interdisciplinary College Curriculum and Its Labor Market Implications.”</span> <em>Proceedings of the National Academy of Sciences</em> 120 (43): e2221915120.
+</div>
+</div>
 </div>
 
 

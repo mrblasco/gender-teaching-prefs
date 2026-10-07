@@ -116,7 +116,13 @@ analysis <- syllabi_merged %>%
         conventional  = rank_percentile(novel_med),
         interdisc     = rank_percentile(mean_intdisc),
         total_authors = female_authors + male_authors,
-        female_ratio  = (female_authors + 1) / (male_authors + female_authors + 2),
+        # Unadjusted empirical share of women authors; undefined (NA)
+        # when a reading list has no gender-identified authors (see the
+        # response to Reviewer #3, third revision). We previously used
+        # the Agresti-style (f+1)/(f+m+2) adjustment, now removed so the
+        # outcome is the raw empirical proportion.
+        female_ratio  = ifelse(total_authors > 0,
+                               female_authors / total_authors, NA_real_),
         .by = c(year)
     ) %>%
     mutate(

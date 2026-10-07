@@ -138,7 +138,11 @@ women <- syllabi_merged %>%
     filter(!is.na(mean_intdisc)) %>%
     mutate(
         total_authors = female_authors + male_authors,
-        female_ratio = (female_authors + 1) / (male_authors + female_authors + 2),
+        # Unadjusted empirical share of women authors (NA when no
+        # gender-identified authors); the (f+1)/(f+m+2) adjustment was
+        # removed in the third revision (Reviewer #3).
+        female_ratio = ifelse(total_authors > 0,
+                              female_authors / total_authors, NA_real_),
         .by = c(year)
     )
 
