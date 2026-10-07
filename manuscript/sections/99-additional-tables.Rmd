@@ -1,0 +1,64 @@
+## Additional Tables 
+
+```{r}
+path <- here::here(
+    "output/01_plot_montecarlo_analysis/supp_teams_count_wide.csv"
+)
+
+read.csv(path) |>
+    dplyr::arrange(size) |> 
+    knitr::kable(
+        digits = 1,
+        format.args = list(big.mark = " "),
+        caption = "Teaching teams: Observed vs Simulated"
+    )
+```
+
+```{r, echo = FALSE}
+path <- here::here(
+  "output/01_plot_montecarlo_analysis/supp_teams_count_wide.csv"
+)
+
+read.csv(path) |>
+    dplyr::arrange(size) |> 
+    dplyr::select(
+        "Size" = size,
+        "Composition" = sex,
+        "Observed (n)" = Observed,
+        "Simulated (n)" = Simulated,
+        "Observed (% by size)" = observed_pc,
+        "Simulated (% by size)" = simulated_pc,
+        "Difference" = diff,
+    ) |>
+    knitr::kable(
+        digits = 1,
+        format.args = list(big.mark = " "),
+        caption = "Observed vs Simulated Teaching Teams"
+    )
+```
+
+
+```{r}
+path <- here::here(
+    "output/01_plot_montecarlo_analysis/supp_teams_count_field_wide.csv"
+)
+
+read.csv(path) |>
+    dplyr::filter(size == "2 instructor(s)") |>
+    dplyr::select(-size) |>
+    dplyr::arrange(isced) |>
+    dplyr::select(
+        "Field" = isced,
+        "Composition" = sex,
+        "Observed (n)" = Observed,
+        "Simulated (n)" = Simulated,
+        "Observed (% by size)" = observed_pc,
+        "Simulated (% by size)" = simulated_pc,
+        "Difference" = diff,
+    ) |>
+    knitr::kable(
+        digits = 1,
+        format.args = list(big.mark = " "),
+        caption = "Observed vs Simulated Teaching Teams, by Academic Field (onyly teams of size two)"
+    )
+```

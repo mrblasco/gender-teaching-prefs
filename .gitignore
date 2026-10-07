@@ -13,3 +13,8 @@ docs/
 *.fff 
 *.ttt
 *.pdf
+
+
+output/
+*/build
+*/*output

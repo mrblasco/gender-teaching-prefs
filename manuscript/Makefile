@@ -1,24 +1,28 @@
-DIR := _build
-LOGDIR := logs
+OUTDIR := build
+INPUT := main.Rmd 
+FILES := $(wildcard sections/*.Rmd) refs.bib _output.yml
+OPTS := output_dir = "$(OUTDIR)", output_format = "bookdown::pdf_document2"
+PDF := $(OUTDIR)/main.pdf
 
-PDF := $(DIR)/_main.pdf
-FILES := $(wildcard *.Rmd) refs.bib _output.yml
 
+pdf :  $(OUTDIR) $(PDF)
+
+$(OUTDIR):
+	@mkdir -p "$@"
+
+$(PDF): $(INPUT) $(FILES)
+	@echo "Rendering $@..."
+	@Rscript -e 'rmarkdown::render("$<", $(OPTS))'
+
+view: 
+	open -a Skim $(PDF)
+
+
+# ----- Canonical version
 TIME := $(shell date '+%Y-%m-%d %H:%M:%S')
 DAY := $(shell date '+%Y-%m-%d')
 OLD := _canonical/second_revision_$(DAY)/_main.tex
 
-
-pdf : $(PDF)
-	open -a Skim $<
-
-$(PDF): _main.Rmd $(FILES)
-	@mkdir -p "$(dir $@)" "$(LOGDIR)"
-	@echo "[$(TIME)] - Rendering $@ ..." >> "$(LOGDIR)/render.log"
-	@Rscript -e 'rmarkdown::render("$<", output_dir = "$(dir $@)", output_format = "bookdown::pdf_document2")' \
-		>> "$(LOGDIR)/render.log" 2>&1
-
-# ----- Canonical version
 canonical: $(OLD)
 $(OLD): _build/_main.tex
 	@mkdir -p "$(dir $@)"

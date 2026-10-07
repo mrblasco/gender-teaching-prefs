@@ -5,7 +5,9 @@
 # Update: Sep 27
 
 
-# ---- Setup, include = FALSE ------------------------------
+# ----------------------------------------------------------------------
+# Setup
+# ----------------------------------------------------------------------
 suppressWarnings({
     library(dplyr, warn.conflicts = FALSE)
     library(tidyr)
@@ -14,24 +16,33 @@ suppressWarnings({
 })
 options(warn = -1)
 
-source("R/utils.R")   # rank_percentile(), log_msg()
-source("R/isced.R")   # isced lookup
-source("R/theme.R")   # theme_custom()
+source(here::here("R/utils.R"))   # rank_percentile(), log_msg()
+source(here::here("R/isced.R"))   # isced lookup
+source(here::here("R/theme.R"))   # theme_custom()
 theme_set(theme_custom())
 
 set.seed(4881)
+formats <- c("pdf", "png", "svg")
 
 args <- commandArgs(trailingOnly = TRUE)
 
-data_dir    <- file.path("data", "processed")
-out_dir <- if (length(args) >= 1) args[1] else file.path("output", "montecarlo")
+data_dir    <- here::here("data", "processed")
+out_dir <- if (length(args) >= 1) {
+    args[1]
+} else {
+    here::here("output", "montecarlo")
+}
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
-
+# ----------------------------------------------------------------------
+# Utils
+# ----------------------------------------------------------------------
 say <- logger::log_info
 
 year_cutoff <- 1999
+
 team_size_cutoff <- 3
+
 team_labels <- c(
     f = "Female",
     ff = "Female + female",
@@ -64,10 +75,6 @@ ds <- syllabi_merged |>
         )
     )
 
-# ---------------------------------------------
-# Figure 1 -- Annual trends
-# ---------------------------------------------
-say("Analysis of syllabi by year, team and team size")
 ds_annual <- ds |>
     count(year, team, team_size) |>
     group_by(year, team_size) |>
@@ -82,6 +89,20 @@ ds_annual <- ds |>
         )
     )
 
+ds_long <- ds |>
+    rename(Observed = team_ordered,  Simulated = team_rand) |>
+    pivot_longer(
+        cols = c(Simulated, Observed),
+        names_to = "formation",
+        values_to = "sex"
+    )
+
+
+# ---------------------------------------------
+# Figure 1 -- Annual trends
+# ---------------------------------------------
+say("Analysis of syllabi by year, team and team size")
+
 p1 <- ds_annual |>
     ggplot(aes(year, p, color = sex, shape = sex)) + 
     facet_grid(~ team_size, labeller = labeller(team_size = \(x) paste(x, "instructor(s)"))) +
@@ -95,27 +116,25 @@ p1 <- ds_annual |>
         y = "Courses within team size (%)"
     )
 
-out <- ggsave(
-    file.path(out_dir, "01_annual_trends.pdf"),
-    device = cairo_pdf,
-    width = 4.2,
-    height = 2.5,
-    units = "in"
-)
-say("Figure saved to {out}.")
+
+for (ext in formats) {
+    out <- file.path(out_dir, paste0("01_annual_trends.", ext))
+
+    ggsave(
+        out,
+        width = 4.2,
+        height = 2.5,
+        units = "in"
+    )
+
+    say("Figure saved to {out}.")
+}
 
 # ---------------------------------------------
 # Figure 2 -- Observed vs simulated
 # ---------------------------------------------
 say("Compare simulated vs observed")
 
-ds_long <- ds |>
-    rename(Observed = team_ordered,  Simulated = team_rand) |>
-    pivot_longer(
-        cols = c(Simulated, Observed),
-        names_to = "formation",
-        values_to = "sex"
-    ) 
 
 p2 <- ds_long |>
     count(formation, sex, year, team_size) |>
@@ -235,12 +254,50 @@ p3 <- ds_filtered |>
         x = "Academic year",
     )
 
-out <- ggsave(
-    file.path(out_dir, "04_by_country.pdf"),
+out <- file.path(out_dir, "04_by_country.pdf")
+
+ggsave(
+    out,
     device = cairo_pdf,
     width = 7.5,
     height = 5,
     units = "in"
 )
+
 say("Figure saved to {out}.")
 
+
+# ======================================================================
+# 3. SUPPLEMENTARY TABLEs
+# ======================================================================
+ds_count_wide <- ds_long |> 
+    count(sex, formation) |>
+    pivot_wider(names_from = formation, values_from = n) |>
+    group_by(size = nchar(sex)) |>
+    mutate(
+        size = paste(size, "instructor(s)"), 
+        observed_pc = 100 * Observed / sum(Observed), 
+        simulated_pc = 100 * Simulated/ sum(Simulated),
+        diff = observed_pc - simulated_pc
+    )
+
+out <- file.path(out_dir, "supp_teams_count_wide.csv")
+write.csv(ds_count_wide, out, row.names = FALSE)
+say("Data saved to {out}")
+
+
+# ---- by field
+ds_count_wide <- ds_long |> 
+    count(sex, formation, isced) |>
+    pivot_wider(names_from = formation, values_from = n) |>
+    group_by(size = nchar(sex), isced) |>
+    mutate(
+        size = paste(size, "instructor(s)"), 
+        observed_pc = 100 * Observed / sum(Observed), 
+        simulated_pc = 100 * Simulated/ sum(Simulated),
+        diff = observed_pc - simulated_pc
+    )
+
+out <- file.path(out_dir, "supp_teams_count_field_wide.csv")
+write.csv(ds_count_wide, out, row.names = FALSE)
+say("Data saved to {out}")
