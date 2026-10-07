@@ -11,6 +11,10 @@ bookdown::pdf_document2:
     number_sections: true
     latex_engine: xelatex
     keep_tex: true
+    pandoc_args: [
+        "--lua-filter=assets/scholarly-metadata.lua",
+        "--lua-filter=assets/author-info-block.lua"
+    ]
     includes:
         in_header: latex/preamble.tex
 

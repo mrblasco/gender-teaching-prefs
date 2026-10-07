@@ -19,16 +19,19 @@ library(kableExtra)
 library(ggplot2)
 library(patchwork)
 
-source("../R/tables.R")
-source("../R/theme.R")
+source(here::here("R/tables.R"))
+source(here::here("R/theme.R"))
 theme_set(theme_custom())
 
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  error = TRUE
+)
 
-results_dir <- file.path("..", "data", "results")
+results_dir <- here::here("data", "results")
 ```
 
-```{r, data-supporting, cache = TRUE, include = FALSE}
+```{r, data-supporting, cache = TRUE, include = FALSE, eval = FALSE}
 config <- yaml.load_file("config.yml")
 data_dir <- config$data_dir
 
@@ -80,7 +83,7 @@ In this section, we present additional descriptive statistics for the number of 
 
 <!-- ### Countries -->
 
-```{r, SI-country}
+```{r, SI-country, eval = FALSE}
 ds %>%
     filter(formation == "team") %>%
     count(country, wt = n) %>%
@@ -117,7 +120,7 @@ ds %>%
 ```
 <!-- ### Fields -->
 
-```{r SI-fields, echo = FALSE}
+```{r SI-fields, eval = FALSE}
 ds %>%
   filter(formation == "team") %>% 
   count(field, wt = n) %>%
@@ -143,7 +146,7 @@ ds %>%
 
 <!-- ### Years -->
 
-```{r, SI-years}
+```{r, SI-years, eval = FALSE}
 ds %>%
   filter(formation == "team") %>%
   mutate(
@@ -163,7 +166,7 @@ ds %>%
 
 <!-- ### Gender Composition -->
 
-```{r, SI-composition}
+```{r, SI-composition, eval = FALSE}
 convert_gender_label <- function(original_labels) {
   dplyr::case_match(
     original_labels,
@@ -212,7 +215,9 @@ cap <- paste(
     "Pearson correlation between OS and Eurostat series shown in each panel.",
     "Source: Eurostat (educ_uoe_perd02)."
 )
-knitr::include_graphics(file.path(results_dir, "fig_representative_eurostat.pdf"))
+knitr::include_graphics(
+  file.path(results_dir, "fig_representative_eurostat.pdf")
+)
 ```
 
 ```{r field-coverage-us, fig.cap = cap, fig.width = 7, fig.asp = 1}
@@ -222,7 +227,9 @@ cap <- paste(
     "Pearson correlation between OS and representative series shown in each panel.",
     "Source: NCES (Survey of Earned Doctorates)."
 )
-knitr::include_graphics(file.path(results_dir, "fig_representative_field.pdf"))
+knitr::include_graphics(
+  file.path(results_dir, "fig_representative_field.pdf")
+)
 ```
 
 ## Pre-/Post- Covid-19 Patterns

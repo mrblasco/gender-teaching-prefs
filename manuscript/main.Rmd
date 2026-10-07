@@ -4,8 +4,25 @@ title: |
   Insights from Five Million Syllabi on Collaboration, Interdisciplinarity, and Reading Selections
 
 author:
-  - Andrea Blasco^[Corresponding author; European Commission, Joint Research Centre, Brussels, Belgium; andrea.blasco@ec.europa.eu]
-  - Elisa Orlandi^[University of Salerno, Salerno, Italy, and European Commission, Joint Research Centre, Brussels, Belgium; eoralndi@unisa.it]
+- correspondence: yes
+  email: 'andrea.blasco@ec.europa.eu'
+  id: Andrea Blasco
+  institute:
+  - jrc
+  name: Andrea Blasco
+
+- id: Elisa Orlandi
+  institute:
+  - jrc
+  - dulbea
+  name: Elisa Orlandi
+
+institute:
+- id: jrc
+  name: European Commission, Joint Research Centre
+- id: dulbea
+  name: Université libre de Bruxelles
+
 
 abstract: |
   This study examines how academic teaching teams form and how their gender composition is associated with course design and gender disparities in academic recognition. Analysing over five million syllabi from higher education in fifteen countries, we document a persistent underrepresentation of mixed-gender co-teaching teams, which occur 50% less frequently than expected under gender-neutral team formation. We examine how team gender composition relates to interdisciplinarity, the novelty of reading materials, and the reppresentation of women authors in assigned readings. Courses taught by mixed-gender teams are significantly more interdisciplinary than those taught by same-gender teams. Male-only teams cite substantially fewer female authors than female-only teams, and this gap persists in mixed-gender teams. Courses taught by solo female instructors or teams including at least one woman tend to incorporate more recent reading materials. However, mixed-gender teams tend to rely more on conventional readings and fewer readings at the research frontier. These findings reveal persistent gendered patterns in teaching collaboration and course content, while highlighting the relationship between team composition, interdiscipliniarity, and the representation of women authors in academic teaching.
@@ -17,7 +34,7 @@ linestretch: 1.5
 colorlinks: true
 link-citations: true
 bibliography: [refs.bib]
-csl: [pnas.csl]
+csl: [assets/pnas.csl]
 geometry: margin=1in
 lang: en-UK
 mainfont: Times New Roman
@@ -40,13 +57,8 @@ knitr::opts_chunk$set(
     warning = FALSE,
     error = TRUE
 )
-sections <- c("01-intro.Rmd", "02-literature.Rmd", 
-              "20-methods.Rmd", "30-results.Rmd", "40-discussion.Rmd")
+sections <- list.files("sections", pattern = "*.Rmd", full.names = TRUE)
 ```
-
-# Significance Statement {-}
-
-Despite growing gender diversity in academia, we reveal a persistent underrepresentation of mixed-gender teaching teams across universities. By analysing 5M syllabi (1999-2019), we find that instructors tend to collaborate with same-gender colleagues at a rate more than twice the expected rate. This is not fully explained by institutional or disciplinary constraints, suggesting a gender-based bias. Moreover, mixed-gender teams tend to design more interdisciplinary courses and assign more gender-diverse readings, whereas women tend to assign more recent readings. These findings extend the literature on gender bias in academia into the domain of teaching, revealing how collaboration dynamics are associated with the pedagogical content and the student experience. Understanding these patterns can inform policies aimed at improving equity and pedagogical quality in higher education.
 
 ```{r sections, child = sections}
 ```
@@ -72,5 +84,5 @@ All the scripts and code used in the analyses is available at [GitHub link or DO
 ::: {#refs}
 :::
 
-```{r appendix, child = "50-supporting.Rmd"}
+```{r appendix, child = "50-supporting.Rmd", eval = FALSE}
 ```

@@ -247,7 +247,7 @@ fit_intdisc <- syllabi_merged |>
     filter(!is.na(mean_intdisc)) |>
     fit_by(list_models$interdisc, year, lme4::lmer)
 
-# lst six 
+# Show results ... 
 tail(fit_intdisc) |>
     stargazer::stargazer(type = "text", keep = "team", keep.stat = "n", digits = 2)
 
@@ -262,14 +262,14 @@ p_intdisc <- coeffs |>
     ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
     scale_color_discrete() +
     scale_shape_manual(values = c(1, 16)) + 
-    scale_y_continuous(labels = \(x) 100 * x) + 
+    scale_y_continuous() + 
     facet_grid(~term, labeller = labeller(term = term_labels)) +
     geom_hline(yintercept = 0) +
     geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
     geom_smooth(method = "lm", aes(weight = 1/std.error^2), formula = 'y ~ x') + 
     labs(
         x = "Academic year",
-        y = "Interdisciplinarity"
+        y = "Interdisciplinarity (%)"
     ) +
     theme(legend.position = "none")
 
@@ -294,9 +294,7 @@ fit_women <- syllabi_merged |>
         .by = c(year)
     ) |>
     filter(total_authors > 0) |>
-    group_by(year) |>
-    group_split() |>
-    map(lme4::lmer,  formula = list_models$women)
+    fit_by(list_models$women, year, lme4::lmer)
 
 coeffs <- fit_women |>
     map(broom::tidy, conf.int = TRUE) |>
@@ -334,9 +332,8 @@ log_msg("Conventionality ...")
 
 fits_conventionality <- syllabi_merged |>
     filter(!is.na(novel_med)) |>
-    group_by(year) |>
-    group_split() |>
-    map(lme4::lmer, formula = list_models$conventionality)
+    fit_by(list_models$conventionality, year, lme4::lmer)
+
 
 coeffs <- fits_conventionality |>
     map(broom::tidy, conf.int = TRUE) |>
@@ -348,7 +345,7 @@ p_conventional <- coeffs |>
     ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
     scale_color_discrete() +
     scale_shape_manual(values = c(1, 16)) + 
-    scale_y_continuous(labels = \(x) 100 * x) + 
+    scale_y_continuous() + 
     facet_grid(~term, labeller = labeller(term = term_labels)) +
     geom_hline(yintercept = 0) +
     geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
@@ -373,15 +370,11 @@ ggsave(
 # ----------------------------------------------------------------------
 log_msg("Atypicality ...")
 
-    
+
 fits_atypicality <- syllabi_merged |>
     filter(!is.na(atyp_med)) |>
-    group_by(year) |>
-    group_split() |>
-    map(
-        lme4::lmer,
-        formula = list_models$atypicality
-    )
+    fit_by(list_models$atypicality, year, lme4::lmer)
+
 
 coeffs <- fits_atypicality |>
     map(broom::tidy, conf.int = TRUE) |>
@@ -393,7 +386,7 @@ p_atypical <- coeffs |>
     ggplot(aes(year, estimate, color = term, ymin = conf.low, ymax = conf.high)) +
     scale_color_discrete() +
     scale_shape_manual(values = c(1, 16)) + 
-    scale_y_continuous(labels = \(x) 100 * x) + 
+    scale_y_continuous() + 
     facet_grid(~term, labeller = labeller(term = term_labels)) +
     geom_hline(yintercept = 0) +
     geom_pointrange(show.legend = FALSE, aes(shape = abs(estimate) > 2 * std.error )) +
@@ -421,12 +414,8 @@ log_msg("Age of readings...")
 
 fits_recency <- syllabi_merged |>
     filter(!is.na(recency)) |>
-    group_by(year) |>
-    group_split() |>
-    map(
-        lme4::lmer,
-        formula = list_models$age_readings
-    )
+    fit_by(list_models$age_readings, year, lme4::lmer)
+
 
 coeffs <- fits_recency |>
     map(broom::tidy, conf.int = TRUE) |>
@@ -462,9 +451,14 @@ ggsave(
 # Combined
 # ----------------------------------------------------------------------
 
-p_combined <- p_conventional + p_intdisc + p_women + p_atypical + p_recency +
+p_combined <- p_conventional + 
+    p_intdisc + 
+    p_women + 
+    p_atypical + 
+    p_recency +
     plot_layout(ncol = 1, axes = "collect", axis_titles = "collect")) +
     plot_annotation(tag_levels = "A")
+
 
 ggsave(
     here::here(out_dir, "09_combined.pdf"),
