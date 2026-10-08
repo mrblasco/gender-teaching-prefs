@@ -120,23 +120,20 @@ hetero_panel <- function(df, highlight) {
         )
     ggplot(
         df,
-        aes(x = as.numeric(year), y = estimate, color = group, fill = group)
+        aes(x = as.numeric(year), y = estimate, fill = group, shape = group, color = group)
     ) +
         geom_hline(
-            aes(yintercept = 0, linetype = "Man alone (M)"),
+            aes(yintercept = 0, linetype = "dashed"),
             color = "red"
         ) +
-        scale_linetype_manual(values = "dashed") +
         facet_grid(outcome ~ term, labeller = labeller(term = term_labels),
                    scales = "free_y") +
-        geom_smooth(
-            method = "gam",
-            formula = y ~ s(x, bs = "cs"),
-            aes(weight = 1 / std.error^2),
-            alpha = 0.18,
-            linewidth = 0.6
+        geom_pointrange(
+            aes(ymin = conf.low, ymax = conf.high)
         ) +
-        labs(x = "Academic year", y = NULL, color = NULL, fill = NULL) +
+        scale_color_discrete() +
+        scale_shape_manual(values = c(2, 21)) +
+        labs(x = "Academic year", y = NULL, color = NULL, fill = NULL, shape = NULL) +
         guides(linetype = "none") +
         theme(legend.position = "bottom")
 }
