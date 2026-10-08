@@ -11,41 +11,6 @@
 \setcounter{subsection}{0}
 \renewcommand{\thetable}{SI-\arabic{table}}
 
-```{r, SI-setup, include = FALSE}
-library(yaml)
-library(dplyr)
-library(tidyr)
-library(kableExtra)
-library(ggplot2)
-library(patchwork)
-
-source(here::here("R/tables.R"))
-source(here::here("R/theme.R"))
-theme_set(theme_custom())
-
-knitr::opts_chunk$set(
-  echo = FALSE,
-  error = TRUE
-)
-
-results_dir <- here::here("data", "results")
-```
-
-```{r, data-supporting, cache = TRUE, include = FALSE, eval = FALSE}
-config <- yaml.load_file("config.yml")
-data_dir <- config$data_dir
-
-filename_data <- file.path(data_dir, "rds/final.rds")
-
-ds <- readRDS(filename_data) %>%
-  filter(nchar(team) < 10) %>%
-  select(field, year, team = team_ordered, team_rand, country) %>% 
-  pivot_longer(cols = c(team, team_rand),
-               names_to = "formation",
-               values_to = "composition") %>%
-  count(formation, composition, field, year, country)
-```
-
 # Supporting Information
 
 ## Data
@@ -68,10 +33,10 @@ We measured interdisciplinarity using text similarity between syllabi as in @eva
 
 Thus, the interdisciplinarity score for course \(i\) is:
 $$
-  \text{interdisciplinarity score}_i = 1 - \frac{\sum_{f \in (1, 69)} \cos(f_{\max}, f) \cdot \cos(i, f)}{\sum_{f \in (1, 69)} \cos(f_{\max}, f)}. 
+  \text{interdisciplinarity score}_i = 
+  1 - \frac{\sum_{f \in (1, 69)} \cos(f_{\max}, f) \cdot \cos(i, f)}{\sum_{f \in (1, 69)} \cos(f_{\max}, f)}. 
 $$
 To reduce computational costs, we "bootstrap" the field-by-field cosine similarity matrix by using a 10% random sample of syllabi for each academic year. We repeated the sub-sampling procedure ten times and averaged the results.
-
 
 ## Simulating Gender-Neutral Courses {#si-simulations}
 
@@ -81,7 +46,6 @@ We employed a simlar methodology to that developed by @uzzi2013atypical for the 
 
 In this section, we present additional descriptive statistics for the number of syllabi in each country  \@ref(tab:SI-country), the distribution of syllabi per field \@ref(tab:SI-fields), academic year \@ref(tab:SI-years), and teaching teams \@ref(tab:SI-composition). 
 
-<!-- ### Countries -->
 
 ```{r, SI-country, eval = FALSE}
 ds %>%

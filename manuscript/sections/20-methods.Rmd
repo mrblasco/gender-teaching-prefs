@@ -45,7 +45,7 @@ To assess the scientific novelty of the readings assigned in each syllabus, we f
 
 To examine changes associated with the Covid-19 lockdown period, we supplement this dataset with a second corpus consisting of 2.2 million syllabi of courses between 2019 and 2023 from 33 European countries (EU-27 plus Switzerland, Norway, Iceland, the United Kingdom, and Liechtenstein).
 
-## Outcome variables 
+## Outcome variables
 
 Building on prior research highlighting the value of exposing student to cutting-edge knowledge [@biasi2022education], the influence of interdisciplinary training on career outcomes [@han2023interdisciplinary], and evidence of gender disparities in academic recognition [@aksnes2011female; @chatterjee2021gender; @tekles2022same], we focus on a set of outcome variables designed to capture these dimensions of the assigned readings and course content. These variables allow us to examine how team configurations, including gender composition and team size, are associated with the interdisciplinarity of assigned readings and their key characteristics, such as publication age and the inclusion of female-authored works. The outcome variables are described in detail below; a concise summary is in Table \@ref(tab:outcomes).
 
@@ -122,9 +122,6 @@ $$
   \text{Ratio of Female Authors}_i =
   \frac{\text{Female Authors}_i} {\text{Female Authors}_i + \text{Male Authors}_i}.
 $$
-<!-- Here, we add two pseudo-observations (one for each gender) to stabilise the ratio, preventing extreme values in cases with very few authors [@agresti2000simple]. This metric enables us to examine whether gender and collaboration are associated with the representation of female-authored work in teaching.^[
-  Following @agresti2000simple, the adjustment improves inference in small samples (10 or less observations per group), where standard (Wald) 95% CIs may underperform, and can be interpreted as a weak uniform prior that shrinks extreme estimates toward the interior.
-] -->
 
 ## Simulating Teaching Collaborations
 

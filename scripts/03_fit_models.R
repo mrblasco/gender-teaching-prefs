@@ -18,7 +18,6 @@ warn <- logger::log_warn
 # ----------------------------------------------------------------------
 # Paths
 # ----------------------------------------------------------------------
-
 args <- commandArgs(trailingOnly = TRUE)
 
 data_dir    <- file.path("data", "processed")
@@ -31,60 +30,15 @@ say("Output dir: {out_dir}")
 
 
 # ----------------------------------------------------------------------
-# Utils
-# ----------------------------------------------------------------------
-center <- function(x) {
-    as.numeric(scale(x, scale = FALSE, center = TRUE))
-}
-
-rank_percentile <- function(x) {
-    stopifnot(length(x) > 1)    
-    result <- 100 * (rank(x, na.last = "keep") - 1) / (sum(!is.na(x)) - 1)
-    say("Computed percentile rank: {round(mean(is.na(result)), 2)} missing")
-    result
-}
-
-term_labels <- c(
-    teamf = "Female alone",
-    teamff = "Female + female",
-    teammm = "Male + male",
-    teamfm = "Mixed"
-)
-
-# ----------------------------------------------------------------------
 # Load data
 # ----------------------------------------------------------------------
 
 say("Loading data ...")
 syllabi_merged <- readRDS(file.path(data_dir, "syllabi_merged.rds"))
 
-say("Loaded {format(nrow(syllabi_merged), big.mark = ',')} rows")
-
-syllabi_merged <- syllabi_merged |>
-    group_by(year) |>
-    mutate(
-
-        # Reviewer #3 - drop unknown course levels
-        course_level = dplyr::case_when(
-            course_level == "unknown" ~ NA_character_,
-            TRUE ~ course_level
-        ),
-
-        # Reviewer #3 - don't adjust female women proportions, if not present drop
-        total_authors = female_authors + male_authors,
-        female_ratio = ifelse(
-            total_authors > 0,
-            female_authors / total_authors,
-            NA_real_
-        ),
-
-        # Depvars
-        intdisc_rp = rank_percentile(mean_intdisc),
-        conventional_rp = rank_percentile(novel_med),
-        atyp_rp = rank_percentile(atyp_med),
-        recency_rp = rank_percentile(recency),
-    ) |>
-    ungroup()
+say(
+    "Loaded {nrow(syllabi_merged)} rows, {ncol(syllabi_merged)} cols."
+)
 
 
 knitr::kable(
