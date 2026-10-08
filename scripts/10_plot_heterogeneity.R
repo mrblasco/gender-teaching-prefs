@@ -250,8 +250,8 @@ p_t1 <- ggplot(
 ) +
     geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
     geom_pointrange(linewidth = 0.4) +
-    facet_grid(outcome ~ term, labeller = labeller(term = age_term_labels),
-               scales = "free_y") +
+    facet_wrap(outcome ~ term, labeller = labeller(term = age_term_labels),
+               scales = "free") +
     labs(x = NULL, y = "Difference vs. man alone (M)",
          title = "Team gender gaps within course level",
          subtitle = "If gaps were a seniority-via-course-type artifact, within-level estimates would collapse toward 0") +

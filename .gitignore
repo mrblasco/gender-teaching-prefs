@@ -18,3 +18,4 @@ docs/
 output/
 */build
 */*output
+notebooks/*.html
