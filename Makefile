@@ -1,9 +1,16 @@
 .PHONY: all montecarlo covid models plots heterogeneity fit-heterogeneity plot-heterogeneity
 
-all: montecarlo covid models plots heterogeneity
+all: process montecarlo covid models plots heterogeneity
 
+# ---- Manuscript ----
+draft: 
+	cd manuscript; make
+
+view:
+	cd manuscript; make view
 
 # ---- Analysis ---- 
+process: output/00_process_data/.completed
 montecarlo: output/01_plot_montecarlo_analysis/.completed
 models: output/03_fit_models/.completed
 covid: output/02_plot_covid_analysis/.completed
