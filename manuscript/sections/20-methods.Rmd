@@ -13,7 +13,7 @@ Each syllabus is assigned to one of 69 disciplinary fields derived from the CIP 
 ]
 While the original dataset includes syllabi in 49 languages, most documents (96%) are in English.
 
- For simplicity, our analysis focused exclusively on English-language syllabi.^[
+For simplicity, our analysis focused exclusively on English-language syllabi.^[
   Our focus on English-language courses means that, while we have comprehensive data for English-speaking countries such as Canada, Ireland, the United States, and Great Britain, the sample in non-English-speaking countries tends to be more representative of internationally oriented universities. These are typically institutions offering programs in English or advanced-level courses, such as postgraduate programs or disciplines where English is the primary medium of instruction within traditional universities.
 ]
 This choice resulted in a total of 5.4 million syllabi (1990-2019) from approximately 4,000 higher education institutions across fifteen countries (Table \@ref(tab:SI-country)).

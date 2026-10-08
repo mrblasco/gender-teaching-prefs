@@ -1,6 +1,6 @@
-.PHONY: all montecarlo covid models plots heterogeneity fit-heterogeneity plot-heterogeneity
+.PHONY: all process montecarlo covid models plots heterogeneity fit-heterogeneity plot-heterogeneity supplementary robustness representative
 
-all: process montecarlo covid models plots heterogeneity
+all: process montecarlo covid models plots heterogeneity robustness representative supplementary
 
 # ---- Manuscript ----
 draft: 
@@ -21,6 +21,18 @@ plots: output/04_make_plots_v2/.completed
 fit-heterogeneity: output/09_fit_heterogeneity/.completed
 plot-heterogeneity: output/09_heterogeneity_analysis/.completed
 heterogeneity: plot-heterogeneity
+
+# Robustness checks (full-sample regressions + log transforms).
+robustness: output/05_plot_robustness_checks/.completed
+
+# Representativeness figures (OECD / NCES comparison). Depends on the
+# external benchmark CSVs under data/raw/:
+#   data/raw/tertiary_academic_staff_gender_OECD.csv
+#   data/raw/phd_counts_by_field_year_US_isced.csv
+representative: output/06_plots_representative/.completed
+
+# Supplementary "Additional Tables" (CSV).
+supplementary: output/90_supplementary/.completed
 
 # Generic rule: scripts/<name>.R -> output/<name>/ (one output-dir arg).
 output/%/.completed: scripts/%.R
