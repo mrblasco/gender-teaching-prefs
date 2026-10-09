@@ -111,7 +111,8 @@ Third, to quantify the scientific novelty of the assigned readings, we use the m
   Note that this measure only captures the atypicality at the time of publication, hence, it may not entirely reflect the atypicality at the time of the course. This issue can be partly accounted for in the analysis by (1) aggregating over multiple readings and (2) controlling for the average publication year of the readings or alternatively by imposing a discount for articles published beyond a certain threshold from the course date (e.g., imposing a mean atypicality for readings five years or more older than the course year).
 ]
 
-Together, these three measures, recency of publications, the conventionality of readings, and the scientific atypicality of the readings, provide a multidimensional characterisation of curricular novelty. 
+Together, these three measures, recency of publications, the conventionality of readings, and the scientific atypicality of the readings, provide a multidimensional characterisation of curricular novelty. Importantly, these measures capture combinatorial novelty or reading recency, rather than pedagogical innovation or quality. They should therefore not be interpreted as direct evidence that a course is “better” or more innovative pedagogically.
+
 
 <!-- While more sophisticated methods to measure novelty are available [@uzzi2013atypical; @wang2017bias], we employ this more straightforward approach because pedagogical innovation tends to be incremental, and computationally intensive methods are impractical for large-scale datasets like ours. We anticipate that novelty will vary across fields (e.g., history courses may cite older texts more frequently than computer science courses). Still, within-field differences in novelty serve as a proxy for how close a course is to the current frontier of knowledge ("novelty"). -->
 

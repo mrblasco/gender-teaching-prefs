@@ -7,5 +7,6 @@ bookdown::pdf_document2:
   toc: false
   number_sections: false
   latex_engine: xelatex
+  keep_tex: false
   includes:
-    - in_header: preamble.tex
+    in_header: preamble.tex

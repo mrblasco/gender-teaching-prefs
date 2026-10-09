@@ -3,11 +3,44 @@
 all: process montecarlo covid models plots heterogeneity robustness representative supplementary
 
 # ---- Manuscript ----
-draft: 
-	cd manuscript; make
+PDF := output/manuscript/main.pdf
+draft: $(PDF)
+
+$(PDF) : manuscript/main.Rmd $(wildcard manuscript/sections/*)
+	@echo "🚀 Rendering $@..."
+	@mkdir -p "$(dir $@)"
+	@Rscript -e 'rmarkdown::render("$<", output_dir = "$(dir $@)", output_format = "bookdown::pdf_document2")'
+	@echo "Done"
 
 view:
-	cd manuscript; make view
+	open -a Skim $(PDF)
+
+diff: output/diff/main_diff.pdf
+
+OLD := manuscript/_canonical/second_revision_2026-09-25/_main.tex
+NEW := output/manuscript/main.tex
+output/diff/main_diff.tex: $(OLD) $(NEW)
+	@echo "🚀 Rendering $@..."
+	@mkdir -p "$(dir $@)"
+	@latexdiff \
+    	--exclude-safecmd="printbibliography" \
+    	--exclude-textcmd="input" \
+    	--config="PICTUREENV=(?:picture|DIFnomarkup|tabu)[\w\d*@]*" \
+		$+ > $@
+
+output/diff/main_diff.pdf: output/diff/main_diff.tex
+	cd "$(dir $@)"; xelatex main_diff.tex
+
+
+
+
+# ---- Reviewers ---- 
+
+
+review: peer_review/PNEXUS/04_third_revision/response/response.pdf
+
+%.pdf : %.Rmd
+	Rscript -e "rmarkdown::render('$<', output_format = 'bookdown::pdf_document2')"
 
 # ---- Analysis ---- 
 process: output/00_process_data/.completed

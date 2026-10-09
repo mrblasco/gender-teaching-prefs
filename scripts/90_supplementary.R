@@ -28,19 +28,20 @@
 suppressMessages({
     library(dplyr, warn.conflicts = FALSE)
     library(readr)
+    library(ggplot2)
+    library(patchwork)
 })
 
 source(here::here("R/labels.R"))  # composition_labels
+source(here::here("R/theme.R"))  # composition_labels
+theme_set(theme_custom())
 
 # ----------------------------------------------------------------------
 # Paths
 # ----------------------------------------------------------------------
 args <- commandArgs(trailingOnly = TRUE)
-out_dir <- if (length(args) >= 1) {
-    args[1]
-} else {
-    here::here("output", "90_supplementary")
-}
+out_dir <- ifelse(length(args) >= 1, args[1], tempdir())
+
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
 data_dir <- here::here("data", "processed")
@@ -65,6 +66,63 @@ save_table <- function(tidy, stem) {
     write_csv(tidy, file.path(out_dir, paste0(stem, ".csv")))
     say("  wrote %s.csv", stem)
 }
+
+
+# ======================================================================
+# Figure SI-trends --- fluctuations
+# ======================================================================
+trends_data <- ds |>
+    group_by(year) |>
+    summarise(
+        institutions = n_distinct(institution),
+        syllabi = n(),
+        solo_courses = sum(nchar(as.character(team)) == 1)
+    )
+
+p1 <- trends_data |>
+    ggplot(aes(year, institutions)) +
+    geom_col() +
+    labs(
+        x = "Academic year",
+        y = "Academic institutions"
+    )
+
+p2 <- trends_data |>
+    ggplot(aes(year, syllabi / institutions)) +
+    geom_col() + 
+    labs(
+        x = "Academic year",
+        y = "Syllabi per institution"
+    )
+
+p3 <- trends_data |>
+    ggplot(aes(year, 100 * solo_courses / syllabi)) +
+    geom_col() + 
+    labs(
+        x = "Academic year",
+        y = "Solo courses (%)"
+    )
+
+p_trends <- p1 + p2 + p3 + plot_annotation(tag_levels = "A")
+
+out <- file.path(out_dir, "supp_trends.pdf")
+ggsave(
+    filename = out,
+    device = cairo_pdf, width = 7, height = 3, units = "in"
+)
+say("Figure: %s", out)
+
+
+
+# ======================================================================
+# Table SI-courselevel --- syllabi per course lelve
+# ======================================================================
+course_level_tbl <- ds %>%
+    count(course_level, name = "n") %>%
+    mutate(pc = round(100 * n / sum(n), 1)) %>%
+    arrange(desc(n))
+
+save_table(course_level_tbl, "si_course_level")
 
 # ======================================================================
 # Table SI-country --- syllabi per country

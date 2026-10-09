@@ -1,3 +1,21 @@
-\usepackage{tcolorbox}
-\newtcolorbox{myquote}{colback=red!5!white, colframe=red!75!black}
-\renewenvironment{quote}{\begin{myquote}}{\end{myquote}}
+
+\usepackage[most]{tcolorbox}
+
+\newtcolorbox{myquote}{
+    enhanced,
+    breakable,
+    colback=gray!6,
+    colframe=gray!6,
+    boxrule=0pt,
+    borderline west={2pt}{0pt}{gray!65},
+    sharp corners,
+    left=8pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt,
+    fontupper=\bfseries
+}
+
+\renewenvironment{quote}
+    {\begin{myquote}}
+    {\end{myquote}}

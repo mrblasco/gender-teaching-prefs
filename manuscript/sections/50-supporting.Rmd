@@ -21,11 +21,13 @@ OpenSyllabus uses a Python implementation of Genderize.io to estimate the probab
 
 ### Course Level
 
-To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were assigned an *unknown* level. This approach enabled consistent categorisation across heterogeneous code formats. 
+To determine the level of each course listed in the syllabi, we first extracted the course codes for each syllabus (e.g., Psychology 101, Econ101). Then, we standardised all course codes by converting them to uppercase and removing any non-alphanumeric characters. From each cleaned code, we extracted the first sequence of digits and used the leading digit of this number as an indicator of course level. Codes beginning with 1 or 2 were classified as *basic*, those beginning with 3 or 4 as *advanced*, and those beginning with 5 or higher as *graduate*. Codes that did not contain a recognisable numeric component were considered missing and dropped from the analysis. This approach enabled consistent categorisation across heterogeneous code formats. 
 
 Furthermore, on a subset of 56,000 U.S. syllabi, prior work [@biasi2022education] showed that the course levels obtained using this procedure achieve an accuracy of 85% when compared with the official course levels listed in the corresponding catalog. This provides confidence in the quality of the classification for the U.S. context. 
 
-For non-US countries, no comparable benchmark currently exists or explicit harmonisation was conducted. In the UK and Australia, however, course numbering follows a similar structure, so no additional harmonisation is required. For other countries, we apply a simple rule: when course codes follow a comparable numeric format (as described above), we use the same U.S.-based classification; otherwise, the course level is coded as unknown.
+For non-US countries, no comparable benchmark currently exists or explicit harmonisation was conducted. In the UK and Australia, however, course numbering follows a similar structure, so no additional harmonisation is required. For other countries, we apply a simple rule: when course codes follow a comparable numeric format (as described above), we use the same U.S.-based classification; otherwise, the course level is coded as missing.
+
+The resulting categories are in Table \@ref(tab:SI-course-level).
 
 ### Interdiscipline Similarity {#si-interdisciplinarity}
 
@@ -43,10 +45,9 @@ To reduce computational costs, we "bootstrap" the field-by-field cosine similari
 
 We employed a simlar methodology to that developed by @uzzi2013atypical for the analysis of academic citations. We counted the frequency of gender combinations (male-male, female-male, etc.) of each syllabus per field and academic year. We compared these combinations against those expected by chance, using a gender team composition network. In this network, for a given field, institution, and academic year, we switched all the instructors using a Monte Carlo algorithm. The switching algorithm preserves the total gender counts and the distribution of team size. This ensures that a course with $n$ instructors in the original data will have the same number of instructors in the randomised network. Similarly, an institution with $m$ male instructors and $f$ female instructors teaching in a specific field will have the same number of male and female instructors. The only difference between the randomised and the original data will be the gender composition of the teams.
 
-## Addtional Tables 
+## Addtional Figures and Tables 
 
-In this section, we present additional descriptive statistics for the number of syllabi in each country  \@ref(tab:SI-country), the distribution of syllabi per field \@ref(tab:SI-fields), academic year \@ref(tab:SI-years), and teaching teams \@ref(tab:SI-composition). 
-
+In this section, we present additional descriptive statistics for the number of syllabi in each country  \@ref(tab:SI-country), the distribution of syllabi per field \@ref(tab:SI-fields), academic year \@ref(tab:SI-years), teaching teams \@ref(tab:SI-composition), and course levels Table \@ref(tab:SI-course-level). We also illustrate the evolution of institutions in our sample, the number of syllabi per institution, and the fraction of solo courses between 2000 and 2019 (Figure \@ref(fig:SI-trends)).
 
 <!-- The tables below are produced by scripts/90_supplementary.R, which
      writes the underlying CSVs to output/90_supplementary/. We read the
@@ -148,6 +149,41 @@ read_si("si_table_composition.csv") |>
         format.args = list(big.mark = " "),
         booktabs = TRUE, linesep = ""
     )
+```
+
+
+<!-- Course levels -->
+
+```{r SI-course-level}
+read_si("si_course_level.csv") |>
+    dplyr::mutate(
+        course_level = tools::toTitleCase(course_level)
+    ) |>
+    dplyr::transmute(
+        "Course level" = course_level,
+        "N (thousands)" = n / 1e3,
+        "%" = pc
+    ) |>
+    knitr::kable(
+        caption = "Course Level Distribution",
+        digits = 1,
+        #align = c("l", "r", "r"),
+        format.args = list(big.mark = " "),
+        booktabs = TRUE, linesep = ""
+    )
+```
+
+
+<!-- ### Trends -->
+
+```{r SI-trends, fig.cap = cap}
+cap <- paste(
+    "Trends in the number of academic institutions in our sample;",
+    "syllabi per institution; and fraction of single-instructor courses",
+    "between 2000 and 2019"
+)
+filename <- file.path(si_tbl_dir, "supp_trends.pdf")
+if (file.exists(filename)) knitr::include_graphics(filename)
 ```
 
 ## Representativeness of the gender distribution

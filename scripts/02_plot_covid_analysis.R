@@ -266,10 +266,10 @@ fit_fm_its <- glm(
 models <- list(
     "Single vs Team" = fit_size,
     "Women vs Men" = fit_f,
-    "Mixed-gender vs Same-gender" = fit_fm,
-    "ITS (1)" = fit_fm_its,
-    "ITS (2)" = fit_size_its,
-    "ITS (3)" = fit_fm_its
+    "Mixed-gender vs Same-gender" = fit_fm
+    #"ITS (1)" = fit_fm_its,
+    #"ITS (2)" = fit_size_its,
+    #"ITS (3)" = fit_fm_its
 )
 
 stargazer(models, type = "text", dep.var.labels = names(models))
@@ -316,12 +316,16 @@ say("Figure saved to {out}.")
 
 plot_data <- ds %>%
     dplyr::select(year, value, team, name) %>%
+    #filter(nchar(team) == 2) %>% 
     mutate(
         size = ifelse(nchar(team) == 1, "One instructor", "Two instructors"),
         team_label = team_labels[team],
         name = type_labels[name],
     ) %>%
-    summarise(value = sum(value), .by = c(name, team_label, year)) %>%
+    summarise(
+        value = sum(value),
+        .by = c(name, team_label, year)
+    ) %>%
     mutate(
         percent = value / sum(value),
         .by = c(name, year)
